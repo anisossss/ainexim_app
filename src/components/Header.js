@@ -70,7 +70,7 @@ const Header = (props) => {
         <Logo animate size={50} className={classes.logo} layer="header" />
         <img
           src="/img/logo.svg"
-          alt=""
+          alt="logo"
           className={classes.img}
           style={{
             margin: "15px 10px 15px 0",
