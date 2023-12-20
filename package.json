@@ -1,7 +1,6 @@
 {
   "name": "ainexim_app",
   "version": "1.0.1",
-  "homepage": "/",
   "dependencies": {
     "arwes": "^1.0.0-alpha.5",
     "react": "^17.0.2",
