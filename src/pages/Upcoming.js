@@ -45,7 +45,7 @@ const Upcoming = (props) => {
     []
   );
   return (
-    <Appear id="upcoming" animate show={props.entered}>
+    <Appear id="tasks" animate show={props.entered}>
       <Paragraph>Upcoming tasks</Paragraph>
       <Words animate>Here you will find your upcoming tasks.</Words>
       <br></br>
