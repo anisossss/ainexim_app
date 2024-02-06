@@ -3,6 +3,8 @@ import { withStyles } from "arwes";
 import { Frame, Button, Words } from "arwes";
 import { FaMicrophoneAlt } from "react-icons/fa";
 import { GiSoundWaves } from "react-icons/gi";
+import { CONSTANTS } from "../../../constants/api";
+import axios from "axios";
 
 const styles = () => ({
   frame: {
@@ -57,90 +59,85 @@ const Mentor = (props) => {
   const { classes } = props;
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
-  const [listening, setListening] = useState(false);
   const [voiceMode, setVoiceMode] = useState(false);
   const [audioChunks, setAudioChunks] = useState([]);
+  const [transcribedText, setTranscribedText] = useState("");
+  const mediaRecorderRef = useRef(null);
 
-  const recognition = useRef(new window.webkitSpeechRecognition());
+  let mediaRecorder;
 
   useEffect(() => {
-    recognition.current.onstart = () => {
-      setListening(true);
-    };
-    recognition.current.onerror = (event) => {
-      console.log(`Speech recognition error: ${event.error}`);
-    };
-    recognition.current.onend = () => {
-      setListening(false);
-      if (voiceMode) {
-        recognition.current.start(); // Continue listening if voiceMode is still on
-      }
-    };
-
-    recognition.current.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      setInputMessage(transcript);
-      setAudioChunks([]);
-    };
-
-    // Clean up when component unmounts
-    return () => {
-      recognition.current.stop();
-    };
+    if (voiceMode) {
+      startRecording();
+    } else {
+      stopRecording();
+    }
   }, [voiceMode]);
 
+  useEffect(() => {
+    if (audioChunks.length > 0) {
+      sendAudioToServer();
+    }
+  }, [audioChunks]);
+
   const toggleVoiceMode = () => {
-    if (!voiceMode) {
-      recognition.current.start();
-    } else {
-      recognition.current.stop();
-      if (audioChunks.length > 0) {
-        sendAudioToServer();
-      }
-    }
-    setVoiceMode(!voiceMode);
+    setVoiceMode((prevVoiceMode) => !prevVoiceMode);
   };
-
-  const handleSend = () => {
-    if (inputMessage.trim() !== "") {
-      setMessages([
-        ...messages,
-        { content: inputMessage, type: "user" },
-        { content: getRandomBotResponse(), type: "bot" },
-      ]);
-      setInputMessage("");
-    }
-  };
-  const getRandomBotResponse = () => {
-    const botResponses = [
-      "I'm sorry, I didn't quite catch that.",
-      "Interesting! Tell me more.",
-      "That's a great point!",
-      "I'm here to help. How can I assist you today?",
-    ];
-    const randomIndex = Math.floor(Math.random() * botResponses.length);
-    return botResponses[randomIndex];
-  };
-  const sendAudioToServer = () => {
-    const audioBlob = new Blob(audioChunks, { type: "audio/mpeg" }); // Adjust the type accordingly
-    const formData = new FormData();
-    formData.append("audio", audioBlob, "recording.mp3"); // Adjust the filename and format accordingly
-
-    fetch("http://localhost:3301/transcribe", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setMessages([
-          ...messages,
-          { content: data.text, type: "user" },
-          { content: getRandomBotResponse(), type: "bot" },
-        ]);
+  const startRecording = () => {
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        mediaRecorderRef.current = new MediaRecorder(stream);
+        mediaRecorderRef.current.ondataavailable = (e) => {
+          setAudioChunks((prevChunks) => [...prevChunks, e.data]);
+        };
+        mediaRecorderRef.current.start();
+        console.log(audioChunks);
+        console.log(
+          "Recording stopped. MediaRecorder state:",
+          mediaRecorderRef.current.state
+        );
       })
-      .catch(console.error);
+      .catch((error) => {
+        console.error("Error accessing media devices:", error);
+      });
   };
 
+  const stopRecording = () => {
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state === "recording"
+    ) {
+      mediaRecorderRef.current.stop();
+      console.log(
+        "Recording stopped. MediaRecorder state:",
+        mediaRecorderRef.current.state
+      );
+    }
+  };
+
+  const sendAudioToServer = async () => {
+    try {
+      const audioBlob = new Blob(audioChunks, { type: "audio/mpeg" });
+      const formData = new FormData();
+      formData.append("audio", audioBlob, "recording.mp3");
+
+      const response = await axios.post(
+        `${CONSTANTS.API_URL}/utils/speech-to-text`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      setTranscribedText(response.data.text);
+      setInputMessage(response.data.text);
+      setAudioChunks([]);
+    } catch (error) {
+      console.error("Error sending audio to server:", error);
+    }
+  };
   return (
     <Frame animate={true} corners={1} className={classes.frame}>
       <Words animate style={{ padding: "1em" }}>
@@ -192,22 +189,23 @@ const Mentor = (props) => {
           </Button>
 
           <textarea
+            style={{ overflow: "auto" }}
             id="message_input"
             className={classes.messageInput}
             placeholder="Type your message here..."
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
           ></textarea>
-          <Button onClick={handleSend} className={classes.sendButton}>
-            Send
-          </Button>
+          <Button className={classes.sendButton}>Send</Button>
         </div>
         <Frame
           style={{ display: voiceMode ? "block" : "none", fontSize: "12px" }}
         >
           {voiceMode ? "Voice Mode ON" : "Voice Mode OFF"}
         </Frame>
-        <div id="voice-indicator">Voice Mode ON</div>
+        <div id="voice-indicator">
+          {voiceMode ? "Voice Mode ON" : "Voice Mode OFF"}
+        </div>
       </div>
     </Frame>
   );
