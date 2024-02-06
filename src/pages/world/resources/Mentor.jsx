@@ -6,12 +6,7 @@ const Mentor = (props) => {
   return (
     <>
       <Helmet title="Task N° 2 | AINEXIM" />
-      <Frame level={2} corners={1}>
-        <Words animate className="words">
-          Mentor Chat
-        </Words>
-      </Frame>
-      <br></br>
+
       <MentorChat />
     </>
   );
