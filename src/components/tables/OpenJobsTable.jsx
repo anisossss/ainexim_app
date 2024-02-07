@@ -24,29 +24,32 @@ const OpenJobsTable = (props) => {
     };
   }, []);
   const staticTasks = [
-    { id: 1, title: "Create homepage layout", status: "completed" },
-    { id: 2, title: "Implement user authentication", status: "pending" },
-    { id: 3, title: "Optimize website performance", status: "failed" },
-    { id: 4, title: "Design mobile responsiveness", status: "completed" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
+    {
+      id: 1,
+      title: "Frontend Developer",
+      status: "open",
+    },
+    {
+      id: 2,
+      title: "Backend Engineer",
+      status: "open",
+    },
+    {
+      id: 3,
+      title: "UI/UX Designer",
+      status: "closed",
+    },
+    {
+      id: 4,
+      title: "Full Stack Developer",
+      status: "open",
+    },
+    {
+      id: 5,
+      title: "Software Engineer",
+      status: "closed",
+    },
   ];
-
   const getStatusIcon = (status) => {
     switch (status) {
       case "completed":

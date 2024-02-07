@@ -116,7 +116,7 @@ const ProfilePanel = (props) => {
             <Words style={{ fontWeight: "bold" }}>Current Project </Words>
           </Highlight>
           <Highlight>
-            <Words>AINEXIM LANDING PAGE</Words>
+            <Words>AINEXIM SHOWCASE WEBSITE</Words>
           </Highlight>
         </div>
         <br></br>
@@ -150,7 +150,19 @@ const ProfilePanel = (props) => {
               <Words>Total Tasks: </Words>
             </Highlight>
             <Highlight>
-              <Words>02/100</Words>
+              <Words>45/100</Words>
+            </Highlight>
+          </div>
+          <progress value="20" max="100"></progress>
+        </div>
+        <br></br>
+        <div className={classes.progress}>
+          <div className={classes.header}>
+            <Highlight>
+              <Words>Total projects: </Words>
+            </Highlight>
+            <Highlight>
+              <Words>06/10</Words>
             </Highlight>
           </div>
           <progress value="20" max="100"></progress>

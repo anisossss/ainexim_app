@@ -24,27 +24,24 @@ const CurrentTasksTable = (props) => {
     };
   }, []);
   const staticTasks = [
-    { id: 1, title: "Create homepage layout", status: "completed" },
-    { id: 2, title: "Implement user authentication", status: "pending" },
-    { id: 3, title: "Optimize website performance", status: "failed" },
-    { id: 4, title: "Design mobile responsiveness", status: "completed" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
+    { id: 1, title: "Implement social media integration", status: "pending" },
+    { id: 2, title: "Design landing page graphics", status: "completed" },
+    { id: 3, title: "Optimize database queries", status: "pending" },
+    { id: 4, title: "Fix broken links in footer", status: "pending" },
+    {
+      id: 5,
+      title: "Implement client-side form validation",
+      status: "pending",
+    },
+    {
+      id: 6,
+      title: "Deploy website to production server",
+      status: "completed",
+    },
+    { id: 7, title: "Create API endpoints for user data", status: "pending" },
+    { id: 8, title: "Optimize image assets for web", status: "completed" },
+    { id: 9, title: "Integrate payment gateway", status: "pending" },
+    { id: 10, title: "Update terms and conditions page", status: "completed" },
   ];
 
   const getStatusIcon = (status) => {

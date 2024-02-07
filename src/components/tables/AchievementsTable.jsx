@@ -24,14 +24,44 @@ const AchievementTable = (props) => {
     };
   }, []);
   const staticTasks = [
-    { id: 1, title: "Create homepage layout", status: "completed" },
-    { id: 2, title: "Implement user authentication", status: "pending" },
-    { id: 3, title: "Optimize website performance", status: "failed" },
-    { id: 4, title: "Design mobile responsiveness", status: "completed" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
+    {
+      id: 1,
+      title: "Captivating homepage layout created",
+      status: "completed",
+    },
+    {
+      id: 2,
+      title: "Robust user authentication implemented",
+      status: "completed",
+    },
+    { id: 3, title: "Website performance optimized", status: "completed" },
+    { id: 4, title: "Mobile-responsive layout designed", status: "completed" },
+    {
+      id: 5,
+      title: "Cross-browser compatibility issues addressed",
+      status: "completed",
+    },
+    {
+      id: 6,
+      title: "Cross-browser compatibility issues fixed",
+      status: "completed",
+    },
+    { id: 7, title: "Mobile-responsive design deployed", status: "completed" },
+    {
+      id: 8,
+      title: "Comprehensive testing protocols implemented",
+      status: "completed",
+    },
+    {
+      id: 9,
+      title: "Development process documented and shared",
+      status: "completed",
+    },
+    {
+      id: 10,
+      title: "Website accessibility features enhanced",
+      status: "completed",
+    },
   ];
 
   const getStatusIcon = (status) => {

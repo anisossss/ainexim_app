@@ -1,96 +1,36 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Table, withStyles, Button } from "arwes";
-import {
-  FaCheckCircle,
-  FaTimesCircle,
-  FaExclamationCircle,
-} from "react-icons/fa";
-import { HiOutlineDotsVertical } from "react-icons/hi";
 
 const styles = (theme) => ({});
 
 const NotificationsTable = (props) => {
-  const menuRef = useRef(null);
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setOpenTask(null);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
   const staticTasks = [
-    { id: 1, title: "Create homepage layout", status: "completed" },
-    { id: 2, title: "Implement user authentication", status: "pending" },
-    { id: 3, title: "Optimize website performance", status: "failed" },
-    { id: 4, title: "Design mobile responsiveness", status: "completed" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
-    { id: 5, title: "Fix cross-browser compatibility", status: "pending" },
+    {
+      id: 1,
+      title:
+        "Great job team! We just completed the landing page graphics design.",
+    },
+    {
+      id: 2,
+      title:
+        "Reminder: Please review and provide feedback on the homepage layout draft by EOD today.",
+    },
+    {
+      id: 3,
+      title:
+        "Congratulations everyone! The website has been successfully deployed to the production server.",
+    },
+    {
+      id: 4,
+      title:
+        "Team meeting tomorrow at 10 AM to discuss the optimization of database queries.",
+    },
+    {
+      id: 5,
+      title:
+        "Well done team! The client-side form validation has been implemented and is ready for testing.",
+    },
   ];
-
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case "completed":
-        return <FaCheckCircle color="green" />;
-      case "pending":
-        return <FaExclamationCircle color="orange" />;
-      case "failed":
-        return <FaTimesCircle color="red" />;
-      default:
-        return null;
-    }
-  };
-
-  const [openTask, setOpenTask] = useState(null);
-
-  const handleOpenTask = (taskId) => {
-    if (openTask === taskId) {
-      setOpenTask(null);
-    } else {
-      setOpenTask(taskId);
-    }
-  };
-
-  const TaskActionsMenu = ({ taskId }) => {
-    if (openTask === taskId) {
-      return (
-        <div className="toggle_menu_container" ref={menuRef}>
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            <li>
-              <Button className="menu_btn">
-                <span className="menu_span">Mark as done</span>
-              </Button>
-            </li>
-            <li>
-              <Button className="menu_btn">
-                <span className="menu_span">Archive</span>
-              </Button>
-            </li>
-          </ul>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <Table className="table">
@@ -99,8 +39,6 @@ const NotificationsTable = (props) => {
           <tr>
             <th>ID</th>
             <th>Title</th>
-            <th>Status</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -108,19 +46,6 @@ const NotificationsTable = (props) => {
             <tr key={rowData.id}>
               <td>{rowData.id}</td>
               <td>{rowData.title}</td>
-              <td style={{}}>{getStatusIcon(rowData.status)}</td>
-              <td
-                style={{
-                  cursor: "pointer",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <HiOutlineDotsVertical
-                  onClick={() => handleOpenTask(rowData.id)}
-                />
-                <TaskActionsMenu taskId={rowData.id} />
-              </td>
             </tr>
           ))}
         </tbody>
