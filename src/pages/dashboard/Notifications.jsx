@@ -8,14 +8,12 @@ const Notifications = (props) => {
       <Helmet title="Task N° 2 | AINEXIM" />
       <Frame level={2} corners={1}>
         <Words animate style={{ padding: "1em" }}>
-          All notifications 🔔
+          All notifications
         </Words>
       </Frame>
       <br></br>
       <br></br>
-      <div style={{}}>
-        <NotificationsTable />
-      </div>
+      <NotificationsTable />
     </>
   );
 };

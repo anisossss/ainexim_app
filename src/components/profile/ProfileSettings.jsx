@@ -53,7 +53,6 @@ const styles = () => ({
 });
 const ProfileSettingsPanel = (props) => {
   const { classes, className } = props;
-
   return (
     <div className={classes.content}>
       <div className={classes.personalInfo}>
@@ -124,10 +123,10 @@ const ProfileSettingsPanel = (props) => {
               <Words>Total Achievements: </Words>
             </Highlight>
             <Highlight>
-              <Words>02/100</Words>
+              <Words>08/100</Words>
             </Highlight>
           </div>
-          <progress value="20" max="100"></progress>
+          <progress value="8" max="100"></progress>
         </div>
         <br></br>
         <div className={classes.progress}>
@@ -136,7 +135,7 @@ const ProfileSettingsPanel = (props) => {
               <Words>Total Missions: </Words>
             </Highlight>
             <Highlight>
-              <Words>02/100</Words>
+              <Words>20/100</Words>
             </Highlight>
           </div>
           <progress value="20" max="100"></progress>
@@ -151,7 +150,7 @@ const ProfileSettingsPanel = (props) => {
               <Words>45/100</Words>
             </Highlight>
           </div>
-          <progress value="20" max="100"></progress>
+          <progress value="45" max="100"></progress>
         </div>
         <br></br>
         <div className={classes.progress}>
@@ -160,10 +159,10 @@ const ProfileSettingsPanel = (props) => {
               <Words>Total projects: </Words>
             </Highlight>
             <Highlight>
-              <Words>06/10</Words>
+              <Words>06/100</Words>
             </Highlight>
           </div>
-          <progress value="20" max="100"></progress>
+          <progress value="06" max="100"></progress>
         </div>
       </div>
     </div>

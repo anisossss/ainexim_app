@@ -8,14 +8,12 @@ const OpenJobs = (props) => {
       <Helmet title="Task N° 2 | AINEXIM" />
       <Frame level={2} corners={1}>
         <Words animate style={{ padding: "1em" }}>
-          Open Jobs 🔔
+          Open Jobs
         </Words>
       </Frame>
       <br></br>
       <br></br>
-      <div>
-        <OpenJobsTable />
-      </div>
+      <OpenJobsTable />
     </>
   );
 };
