@@ -1,6 +1,7 @@
 import { CONSTANTS } from "../../../constants/api";
 import React, { useState } from "react";
-import { Link, withStyles } from "arwes";
+import { withStyles } from "arwes";
+import { Link } from "react-router-dom";
 import { Frame, Button, Words, Line } from "arwes";
 const styles = () => ({
   validationFrame: {},
