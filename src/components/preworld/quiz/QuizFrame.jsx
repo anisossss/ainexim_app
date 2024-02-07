@@ -220,11 +220,10 @@ const QuizFrame = (props) => {
               <br />
               <br />
               <div className="btns_confirm">
+                <Button onClick={handleCloseModal}>Cancel</Button>
                 <Link to="/preworld/quiz/result">
                   <Button>Confirm</Button>
                 </Link>
-
-                <Button onClick={handleCloseModal}>Cancel</Button>
               </div>
             </div>
           </Frame>

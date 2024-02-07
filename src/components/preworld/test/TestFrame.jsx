@@ -203,11 +203,10 @@ const TestFrame = (props) => {
               <br />
               <br />
               <div className="btns_confirm">
+                <Button onClick={handleCloseModal}>Cancel</Button>
                 <Link to="/preworld/test/result">
                   <Button>Confirm</Button>
                 </Link>
-
-                <Button onClick={handleCloseModal}>Cancel</Button>
               </div>
             </div>
           </Frame>

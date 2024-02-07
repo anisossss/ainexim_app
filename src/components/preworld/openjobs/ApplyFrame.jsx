@@ -24,11 +24,10 @@ const ApplyFrame = (props) => {
         <br />
         <br />
         <div className="btns_confirm">
+          <Button>Cancel</Button>
           <Link animate href="/dashboard">
             <Button>Confirm</Button>
           </Link>
-
-          <Button>Cancel</Button>
         </div>
       </div>
     </Frame>
