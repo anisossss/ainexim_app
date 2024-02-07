@@ -142,7 +142,7 @@ td {
   color: #fff;
 }
 .chat_container {
-  height: 14.5em;
+  height: 13em;
   overflow: auto;
   background: #1a1a1a;
 }
@@ -314,7 +314,7 @@ label {
 }
 
 #chat-box {
-  height: 400px;
+  height: 360px;
   overflow-y: auto;
   background-color: #121212;
   border: none;
@@ -509,22 +509,22 @@ label {
 }
 @keyframes lds-ripple {
   0% {
-    top: 36px;
-    left: 36px;
+    top: 25px;
+    left: 25px;
     width: 0;
     height: 0;
     opacity: 0;
   }
   4.9% {
-    top: 36px;
-    left: 36px;
+    top: 25px;
+    left: 25px;
     width: 0;
     height: 0;
     opacity: 0;
   }
   5% {
-    top: 36px;
-    left: 36px;
+    top: 25px;
+    left: 25px;
     width: 0;
     height: 0;
     opacity: 1;
@@ -532,8 +532,8 @@ label {
   100% {
     top: 0px;
     left: 0px;
-    width: 72px;
-    height: 72px;
+    width: 40px;
+    height: 40px;
     opacity: 0;
   }
 }

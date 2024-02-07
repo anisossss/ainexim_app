@@ -14,10 +14,13 @@ const styles = () => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-end",
-    height: "10vh",
     marginBottom: "10px",
   },
-
+  voiceButton: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   userMessage: {
     alignSelf: "flex-end",
     marginLeft: "10px",
@@ -52,6 +55,9 @@ const styles = () => ({
     padding: "10px",
     margin: "10px 0",
     borderRadius: "5px",
+  },
+  chatContainer: {
+    maxHeight: "72vh",
   },
 });
 
@@ -139,7 +145,7 @@ const Mentor = (props) => {
     }
   };
   return (
-    <Frame animate={true} corners={1} className={classes.frame}>
+    <Frame animate={true} className={classes.frame}>
       <Words animate style={{ padding: "1em" }}>
         AINEXIM Mentor
       </Words>
@@ -171,7 +177,16 @@ const Mentor = (props) => {
             </div>
           ))}
         </div>
-
+        <Frame
+          style={{
+            display: voiceMode ? "block" : "none",
+            padding: "0.5em",
+          }}
+        >
+          <Words animate style={{ fontSize: "7px" }}>
+            {voiceMode ? "Voice Mode ON" : "Voice Mode OFF"}
+          </Words>
+        </Frame>
         <div
           style={{
             display: "flex",
@@ -186,12 +201,12 @@ const Mentor = (props) => {
             onClick={toggleVoiceMode}
           >
             {voiceMode ? (
-              <GiSoundWaves />
-            ) : (
               <div class="lds-ripple">
                 <div></div>
                 <div></div>
               </div>
+            ) : (
+              <FaMicrophoneAlt />
             )}
           </Button>
 
@@ -204,14 +219,6 @@ const Mentor = (props) => {
             onChange={(e) => setInputMessage(e.target.value)}
           ></textarea>
           <Button className={classes.sendButton}>Send</Button>
-        </div>
-        <Frame
-          style={{ display: voiceMode ? "block" : "none", fontSize: "12px" }}
-        >
-          {voiceMode ? "Voice Mode ON" : "Voice Mode OFF"}
-        </Frame>
-        <div id="voice-indicator">
-          {voiceMode ? "Voice Mode ON" : "Voice Mode OFF"}
         </div>
       </div>
     </Frame>
