@@ -40,9 +40,8 @@ const UserLoginForm = () => {
         }}
       />
       <Frame animate={true} level={3} corners={1} layer="primary">
-        <Words animate style={{ padding: "2em", fontWeight:"bold"}}>
-          Login to AINEXIM, 
-          Your Portal to Seamless Development
+        <Words animate style={{ padding: "2em", fontWeight: "bold" }}>
+          Login to AINEXIM, Your Portal to Seamless Development
         </Words>
         <form className="login">
           <div className="form-group">
@@ -83,15 +82,16 @@ const UserLoginForm = () => {
           </div>
 
           <div className="login-btn">
-            <Button
-              animate
-              layer="success"
-              type="submit"
-              style={{ width: "100%", textAlign: "center" }}
-              onClick={handleSubmit}
-            >
-              Login
-            </Button>{" "}
+            <Link to="/preworld/quiz">
+              <Button
+                animate
+                layer="success"
+                type="submit"
+                style={{ width: "100%", textAlign: "center" }}
+              >
+                Login
+              </Button>
+            </Link>
           </div>
         </form>
       </Frame>

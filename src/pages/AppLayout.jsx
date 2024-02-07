@@ -131,7 +131,7 @@ const AppLayout = (props) => {
             <div style={{ padding: "20px" }}>
               <Switch>
                 <Route exact path="/">
-                  <Home entered={anim.entered} />
+                  <Login entered={anim.entered} />
                 </Route>
                 <Route exact path="/complete-profile">
                   <CompleteProfile entered={anim.entered} />

@@ -185,7 +185,14 @@ const Mentor = (props) => {
             className={classes.voiceButton}
             onClick={toggleVoiceMode}
           >
-            {voiceMode ? <GiSoundWaves /> : <FaMicrophoneAlt />}
+            {voiceMode ? (
+              <GiSoundWaves />
+            ) : (
+              <div class="lds-ripple">
+                <div></div>
+                <div></div>
+              </div>
+            )}
           </Button>
 
           <textarea

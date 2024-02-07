@@ -1,6 +1,6 @@
 import { CONSTANTS } from "../../../constants/api";
 import React, { useState } from "react";
-import { withStyles } from "arwes";
+import { Link, withStyles } from "arwes";
 import { Frame, Button, Words, Line } from "arwes";
 const styles = () => ({
   validationFrame: {},
@@ -55,10 +55,9 @@ const QuizResultFrame = (props) => {
         <Words animate>Points Rewarded: 1200 </Words>
       </div>
       <br></br>
-      <Button onClick={handleValidateTask} className={classes.btn}>
-        Next Task
-      </Button>
-      <Button onClick={handleValidateTask}>Tasks Timeline</Button>
+      <Link to="/preworld/test">
+        <Button className={classes.btn}>Next</Button>
+      </Link>
     </div>
   );
 };

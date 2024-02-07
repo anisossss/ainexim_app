@@ -285,7 +285,25 @@ td {
   background-color: #007bff;
   color: #ffffff;
 }
-
+progress {
+  width: 100%;
+  height: 20px; /* Adjust height as needed */
+  border: none;
+  border-radius: 10px; /* Rounded corners */
+  background-color: #ddd; /* Light gray background */
+}
+progress::-webkit-progress-bar {
+  background-color: #ddd; /* Light gray background */
+  border-radius: 10px; /* Rounded corners */
+}
+progress::-webkit-progress-value {
+  background-color: #4caf50; /* Green progress color */
+  border-radius: 10px; /* Rounded corners */
+}
+progress::-moz-progress-bar {
+  background-color: #4caf50; /* Green progress color */
+  border-radius: 10px; /* Rounded corners */
+}
 label {
   font-size: 16px;
 }

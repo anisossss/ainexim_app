@@ -40,6 +40,11 @@ const styles = () => ({
     color: "#fff",
     margin: "0.5em 0",
   },
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100%",
+  },
 });
 
 const ProfilePanel = (props) => {
@@ -100,10 +105,21 @@ const ProfilePanel = (props) => {
         </div>
         <hr className={classes.hr}></hr>
         <div className={classes.progressSection}>
-          <Words> Task 1:</Words>
           <div>
+            <div className={classes.header}>
+              <Highlight>
+                <Words>Achievements: </Words>
+              </Highlight>
+              <Highlight>
+                <Words>02/100</Words>
+              </Highlight>
+            </div>
             <progress value="70" max="100"></progress>
           </div>
+
+          <br></br>
+          <Words>Missions: 02/100</Words>
+          <div></div>
           <Highlight>
             <Words> Task 2:</Words>
           </Highlight>
