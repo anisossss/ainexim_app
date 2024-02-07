@@ -6,6 +6,9 @@ const styles = () => ({
   content: {
     display: "flex",
     padding: 20,
+    justifyContent: "center",
+    textAlign: "left",
+    width: "100%",
   },
   picture: {
     borderRadius: "50%",
@@ -14,15 +17,18 @@ const styles = () => ({
   userDetails: {
     marginTop: "0.5em",
   },
+  hr: {},
   details: {
     marginBottom: "0.5em",
   },
-  progressBar: {
-    marginTop: 20,
-    padding: 20,
+  progressBar: {},
+  personalInfo: {
+    width: "40%",
   },
-  personalInfo: {},
-  progressSection: {},
+  progressSection: {
+    width: "50%",
+    justifyContent: "center",
+  },
   top_section: {
     display: "flex",
     alignItems: "center",
@@ -51,90 +57,106 @@ const ProfilePanel = (props) => {
   const { classes, className } = props;
 
   return (
-    <Frame animate={true}>
-      <div className={classes.content}>
-        <div className={classes.personalInfo}>
-          <div className={classes.top_section}>
-            <img
-              src="/img/avatars/me.jpeg"
-              alt="Profile Picture"
-              className={classes.picture}
-              style={{ objectFit: "cover", width: "8em", height: "8em" }}
-            />
+    <div className={classes.content}>
+      <div className={classes.personalInfo}>
+        <div className={classes.top_section}>
+          <img
+            src="/img/avatars/me.jpeg"
+            alt="Profile Picture"
+            className={classes.picture}
+            style={{ objectFit: "cover", width: "8em", height: "8em" }}
+          />
+          <div>
             <div>
-              <div>
-                <b>Anis Khalef</b>
-              </div>
+              <b>Anis Khalef</b>
+            </div>
 
-              <span className={classes.badge}>Web Developer</span>
-            </div>
-          </div>
-
-          <div className={classes.userDetails}>
-            <div>
-              <b>Email</b>
-            </div>
-            <div className={classes.details}>
-              <span>anis.khalef98@ainexim.com</span>
-            </div>
-            <div>
-              <b>Location</b>
-            </div>
-            <div className={classes.details}>
-              <span>Sousse, Tunisia</span>
-            </div>
-            <div>
-              <b>Current career:</b>
-            </div>
-            <div className={classes.details}>
-              <span>Frontend Developer</span>
-            </div>
-            <div>
-              <b>Department</b>
-            </div>
-            <div className={classes.details}>
-              <span>Software Development</span>
-            </div>
-            <div>
-              <b>Level</b>
-            </div>
-            <div className={classes.details}>
-              <span>Expert</span>
-            </div>
+            <span className={classes.badge}>Web Developer</span>
           </div>
         </div>
-        <hr className={classes.hr}></hr>
-        <div className={classes.progressSection}>
-          <div>
-            <div className={classes.header}>
-              <Highlight>
-                <Words>Achievements: </Words>
-              </Highlight>
-              <Highlight>
-                <Words>02/100</Words>
-              </Highlight>
-            </div>
-            <progress value="70" max="100"></progress>
-          </div>
 
-          <br></br>
-          <Words>Missions: 02/100</Words>
-          <div></div>
-          <Highlight>
-            <Words> Task 2:</Words>
-          </Highlight>
+        <div className={classes.userDetails}>
           <div>
-            <progress value="70" max="100"></progress>
+            <b>Email</b>
           </div>
-          <Highlight>
-            <Words> Task 3:</Words>
-          </Highlight>
+          <div className={classes.details}>
+            <span>anis.khalef98@ainexim.com</span>
+          </div>
           <div>
-            <progress value="70" max="100"></progress>
+            <b>Location</b>
+          </div>
+          <div className={classes.details}>
+            <span>Sousse, Tunisia</span>
+          </div>
+          <div>
+            <b>Current career:</b>
+          </div>
+          <div className={classes.details}>
+            <span>Frontend Developer</span>
+          </div>
+          <div>
+            <b>Department</b>
+          </div>
+          <div className={classes.details}>
+            <span>Software Development</span>
+          </div>
+          <div>
+            <b>Level</b>
+          </div>
+          <div className={classes.details}>
+            <span>Expert</span>
           </div>
         </div>
       </div>
-    </Frame>
+      <hr className={classes.hr}></hr>
+
+      <div className={classes.progressSection}>
+        <div>
+          <Highlight>
+            <Words style={{ fontWeight: "bold" }}>Current Project </Words>
+          </Highlight>
+          <Highlight>
+            <Words>AINEXIM LANDING PAGE</Words>
+          </Highlight>
+        </div>
+        <br></br>
+        <div className={classes.progress}>
+          <div className={classes.header}>
+            <Highlight>
+              <Words>Total Achievements: </Words>
+            </Highlight>
+            <Highlight>
+              <Words>02/100</Words>
+            </Highlight>
+          </div>
+          <progress value="20" max="100"></progress>
+        </div>
+        <br></br>
+        <div className={classes.progress}>
+          <div className={classes.header}>
+            <Highlight>
+              <Words>Total Missions: </Words>
+            </Highlight>
+            <Highlight>
+              <Words>02/100</Words>
+            </Highlight>
+          </div>
+          <progress value="20" max="100"></progress>
+        </div>
+        <br></br>
+        <div className={classes.progress}>
+          <div className={classes.header}>
+            <Highlight>
+              <Words>Total Tasks: </Words>
+            </Highlight>
+            <Highlight>
+              <Words>02/100</Words>
+            </Highlight>
+          </div>
+          <progress value="20" max="100"></progress>
+        </div>
+      </div>
+    </div>
   );
 };
 
