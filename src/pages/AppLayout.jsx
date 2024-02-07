@@ -44,6 +44,7 @@ import Quiz from "./preworld/quiz/Quiz";
 import QuizResult from "./preworld/quiz/QuizResult";
 import Test from "./preworld/test/Test";
 import TestResult from "./preworld/test/TestResult";
+import Apply from "./preworld/jobs/Apply";
 const styles = () => ({
   centered: {
     flex: 1,
@@ -223,6 +224,12 @@ const AppLayout = (props) => {
 
                 <Route exact path="/preworld/quiz/result">
                   <QuizResult entered={anim.entered} />
+                </Route>
+                <Route exact path="/preworld/open-jobs">
+                  <OpenJobs entered={anim.entered} />
+                </Route>
+                <Route exact path="/preworld/apply">
+                  <Apply entered={anim.entered} />
                 </Route>
 
                 <Route component={NotFound} />

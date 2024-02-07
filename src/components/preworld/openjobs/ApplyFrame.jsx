@@ -16,15 +16,19 @@ const ApplyFrame = (props) => {
   return (
     <Frame className={classes.modalFrame} animate={true} corners={1}>
       <div style={{ padding: "1em" }}>
-        <Words>Are you sure you want to Validate the Quiz?</Words>
+        <Words>Apply for Frontend Developer job</Words>
+        <br />
+        <br />
+        <Words>Upload your resume and a cover letter</Words>
+
         <br />
         <br />
         <div className="btns_confirm">
-          <Link animate href="/preworld/test">
+          <Link animate href="/dashboard">
             <Button>Confirm</Button>
           </Link>
 
-          <Button onClick={handleCloseModal}>Cancel</Button>
+          <Button>Cancel</Button>
         </div>
       </div>
     </Frame>

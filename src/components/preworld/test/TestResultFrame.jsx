@@ -55,7 +55,7 @@ const TestResultFrame = (props) => {
         <Words animate>Points Rewarded: 1200 </Words>
       </div>
       <br></br>
-      <Link to="/dashboard">
+      <Link to="/preworld/open-jobs">
         <Button className={classes.btn}>Next</Button>
       </Link>
     </div>
