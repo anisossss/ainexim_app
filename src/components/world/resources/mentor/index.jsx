@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { withStyles } from "arwes";
 import { Frame, Button, Words } from "arwes";
 import { FaMicrophoneAlt } from "react-icons/fa";
-import { GiSoundWaves } from "react-icons/gi";
-import { CONSTANTS } from "../../../constants/api";
+import { CONSTANTS } from "../../../../constants/api";
 import axios from "axios";
 
 const styles = () => ({

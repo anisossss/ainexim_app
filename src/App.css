@@ -285,26 +285,16 @@ td {
   background-color: #007bff;
   color: #ffffff;
 }
-progress {
-  height: 20px; /* Adjust height as needed */
+.progress {
+  height: 20px;
   border: none;
-  border-radius: 0; /* Rounded corners */
-  background-color: #ddd; /* Light gray background */
+  border-radius: 0;
+  background-color: #029dbb;
   width: 100%;
   margin-top: 10px;
+  transition: width 1.5s ease-in-out;
 }
-progress::-webkit-progress-bar {
-  background-color: #ddd; /* Light gray background */
-  border-radius: 10px; /* Rounded corners */
-}
-progress::-webkit-progress-value {
-  background-color: #029dbb; /* Green progress color */
-  border-radius: 0; /* Rounded corners */
-}
-progress::-moz-progress-bar {
-  background-color: #029dbb; /* Green progress color */
-  border-radius: 0; /* Rounded corners */
-}
+
 label {
   font-size: 16px;
 }
@@ -548,4 +538,49 @@ label {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+}
+
+@keyframes loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.loading div {
+  position: absolute;
+  animation: loading 0.4s linear infinite;
+  width: 80px;
+  height: 80px;
+  bottom: 80%;
+  left: 45%;
+  border-radius: 50%;
+  box-shadow: 0 4px 0 0 #029dbb;
+}
+.loadingio {
+  width: 300px;
+  height: 300px;
+  display: inline-block;
+}
+.loading {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: translateZ(0) scale(1);
+  backface-visibility: hidden;
+  transform-origin: 0 0;
+}
+.search-input-container {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa; /* Change the color as needed */
 }

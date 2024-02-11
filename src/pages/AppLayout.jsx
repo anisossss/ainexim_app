@@ -39,12 +39,21 @@ import CompleteProfile from "./dashboard/CompleteProfile";
 import Task from "./world/desktop/Task";
 import Mission from "./world/desktop/Mission";
 import Verification from "./world/desktop/Verification";
+
 import Mentor from "./world/resources/Mentor";
+import Techresources from "./world/resources/TechResources";
+import BooksFrame from "../components/world/resources/techresources/books";
+import CoursesFrame from "../components/world/resources/techresources/courses";
+import PlaygroundsFrame from "../components/world/resources/techresources/playgrounds";
+import CheatsheetsFrame from "../components/world/resources/techresources/cheatsheets";
+import CastsFrame from "../components/world/resources/techresources/casts";
+
 import Quiz from "./preworld/quiz/Quiz";
 import QuizResult from "./preworld/quiz/QuizResult";
 import Test from "./preworld/test/Test";
 import TestResult from "./preworld/test/TestResult";
 import Apply from "./preworld/jobs/Apply";
+import TechResources from "./world/resources/TechResources";
 const styles = () => ({
   centered: {
     flex: 1,
@@ -179,6 +188,48 @@ const AppLayout = (props) => {
                 <Route exact path="/open-jobs">
                   <OpenJobs entered={anim.entered} />
                 </Route>
+
+                {/* <Route
+                  exact
+                  path="/world/departments/training-center/tech-resources"
+                >
+                  <Techresources entered={anim.entered} />
+                </Route> 
+                when adding more than tech resources remove comment otherwise training center open the tech resources */}
+                <Route
+                  exact
+                  path="/world/departments/training-center/tech-resources/books"
+                >
+                  <BooksFrame entered={anim.entered} />
+                </Route>
+                <Route
+                  exact
+                  path="/world/departments/training-center/tech-resources/casts"
+                >
+                  <CastsFrame entered={anim.entered} />
+                </Route>
+                <Route
+                  exact
+                  path="/world/departments/training-center/tech-resources/cheatsheets"
+                >
+                  <CheatsheetsFrame entered={anim.entered} />
+                </Route>
+                <Route
+                  exact
+                  path="/world/departments/training-center/tech-resources/playgrounds"
+                >
+                  <PlaygroundsFrame entered={anim.entered} />
+                </Route>
+                <Route
+                  exact
+                  path="/world/training-center/tech-resources/courses"
+                >
+                  <CoursesFrame entered={anim.entered} />
+                </Route>
+                <Route exact path="/world/mentor">
+                  <Mentor entered={anim.entered} />
+                </Route>
+
                 <Route
                   exact
                   path="/world/departments/web-development-department"
@@ -192,7 +243,7 @@ const AppLayout = (props) => {
                   <Conference entered={anim.entered} />
                 </Route>
                 <Route exact path="/world/departments/training-center">
-                  <Training entered={anim.entered} />
+                  <TechResources entered={anim.entered} />
                 </Route>
                 <Route exact path="/world/departments/recreation">
                   <Recreation entered={anim.entered} />
@@ -205,9 +256,6 @@ const AppLayout = (props) => {
                 </Route>
                 <Route exact path="/world/desktop/task/verification">
                   <Verification entered={anim.entered} />
-                </Route>
-                <Route exact path="/world/mentor">
-                  <Mentor entered={anim.entered} />
                 </Route>
 
                 <Route exact path="/preworld/test">

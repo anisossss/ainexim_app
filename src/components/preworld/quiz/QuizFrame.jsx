@@ -103,15 +103,17 @@ const QuizFrame = (props) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const progressPercentage =
     (currentQuestionIndex / (quizData.length - 1)) * 100;
+  const [isLoading, setIsLoading] = useState(true); // New state for loading
+
+  // Your existing code
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const url = `${CONSTANTS.API_URL}/generation/get-software-quiz`;
         const response = await axios.get(url);
-        console.log(response.data.quizs);
         setQuizData(response.data.quizs);
-        console.log(response.data.quizs);
-        console.log(response.data.quizs.responses);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching quiz data:", error);
       }
@@ -145,110 +147,119 @@ const QuizFrame = (props) => {
   );
   return (
     <div className={classes.quizContainer}>
-      <div className="timer">
-        <div>{`${currentQuestionIndex + 1}/${totalQuestions}`}</div>
-        <div style={{ color: timeRemaining === 0 ? "red" : "inherit" }}>
-          {`${Math.floor(timeRemaining / 60)}:${(timeRemaining % 60)
-            .toString()
-            .padStart(2, "0")}`}
+      {isLoading ? (
+        <div className="loadingio">
+          <div className="loading">
+            <div></div>
+          </div>
         </div>
-      </div>
-      <div className={classes.progressBarContainer}>
-        <div
-          className={classes.progressBarFill}
-          style={{ width: `${progressPercentage}%` }}
-        />
-      </div>
-      {currentQuiz && (
-        <div className={classes.question}>
-          <h3>{currentQuiz.title}</h3>
-          <p style={{ fontSize: "15px" }}>{currentQuiz.question}</p>
-          <ul>
-            {currentQuiz.responses.map((response, index) => (
-              <li key={index}>
-                <label
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontSize: "15px",
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={
-                      checkedItems[currentQuestionIndex] &&
-                      checkedItems[currentQuestionIndex][index]
-                    }
-                    onChange={() => handleCheckboxChange(index)}
-                  />
-                  {response}
-                </label>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      ) : (
+        <>
+          <div className="timer">
+            <div>{`${currentQuestionIndex + 1}/${totalQuestions}`}</div>
+            <div style={{ color: timeRemaining === 0 ? "red" : "inherit" }}>
+              {`${Math.floor(timeRemaining / 60)}:${(timeRemaining % 60)
+                .toString()
+                .padStart(2, "0")}`}
+            </div>
+          </div>
+          <div className={classes.progressBarContainer}>
+            <div
+              className={classes.progressBarFill}
+              style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
+          {currentQuiz && (
+            <div className={classes.question}>
+              <h3>{currentQuiz.title}</h3>
+              <p style={{ fontSize: "15px" }}>{currentQuiz.question}</p>
+              <ul>
+                {currentQuiz.responses.map((response, index) => (
+                  <li key={index}>
+                    <label
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        fontSize: "15px",
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={
+                          checkedItems[currentQuestionIndex] &&
+                          checkedItems[currentQuestionIndex][index]
+                        }
+                        onChange={() => handleCheckboxChange(index)}
+                      />
+                      {response}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-      <div className={classes.buttonsContainer}>
-        <div className={classes.buttonContainer}>
-          <Button
-            onClick={handlePreviousQuestion}
-            disabled={currentQuestionIndex === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            onClick={handleNextQuestion}
-            disabled={currentQuestionIndex === quizData.length - 1}
-          >
-            Next
-          </Button>
-        </div>
-        <div className={classes.submitButton}>
-          <Button onClick={handleVerifyClick}>Submit</Button>
-        </div>
-      </div>
-      {isModalOpen && (
-        <>
-          <div
-            className={classes.modalBackdrop}
-            onClick={handleCloseModal}
-          ></div>
-          <Frame className={classes.modalFrame} animate={true} corners={1}>
-            <div style={{ padding: "1em" }}>
-              <Words>Are you sure you want to Validate the Quiz?</Words>
-              <br />
-              <br />
-              <div className="btns_confirm">
-                <Button onClick={handleCloseModal}>Cancel</Button>
-                <Link to="/preworld/quiz/result">
-                  <Button>Confirm</Button>
-                </Link>
-              </div>
+          <div className={classes.buttonsContainer}>
+            <div className={classes.buttonContainer}>
+              <Button
+                onClick={handlePreviousQuestion}
+                disabled={currentQuestionIndex === 0}
+              >
+                Previous
+              </Button>
+              <Button
+                onClick={handleNextQuestion}
+                disabled={currentQuestionIndex === quizData.length - 1}
+              >
+                Next
+              </Button>
             </div>
-          </Frame>
-        </>
-      )}
-      {isTimeModalOpen && (
-        <>
-          <div
-            className={classes.modalBackdrop}
-            onClick={handleCloseModal}
-          ></div>
-          <Frame className={classes.modalFrame} animate={true} corners={1}>
-            <div style={{ padding: "1em", textAlign: "center" }}>
-              <Words>Time is up! You need to submit the quiz.</Words>
-              <br />
-              <br />
-              <Link to="/preworld/quiz/result">
-                <Button>Submit</Button>
-              </Link>
+            <div className={classes.submitButton}>
+              <Button onClick={handleVerifyClick}>Submit</Button>
             </div>
-          </Frame>
+          </div>
+          {isModalOpen && (
+            <>
+              <div
+                className={classes.modalBackdrop}
+                onClick={handleCloseModal}
+              ></div>
+              <Frame className={classes.modalFrame} animate={true} corners={1}>
+                <div style={{ padding: "1em" }}>
+                  <Words>Are you sure you want to Validate the Quiz?</Words>
+                  <br />
+                  <br />
+                  <div className="btns_confirm">
+                    <Button onClick={handleCloseModal}>Cancel</Button>
+                    <Link to="/preworld/quiz/result">
+                      <Button>Confirm</Button>
+                    </Link>
+                  </div>
+                </div>
+              </Frame>
+            </>
+          )}
+          {isTimeModalOpen && (
+            <>
+              <div
+                className={classes.modalBackdrop}
+                onClick={handleCloseModal}
+              ></div>
+              <Frame className={classes.modalFrame} animate={true} corners={1}>
+                <div style={{ padding: "1em", textAlign: "center" }}>
+                  <Words>Time is up! You need to submit the quiz.</Words>
+                  <br />
+                  <br />
+                  <Link to="/preworld/quiz/result">
+                    <Button>Submit</Button>
+                  </Link>
+                </div>
+              </Frame>
+            </>
+          )}
         </>
       )}
     </div>
   );
 };
-
 export default withStyles(styles)(QuizFrame);
