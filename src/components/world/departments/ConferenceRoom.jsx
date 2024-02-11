@@ -1,4 +1,4 @@
-import { Highlight, withStyles } from "arwes";
+import { withStyles } from "arwes";
 import { Frame } from "arwes";
 const styles = () => ({
   root: {

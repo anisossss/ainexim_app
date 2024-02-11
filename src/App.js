@@ -7,7 +7,7 @@ import {
 } from "arwes";
 import { BrowserRouter as Router } from "react-router-dom";
 import AppLayout from "./pages/AppLayout";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { theme, resources, sounds } from "./settings";
 import "./App.css";
 

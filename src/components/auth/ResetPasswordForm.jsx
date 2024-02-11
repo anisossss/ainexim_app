@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { Frame, Words, Button } from "arwes";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Toaster, toast } from "react-hot-toast";
@@ -40,14 +39,10 @@ const ResetPasswordForm = () => {
         }}
       />
       <Frame animate={true} level={3} corners={1} layer="primary">
-    <div style={{ padding: "2em"}}>
-
-        <Words  style={{  fontWeight:"bold"}}>
-        Set a new password
-        </Words>
-        <br></br>
-      
-    </div>
+        <div style={{ padding: "2em" }}>
+          <Words style={{ fontWeight: "bold" }}>Set a new password</Words>
+          <br></br>
+        </div>
         <form className="login">
           <div className="form-group pass-box">
             <label htmlFor="password">Password</label>
@@ -84,7 +79,6 @@ const ResetPasswordForm = () => {
               </span>
             </div>
           </div>
-        
 
           <div className="login-btn">
             <Button

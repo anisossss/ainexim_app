@@ -1,5 +1,4 @@
-import { Highlight, withStyles } from "arwes";
-import { Frame } from "arwes";
+import { withStyles } from "arwes";
 import QuizFrame from "../../../components/preworld/quiz/QuizFrame";
 const styles = () => ({
   root: {

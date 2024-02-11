@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  withStyles,
-  Appear,
-  Words,
-  Frame,
-  Header as ArwesHeader,
-  Highlight,
-} from "arwes";
-import { Link } from "react-router-dom";
-import Clickable from "../publicComp/Clickable";
+import { withStyles, Frame, Header as ArwesHeader } from "arwes";
 import { FaUsers } from "react-icons/fa6";
 
 const styles = (theme) => ({});

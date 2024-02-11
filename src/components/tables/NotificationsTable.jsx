@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Table, withStyles, Button } from "arwes";
+import React from "react";
+import { Table, withStyles } from "arwes";
 
 const styles = (theme) => ({});
 
