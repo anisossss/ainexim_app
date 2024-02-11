@@ -89,7 +89,7 @@ const BooksFrame = (props) => {
                     {book.entries.map((entry) => (
                       <li key={entry.url}>
                         <a
-                          style={{ fontSize: "15px" }}
+                          style={{ fontSize: "15px", textDecoration: "none" }}
                           href={entry.url}
                           target="_blank"
                           rel="noopener noreferrer"
