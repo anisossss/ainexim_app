@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { withStyles } from "arwes";
-import { CONSTANTS } from "../../../../../constants/api";
 import axios from "axios";
-import { Frame, Words } from "arwes";
+import { withStyles } from "arwes";
+import { Frame } from "arwes";
+import { CONSTANTS } from "../../../../../constants/api";
+
 const styles = () => ({
   root: {
     height: "80vh",
@@ -17,7 +18,7 @@ const styles = () => ({
   },
 });
 
-const CheatsheetsFrame = (props) => {
+const TutosFrame = (props) => {
   const { classes } = props;
   const [courses, setCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
@@ -27,7 +28,7 @@ const CheatsheetsFrame = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = `${CONSTANTS.API_URL}/resources/get-software-cheatsheets`;
+        const url = `${CONSTANTS.API_URL}/resources/get-software-tutos`;
         const response = await axios.get(url);
         const coursesWithoutFirst = response.data.titles.slice(1);
         setCourses(coursesWithoutFirst);
@@ -51,11 +52,36 @@ const CheatsheetsFrame = (props) => {
     setFilteredCourses(filtered);
   };
 
+  const renderCourse = (titleObj, index) => {
+    const renderLinks = (course) => {
+      return course.startsWith("https://") ? (
+        <a href={course} target="_blank" rel="noopener noreferrer">
+          {course}
+        </a>
+      ) : (
+        course
+      );
+    };
+
+    return (
+      <Frame key={index} animate={true}>
+        <div>
+          <h2>{titleObj.title}</h2>
+          <ul style={{ lineHeight: "2em" }}>
+            {titleObj.courses.map((course, idx) => (
+              <li key={idx}>{renderLinks(course)}</li>
+            ))}
+          </ul>
+        </div>
+      </Frame>
+    );
+  };
+
   return (
     <div className={classes.root}>
       <input
         type="text"
-        placeholder="Search Cheatsheets By Software Language"
+        placeholder="Search Interactive Tutorials By Software Language / Topic"
         className={classes.searchInput}
         value={searchQuery}
         onChange={handleSearch}
@@ -63,23 +89,10 @@ const CheatsheetsFrame = (props) => {
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        filteredCourses.map((titleObj, index) => (
-          <Frame key={index} animate={true}>
-            <div>
-              <h2>{titleObj.title}</h2>
-              <ul style={{ lineHeight: "2em" }}>
-                {titleObj.courses.map((course, idx) => (
-                  <li key={idx}>
-                    <a href={`#${course}`}>{course}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Frame>
-        ))
+        filteredCourses.map((titleObj, index) => renderCourse(titleObj, index))
       )}
     </div>
   );
 };
 
-export default withStyles(styles)(CheatsheetsFrame);
+export default withStyles(styles)(TutosFrame);

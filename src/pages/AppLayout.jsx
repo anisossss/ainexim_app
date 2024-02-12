@@ -41,19 +41,22 @@ import Mission from "./world/desktop/Mission";
 import Verification from "./world/desktop/Verification";
 
 import Mentor from "./world/resources/Mentor";
-import Techresources from "./world/resources/TechResources";
+import TechResources from "./world/resources/TechResources";
+
 import BooksFrame from "../components/world/resources/techresources/books";
-import CoursesFrame from "../components/world/resources/techresources/courses";
+import CoursesFrame from "../components/world/resources/techresources/casts";
 import PlaygroundsFrame from "../components/world/resources/techresources/playgrounds";
 import CheatsheetsFrame from "../components/world/resources/techresources/cheatsheets";
-import CastsFrame from "../components/world/resources/techresources/casts";
+import CastsFrame from "../components/world/resources/techresources/courses";
+import ProblemSetsFrame from "../components/world/resources/techresources/problemsets";
+import TutosFrame from "../components/world/resources/techresources/tutos";
 
 import Quiz from "./preworld/quiz/Quiz";
 import QuizResult from "./preworld/quiz/QuizResult";
 import Test from "./preworld/test/Test";
 import TestResult from "./preworld/test/TestResult";
 import Apply from "./preworld/jobs/Apply";
-import TechResources from "./world/resources/TechResources";
+
 const styles = () => ({
   centered: {
     flex: 1,
@@ -222,9 +225,21 @@ const AppLayout = (props) => {
                 </Route>
                 <Route
                   exact
-                  path="/world/training-center/tech-resources/courses"
+                  path="/world/departments/training-center/tech-resources/courses"
                 >
                   <CoursesFrame entered={anim.entered} />
+                </Route>
+                <Route
+                  exact
+                  path="/world/departments/training-center/tech-resources/problem-sets"
+                >
+                  <ProblemSetsFrame entered={anim.entered} />
+                </Route>
+                <Route
+                  exact
+                  path="/world/departments/training-center/tech-resources/interactive-tutorials"
+                >
+                  <TutosFrame entered={anim.entered} />
                 </Route>
                 <Route exact path="/world/mentor">
                   <Mentor entered={anim.entered} />

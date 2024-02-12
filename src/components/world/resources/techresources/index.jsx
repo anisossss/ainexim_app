@@ -8,7 +8,7 @@ const styles = () => ({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    padding: "20px",
+    padding: 20,
   },
   "@media (max-width: 800px)": {
     root: {
@@ -22,6 +22,18 @@ const TechResourcesFrame = (props) => {
   return (
     <Frame animate={true}>
       <div className={classes.root}>
+        <Link to="/world/departments/training-center/tech-resources/cheatsheets">
+          Cheatsheets
+        </Link>{" "}
+        <Link to="/world/departments/training-center/tech-resources/interactive-tutorials">
+          Interactive Tutorials
+        </Link>
+        <Link to="/world/departments/training-center/tech-resources/problem-sets">
+          Problem Sets
+        </Link>
+      </div>
+      <br></br>
+      <div className={classes.root}>
         <Link to="/world/departments/training-center/tech-resources/books">
           Books
         </Link>
@@ -33,9 +45,6 @@ const TechResourcesFrame = (props) => {
         </Link>
         <Link to="/world/departments/training-center/tech-resources/playgrounds">
           Playgrounds
-        </Link>
-        <Link to="/world/departments/training-center/tech-resources/cheatsheets">
-          Cheatsheets
         </Link>
       </div>
     </Frame>

@@ -4,7 +4,7 @@ const NotFound = () => {
   return (
     <>
       <h3 style={{ textAlign: "center", marginTop: "5rem" }}>
-        Didn't matched any route.
+        Are you lost ? 404 Not Found
       </h3>
     </>
   );

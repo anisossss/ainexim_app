@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { withStyles } from "arwes";
-import { CONSTANTS } from "../../../../../constants/api";
 import axios from "axios";
-import { Frame, Words } from "arwes";
+import { withStyles } from "arwes";
+import { Frame } from "arwes";
+import { CONSTANTS } from "../../../../../constants/api";
+
 const styles = () => ({
   root: {
     height: "80vh",
@@ -17,7 +18,7 @@ const styles = () => ({
   },
 });
 
-const CheatsheetsFrame = (props) => {
+const ProblemSetsFrame = (props) => {
   const { classes } = props;
   const [courses, setCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
@@ -27,7 +28,7 @@ const CheatsheetsFrame = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = `${CONSTANTS.API_URL}/resources/get-software-cheatsheets`;
+        const url = `${CONSTANTS.API_URL}/resources/get-software-problemsets`;
         const response = await axios.get(url);
         const coursesWithoutFirst = response.data.titles.slice(1);
         setCourses(coursesWithoutFirst);
@@ -55,7 +56,7 @@ const CheatsheetsFrame = (props) => {
     <div className={classes.root}>
       <input
         type="text"
-        placeholder="Search Cheatsheets By Software Language"
+        placeholder="Search Problem Sets By Software Language / Topic"
         className={classes.searchInput}
         value={searchQuery}
         onChange={handleSearch}
@@ -82,4 +83,4 @@ const CheatsheetsFrame = (props) => {
   );
 };
 
-export default withStyles(styles)(CheatsheetsFrame);
+export default withStyles(styles)(ProblemSetsFrame);

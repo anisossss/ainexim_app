@@ -143,6 +143,44 @@ const Mentor = (props) => {
       console.error("Error sending audio to server:", error);
     }
   };
+
+  const sendMessage = async () => {
+    if (!inputMessage.trim()) return;
+
+    // Add the user message to the chat
+    setMessages((prevMsgs) => [
+      ...prevMsgs,
+      { type: "user", content: inputMessage },
+    ]);
+
+    try {
+      const response = await axios.post(
+        `${CONSTANTS.API_URL}/utils/mentor-message`,
+        {
+          message: inputMessage,
+        }
+      );
+
+      setMessages((prevMsgs) => [
+        ...prevMsgs,
+        { type: "bot", content: response.data.text },
+      ]);
+      setInputMessage("");
+      const audioResponse = await axios.post(
+        `${CONSTANTS.API_URL}/utils/text-to-speech`,
+        { text: response.data.text },
+        { responseType: "arraybuffer" }
+      );
+
+      const audioBlob = new Blob([audioResponse.data], { type: "audio/mpeg" });
+
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+    } catch (error) {
+      console.error("Error sending message to mentor:", error);
+    }
+  };
   return (
     <Frame animate={true} className={classes.frame}>
       <Words animate style={{ padding: "1em" }}>
@@ -217,7 +255,9 @@ const Mentor = (props) => {
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
           ></textarea>
-          <Button className={classes.sendButton}>Send</Button>
+          <Button className={classes.sendButton} onClick={sendMessage}>
+            Send
+          </Button>
         </div>
       </div>
     </Frame>
