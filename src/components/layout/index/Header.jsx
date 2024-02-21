@@ -41,9 +41,10 @@ const styles = (theme) => ({
   },
   icons: {
     display: "flex",
-    justifyContent: "space-around",
-    width: "10%",
+    justifyContent: "space-evenly",
+    width: "20%",
     marginRight: "2em",
+    alignItems: "center",
   },
   button: {
     padding: [0, theme.padding / 2],
@@ -62,6 +63,9 @@ const styles = (theme) => ({
       marginRight: "1em",
       width: "auto",
     },
+  },
+  timer: {
+    fontFamily: "monospace",
   },
 });
 
@@ -108,7 +112,33 @@ const Header = (props) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
+  // Timer effect
+  useEffect(() => {
+    const timer = setInterval(() => {
+      // Update time every second
+      setTime((prevTime) => {
+        let { hours, minutes, seconds } = prevTime;
+        seconds++;
+        if (seconds === 60) {
+          seconds = 0;
+          minutes++;
+          if (minutes === 60) {
+            minutes = 0;
+            hours++;
+          }
+        }
+        return { hours, minutes, seconds };
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatWithLeadingZeros = (number) => {
+    return number < 10 ? `0${number}` : `${number}`;
+  };
   return (
     <ArwesHeader
       animate
@@ -157,6 +187,11 @@ const Header = (props) => {
 
         {!isMobile && (
           <div className={classes.icons}>
+            <div className={classes.timer}>
+              {formatWithLeadingZeros(time.hours)}:
+              {formatWithLeadingZeros(time.minutes)}:
+              {formatWithLeadingZeros(time.seconds)}
+            </div>
             <Clickable>
               <Link to="/profile">
                 <RiUserLine size={30} />

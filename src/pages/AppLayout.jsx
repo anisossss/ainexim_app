@@ -166,9 +166,7 @@ const AppLayout = (props) => {
                 <Route exact path="/profile">
                   <Profile entered={anim.entered} />
                 </Route>
-                <Route exact path="/update-profile">
-                  <Profile entered={anim.entered} />
-                </Route>
+
                 <Route exact path="/profile-settings">
                   <ProfileSettings entered={anim.entered} />
                 </Route>
@@ -269,7 +267,7 @@ const AppLayout = (props) => {
                 <Route exact path="/world/desktop/mission">
                   <Mission entered={anim.entered} />
                 </Route>
-                <Route exact path="/world/desktop/task/verification">
+                <Route exact path="/world/desktop/task/verification/:id">
                   <Verification entered={anim.entered} />
                 </Route>
 

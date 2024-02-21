@@ -21,11 +21,6 @@ const Task = (props) => {
   return (
     <>
       <Helmet title="Task N° 2 | AINEXIM" />
-      <Frame level={2} corners={1}>
-        <Words animate className="words">
-          Task
-        </Words>
-      </Frame>
       <TaskFrame />
     </>
   );

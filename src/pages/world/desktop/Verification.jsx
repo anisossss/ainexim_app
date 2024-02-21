@@ -19,13 +19,7 @@ const Verification = (props) => {
   return (
     <>
       <Helmet title="Task N° 2 | AINEXIM" />
-      <Frame level={2} corners={1}>
-        <Words animate className="words">
-          Timeline
-        </Words>
-      </Frame>
-      <br></br>
-      <br></br>
+
       <VerificationFrame />
     </>
   );

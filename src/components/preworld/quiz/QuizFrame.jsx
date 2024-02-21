@@ -229,11 +229,14 @@ const QuizFrame = (props) => {
                   <Words>Are you sure you want to Validate the Quiz?</Words>
                   <br />
                   <br />
+
                   <div className="btns_confirm">
-                    <Button onClick={handleCloseModal}>Cancel</Button>
                     <Link to="/preworld/quiz/result">
-                      <Button>Confirm</Button>
+                      <Button layer="success">Confirm</Button>
                     </Link>
+                    <Button layer="secondary" onClick={handleCloseModal}>
+                      Cancel
+                    </Button>
                   </div>
                 </div>
               </Frame>

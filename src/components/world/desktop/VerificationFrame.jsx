@@ -1,66 +1,144 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withStyles } from "arwes";
 import { Frame, Button, Words, Line } from "arwes";
+import { CONSTANTS } from "../../../constants/api";
+import { useParams } from "react-router-dom";
 
+import axios from "axios";
 const styles = () => ({
-  validationFrame: {
-  },
+  validationFrame: {},
   criteriaContainer: {
     marginBottom: "1em",
   },
-  btn:{
-    marginRight:"2em"
-  }
+  btn: {
+    marginRight: "2em",
+  },
+  btns: {
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  progress: {
+    transition: "width 0.5s ease-in-out",
+    height: "30px",
+    border: "none",
+    marginTop: "10px",
+    backgroundColor: "#029dbb",
+    borderRadius: 0,
+  },
 });
 
 const Verification = (props) => {
-  const { classes } = props;
+  const [width, setWidth] = useState("0%");
 
-  const [score, setScore] = useState(0);
-  const [pointsRewarded, setPointsRewarded] = useState(0);
- 
-  const handleValidateTask = () => {
-    const randomScore = Math.floor(Math.random() * 100);
-    setScore(randomScore);
-    const randomPointsRewarded = Math.floor(Math.random() * 10);
-    setPointsRewarded(randomPointsRewarded);
-  };
+  const { classes } = props;
+  const [taskData, setTaskData] = useState(null);
+  const { id } = useParams();
+  const [evaluationData, setEvaluationData] = useState(null);
+  const [scoreColor, setScoreColor] = useState("");
+  useEffect(() => {
+    const fetchTask = () => {
+      axios
+        .get(
+          `${CONSTANTS.API_URL}/generation/get-web-task/65cc8e9ef077905a583559c2`
+        )
+        .then((response) => {
+          setTaskData(response.data.task);
+          console.log("Task data:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error getting evaluation data from backend:", error);
+        });
+    };
+    fetchTask();
+  }, []);
+  useEffect(() => {
+    const fetchEvaluation = () => {
+      axios
+        .get(`${CONSTANTS.API_URL}/evaluation/get-web-task-evaluation/${id}`)
+        .then((response) => {
+          setEvaluationData(response.data.taskEvaluation);
+          const score = response.data.taskEvaluation.rating;
+          setWidth(`${score}%`);
+          if (score < 20) {
+            setScoreColor("red");
+          } else if (score >= 20 && score <= 70) {
+            setScoreColor("yellow");
+          } else {
+            setScoreColor("green");
+          }
+        })
+        .catch((error) => {
+          console.error("Error getting evaluation data from backend:", error);
+        });
+    };
+    fetchEvaluation();
+  }, []);
 
   return (
-    <div  className={classes.validationFrame}>
-        <Words animate>Task Validation</Words>
+    <div className={classes.validationFrame}>
+      <Words animate style={{ color: scoreColor, fontWeight: "bold" }}>
+        Task Title
+      </Words>
+      <br></br>
+      {taskData && <Words animate>{taskData.title}</Words>}
+      <br></br>
+      <br></br>
+      {evaluationData && (
         <div className={classes.criteriaContainer}>
-          <Words>Code Quality:</Words>
-          <Words>Code quality is good.</Words>
-          <Line />
-        </div>
-        <div className={classes.criteriaContainer}>
-          <Words>Functionality:</Words>
-          <Line />
-          <Words>Functionality is well-implemented.</Words>
-        </div>
-        <div className={classes.criteriaContainer}>
-          <Words>User Interface (UI):</Words>
-          <Words>
-          Responsive on different screen sizes.
+          <Words style={{ color: scoreColor, fontWeight: "bold" }}>
+            Evaluation Description
           </Words>
+          <Words>{evaluationData.description}</Words>
+          <br></br>
+          <br></br>
           <Line />
         </div>
+      )}
+      {evaluationData && (
         <div className={classes.criteriaContainer}>
-          <Words>Error Handling:</Words>
+          <Words style={{ color: scoreColor, fontWeight: "bold" }}>
+            Code Correction
+          </Words>
+          <Words>{evaluationData.codeCorrection}</Words>
+          <br></br>
+          <br></br>
           <Line />
-          <Words>Effective error handling.</Words>
         </div>
-        <div>
-          <Words animate>Score: 90/100 </Words>
+      )}
+      {evaluationData && (
+        <div className={classes.criteriaContainer}>
+          <Words style={{ color: scoreColor, fontWeight: "bold" }}>
+            Advice
+          </Words>
+          <Words>{evaluationData.advice}</Words>
           <br></br>
           <br></br>
-          <Words animate>Points Rewarded: 1200 </Words>
+          <Line />
         </div>
-        <br></br>
-        <Button onClick={handleValidateTask } className={classes.btn}>Next Task</Button>
-        <Button onClick={handleValidateTask}>Tasks Timeline</Button>
-
+      )}
+      {evaluationData && (
+        <div className={classes.criteriaContainer}>
+          <div
+            className={classes.progress}
+            style={{
+              width: width,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Words style={{ fontWeight: "bold" }}>
+              Your Evaluation Score: &nbsp;{" "}
+              <span style={{ color: scoreColor }}>
+                {evaluationData && evaluationData.rating}
+              </span>
+            </Words>
+          </div>
+        </div>
+      )}
+      <div className={classes.btns}>
+        <Button className={classes.btn}>Next Task</Button>
+        <Button>Tasks Board</Button>
+      </div>
     </div>
   );
 };
