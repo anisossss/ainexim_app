@@ -106,7 +106,7 @@ const Sidebar = () => {
         </NavLink>
       </SidebarItem>
       <SidebarItem title="Departments" icon={<FaRegBuilding />}>
-        <NavLink to="/world/departments/web-development-department">
+        <NavLink to="/world/desktop/code-task">
           <Button className="sidebar-button">
             <div className="sidebar-list">
               <MdDeveloperMode />

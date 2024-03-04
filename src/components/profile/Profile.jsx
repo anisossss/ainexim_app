@@ -17,7 +17,6 @@ const styles = () => ({
   userDetails: {
     marginTop: "0.5em",
   },
-  hr: {},
   details: {
     marginBottom: "0.5em",
   },

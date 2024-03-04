@@ -5,7 +5,7 @@ import { Helmet } from "react-helmet";
 const Mentor = (props) => {
   return (
     <>
-      <Helmet title="Task N° 2 | AINEXIM" />
+      <Helmet title="Mentorting Support | AINEXIM" />
 
       <MentorChat />
     </>

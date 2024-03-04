@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { withStyles } from "arwes";
-import { Frame, Button, Words, Link } from "arwes";
-import { FaCheckCircle } from "react-icons/fa"; // Importing the apply icon from Font Awesome
+import React from "react";
+import { withStyles, Words } from "arwes";
+import { Table } from "arwes";
+import { Link } from "react-router-dom";
+import { MdWork } from "react-icons/md";
 
-import axios from "axios";
-import { CONSTANTS } from "../../../constants/api";
 const styles = () => ({
   "@media (max-width: 800px)": {
     root: {
@@ -95,32 +94,37 @@ const OpenJobsFrame = (props) => {
     },
   ];
   return (
-    <Table className="table">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {staticTasks.map((rowData) => (
-            <tr key={rowData.id}>
-              <td>{rowData.id}</td>
-              <td>{rowData.title}</td>
-              <td>{rowData.status}</td>
-              <td>
-                <Link to="/preworld/apply" title="Apply">
-                  <FaCheckCircle style={{ marginRight: "5px" }} />
-                </Link>
-              </td>
+    <>
+      <Words animate>Open Jobs on AINEXIM</Words>
+      <br></br>
+      <br></br>
+      <Table className="table">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Apply</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </Table>
+          </thead>
+          <tbody>
+            {staticTasks.map((rowData) => (
+              <tr key={rowData.id}>
+                <td>{rowData.id}</td>
+                <td>{rowData.title}</td>
+                <td>{rowData.status}</td>
+                <td>
+                  <Link to="/preworld/apply" title="Apply">
+                    <MdWork size={30} style={{ marginRight: "5px" }} />
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Table>
+    </>
   );
 };
 

@@ -82,7 +82,7 @@ const UserLoginForm = () => {
           </div>
 
           <div className="login-btn">
-            <Link to="/preworld/quiz">
+            <Link to="/preworld/complete-profile">
               <Button
                 animate
                 layer="success"

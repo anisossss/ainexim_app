@@ -21,7 +21,8 @@ const ResetPasswordForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    toast.success("Loggedin successfully!");
+
+    toast.success("Password reset successfully!");
   };
 
   return (

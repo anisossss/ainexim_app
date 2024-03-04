@@ -1,5 +1,5 @@
 import { Highlight, withStyles } from "arwes";
-import { Frame } from "arwes";
+import { Helmet } from "react-helmet";
 import OpenJobsFrame from "../../../components/preworld/openjobs/OpenJobsFrame";
 const styles = () => ({
   root: {
@@ -15,7 +15,12 @@ const styles = () => ({
 
 const OpenJobs = (props) => {
   const { classes, className } = props;
-  return <OpenJobsFrame />;
+  return (
+    <>
+      <Helmet title="Open Jobs | AINEXIM" />
+      <OpenJobsFrame />
+    </>
+  );
 };
 
 export default withStyles(styles)(OpenJobs);

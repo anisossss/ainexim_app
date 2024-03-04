@@ -24,24 +24,66 @@ const CurrentTasksTable = (props) => {
     };
   }, []);
   const staticTasks = [
-    { id: 1, title: "Implement social media integration", status: "pending" },
-    { id: 2, title: "Design landing page graphics", status: "completed" },
-    { id: 3, title: "Optimize database queries", status: "pending" },
-    { id: 4, title: "Fix broken links in footer", status: "pending" },
+    {
+      id: 1,
+      title: "Implement social media integration",
+      status: "pending",
+      deadline: "2024-03-15",
+    },
+    {
+      id: 2,
+      title: "Design landing page graphics",
+      status: "completed",
+      deadline: "2024-02-28",
+    },
+    {
+      id: 3,
+      title: "Optimize database queries",
+      status: "pending",
+      deadline: "2024-03-10",
+    },
+    {
+      id: 4,
+      title: "Fix broken links in footer",
+      status: "pending",
+      deadline: "2024-03-05",
+    },
     {
       id: 5,
       title: "Implement client-side form validation",
       status: "pending",
+      deadline: "2024-03-20",
     },
     {
       id: 6,
       title: "Deploy website to production server",
       status: "completed",
+      deadline: "2024-02-25",
     },
-    { id: 7, title: "Create API endpoints for user data", status: "pending" },
-    { id: 8, title: "Optimize image assets for web", status: "completed" },
-    { id: 9, title: "Integrate payment gateway", status: "pending" },
-    { id: 10, title: "Update terms and conditions page", status: "completed" },
+    {
+      id: 7,
+      title: "Create API endpoints for user data",
+      status: "pending",
+      deadline: "2024-03-08",
+    },
+    {
+      id: 8,
+      title: "Optimize image assets for web",
+      status: "completed",
+      deadline: "2024-02-27",
+    },
+    {
+      id: 9,
+      title: "Integrate payment gateway",
+      status: "pending",
+      deadline: "2024-03-18",
+    },
+    {
+      id: 10,
+      title: "Update terms and conditions page",
+      status: "completed",
+      deadline: "2024-02-22",
+    },
   ];
 
   const getStatusIcon = (status) => {
@@ -97,6 +139,7 @@ const CurrentTasksTable = (props) => {
             <th>ID</th>
             <th>Title</th>
             <th>Status</th>
+            <th>Deadline</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -106,6 +149,7 @@ const CurrentTasksTable = (props) => {
               <td>{rowData.id}</td>
               <td>{rowData.title}</td>
               <td style={{}}>{getStatusIcon(rowData.status)}</td>
+              <td>{rowData.deadline}</td>
               <td
                 style={{
                   cursor: "pointer",

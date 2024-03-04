@@ -1,4 +1,5 @@
 import { withStyles } from "arwes";
+import { Helmet } from "react-helmet";
 import ApplyFrame from "../../../components/preworld/openjobs/ApplyFrame";
 const styles = () => ({
   root: {
@@ -14,7 +15,12 @@ const styles = () => ({
 
 const Apply = (props) => {
   const { classes, className } = props;
-  return <ApplyFrame />;
+  return (
+    <>
+      <Helmet title="Job Application | AINEXIM" />
+      <ApplyFrame />
+    </>
+  );
 };
 
 export default withStyles(styles)(Apply);

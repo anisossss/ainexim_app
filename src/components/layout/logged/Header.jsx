@@ -4,7 +4,7 @@ import {
   Highlight,
   withStyles,
   Frame,
-Button
+  Button,
 } from "arwes";
 import { Link } from "react-router-dom";
 import Clickable from "../../publicComp/Clickable";
@@ -20,6 +20,7 @@ import { MdMarkUnreadChatAlt } from "react-icons/md";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { RiUserLine } from "react-icons/ri";
+import { VscScreenFull } from "react-icons/vsc";
 
 const styles = (theme) => ({
   root: {
@@ -40,10 +41,10 @@ const styles = (theme) => ({
   },
   icons: {
     display: "flex",
-    justifyContent: "space-around",
-    width: "10%",
+    justifyContent: "space-evenly",
+    width: "20%",
     marginRight: "2em",
-
+    alignItems: "center",
   },
   button: {
     padding: [0, theme.padding / 2],
@@ -61,12 +62,23 @@ const styles = (theme) => ({
     icons: {
       marginRight: "1em",
       width: "auto",
-
     },
+  },
+  timer: {
+    fontFamily: "monospace",
   },
 });
 
 const Header = (props) => {
+  const toggleFullSceen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
   const [showNotifications, setShowNotifications] = useState(false);
   const [showChatPanel, setShowChatPanel] = useState(false);
   const notificationRef = useRef(null);
@@ -100,7 +112,33 @@ const Header = (props) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
+  // Timer effect
+  useEffect(() => {
+    const timer = setInterval(() => {
+      // Update time every second
+      setTime((prevTime) => {
+        let { hours, minutes, seconds } = prevTime;
+        seconds++;
+        if (seconds === 60) {
+          seconds = 0;
+          minutes++;
+          if (minutes === 60) {
+            minutes = 0;
+            hours++;
+          }
+        }
+        return { hours, minutes, seconds };
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatWithLeadingZeros = (number) => {
+    return number < 10 ? `0${number}` : `${number}`;
+  };
   return (
     <ArwesHeader
       animate
@@ -122,41 +160,42 @@ const Header = (props) => {
 
                 <Words animate>&nbsp; &nbsp;AINEXIM</Words>
               </Link>
-              
             </Highlight>
           </Clickable>
-          <Link to="/world/task" className="slide-panel-item">
-          <Button layer={"success"} animate className="checkin">
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <Words animate> Check-in &nbsp;</Words>
-            <RiLogoutCircleRLine size={20} />
-          </div>
-        </Button>
-        </Link>
+          <Link to="/world/desktop/task" className="slide-panel-item">
+            <Button layer={"success"} animate className="checkin">
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Words animate> Check-in &nbsp;</Words>
+                <RiLogoutCircleRLine size={20} />
+              </div>
+            </Button>
+          </Link>
         </div>
 
         {isMobile && (
           <div className={classes.icons}>
             <Clickable onClick={toggleMenu}>
-              {showMenu ? (
-                <CiMenuFries size={30} />
-              ) : (
-                <CiMenuFries size={30} />
-              )}
+              {showMenu ? <CiMenuFries size={30} /> : <CiMenuFries size={30} />}
             </Clickable>
           </div>
         )}
 
         {!isMobile && (
           <div className={classes.icons}>
-            <Clickable >
-
-              <RiUserLine size={30} />
+            <div className={classes.timer}>
+              {formatWithLeadingZeros(time.hours)}:
+              {formatWithLeadingZeros(time.minutes)}:
+              {formatWithLeadingZeros(time.seconds)}
+            </div>
+            <Clickable>
+              <Link to="/profile">
+                <RiUserLine size={30} />
+              </Link>
             </Clickable>
             <Clickable onClick={() => setShowChatPanel(!showChatPanel)}>
               <MdMarkUnreadChatAlt size={30} />
@@ -180,6 +219,10 @@ const Header = (props) => {
                 <RiLogoutCircleLine size={30} />
               </Link>
             </Clickable>
+
+            <Clickable onClick={() => toggleFullSceen()}>
+              <VscScreenFull size={30} />
+            </Clickable>
           </div>
         )}
       </div>
@@ -202,12 +245,19 @@ const Header = (props) => {
                 </Clickable>
               </div>
               <Clickable onClick={onNav}>
-                <Link to="/chat" className="slide-panel-item">
-                  <MdMarkUnreadChatAlt size={30} />
-                  <Words animate>Inbox</Words>
+                <Link to="/profile" className="slide-panel-item">
+                  <RiUserLine size={30} />
+                  <Words animate>Profile</Words>
                 </Link>
               </Clickable>
 
+              <br></br>
+              <Clickable onClick={onNav}>
+                <Link to="/chat" className="slide-panel-item">
+                  <MdMarkUnreadChatAlt size={30} />
+                  <Words animate>Chat</Words>
+                </Link>
+              </Clickable>
               <br></br>
               <Clickable onClick={onNav}>
                 <Link to="/notifications" className="slide-panel-item">
@@ -219,7 +269,7 @@ const Header = (props) => {
               <Clickable onClick={onNav}>
                 <Link to="/login" className="slide-panel-item">
                   <RiLogoutCircleLine size={30} />
-                  <Words animate>Logout</Words>
+                  <Words animate>Login</Words>
                 </Link>
               </Clickable>
             </div>

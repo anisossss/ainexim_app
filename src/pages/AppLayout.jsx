@@ -13,7 +13,6 @@ import Footer from "../components/layout/index/Footer";
 import NotFound from "../components/utils/NotFound";
 // import ProtectedRoute from "./../routes/ProtectedRoute";
 
-import Home from "./publicPages/Home";
 import Sidebar from "../components/layout/index/Sidebar";
 import Dashboard from "./dashboard/Dashboard";
 import CurrentTasks from "./user/CurrentTasks";
@@ -22,7 +21,7 @@ import AchievementsTable from "./user/Achievements";
 import Login from "./auth/Login";
 import Notifications from "./dashboard/Notifications";
 import Chat from "./dashboard/Chat";
-import OpenJobs from "./dashboard/OpenJobs";
+import OpenJobs from "./preworld/jobs/OpenJobs";
 import ForgotPassword from "./auth/ForgotPassword";
 import ResetPassword from "./auth/ResetPassword";
 import ProfileSettings from "./user/ProfileSettings";
@@ -31,13 +30,15 @@ import Profile from "./user/Profile";
 import Web from "./world/departments/Web";
 import Admin from "./world/departments/Admin";
 import Conference from "./world/departments/Conference";
+import MeetingEvaluation from "./world/departments/MeetingEvaluation";
+
 import Training from "./world/departments/Training";
 import Recreation from "./world/departments/Recreation";
-import Progress from "./user/Progress";
-import CompleteProfile from "./dashboard/CompleteProfile";
+import CompleteProfile from "./preworld/complete/CompleteProfile";
 
-import Task from "./world/desktop/Task";
-import Mission from "./world/desktop/Mission";
+import CodeTask from "./world/desktop/CodeTask";
+import GithubTask from "./world/desktop/GithubTask";
+import GithubActivityTask from "./world/desktop/GithubActivityTask";
 import Verification from "./world/desktop/Verification";
 
 import Mentor from "./world/resources/Mentor";
@@ -146,9 +147,7 @@ const AppLayout = (props) => {
                 <Route exact path="/">
                   <Login entered={anim.entered} />
                 </Route>
-                <Route exact path="/complete-profile">
-                  <CompleteProfile entered={anim.entered} />
-                </Route>
+
                 <Route exact path="/dashboard">
                   <Dashboard entered={anim.entered} />
                 </Route>
@@ -160,9 +159,13 @@ const AppLayout = (props) => {
                 />
                 <Route
                   exact
-                  path="/reset-password/:token"
+                  // path="/reset-password/:token"
+                  path="/reset-password"
                   component={ResetPassword}
                 />
+                <Route exact path="/preworld/complete-profile">
+                  <CompleteProfile entered={anim.entered} />
+                </Route>
                 <Route exact path="/profile">
                   <Profile entered={anim.entered} />
                 </Route>
@@ -170,9 +173,7 @@ const AppLayout = (props) => {
                 <Route exact path="/profile-settings">
                   <ProfileSettings entered={anim.entered} />
                 </Route>
-                <Route exact path="/progress">
-                  <Progress entered={anim.entered} />
-                </Route>
+
                 <Route exact path="/current-tasks">
                   <CurrentTasks entered={anim.entered} />
                 </Route>
@@ -184,10 +185,6 @@ const AppLayout = (props) => {
                 </Route>
                 <Route exact path="/notifications">
                   <Notifications entered={anim.entered} />
-                </Route>
-
-                <Route exact path="/open-jobs">
-                  <OpenJobs entered={anim.entered} />
                 </Route>
 
                 {/* <Route
@@ -255,20 +252,27 @@ const AppLayout = (props) => {
                 <Route exact path="/world/departments/conference-rooms">
                   <Conference entered={anim.entered} />
                 </Route>
+                <Route exact path="/world/departments/meeting-evaluation/:id">
+                  <MeetingEvaluation entered={anim.entered} />
+                </Route>
+
                 <Route exact path="/world/departments/training-center">
                   <TechResources entered={anim.entered} />
                 </Route>
                 <Route exact path="/world/departments/recreation">
                   <Recreation entered={anim.entered} />
                 </Route>
-                <Route exact path="/world/desktop/task">
-                  <Task entered={anim.entered} />
-                </Route>
-                <Route exact path="/world/desktop/mission">
-                  <Mission entered={anim.entered} />
+                <Route exact path="/world/desktop/code-task">
+                  <CodeTask entered={anim.entered} />
                 </Route>
                 <Route exact path="/world/desktop/task/verification/:id">
                   <Verification entered={anim.entered} />
+                </Route>
+                <Route exact path="/world/desktop/github-task">
+                  <GithubTask entered={anim.entered} />
+                </Route>
+                <Route exact path="/world/desktop/github-activity">
+                  <GithubActivityTask entered={anim.entered} />
                 </Route>
 
                 <Route exact path="/preworld/test">

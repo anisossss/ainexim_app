@@ -1,5 +1,6 @@
 import { CONSTANTS } from "../../constants/api";
 import { Frame, Highlight, withStyles, Words } from "arwes";
+import React, { useEffect, useRef, useState } from "react";
 
 const styles = () => ({
   content: {
@@ -16,7 +17,6 @@ const styles = () => ({
   userDetails: {
     marginTop: "0.5em",
   },
-  hr: {},
   details: {
     marginBottom: "0.5em",
   },
@@ -51,8 +51,21 @@ const styles = () => ({
     width: "100%",
   },
 });
+
 const ProfileSettingsPanel = (props) => {
   const { classes, className } = props;
+  const [width, setWidth] = useState({
+    width1: "1%",
+    width2: "1%",
+    width3: "1%",
+    width4: "1%",
+  });
+  useEffect(() => {
+    setTimeout(() => {
+      setWidth({ width1: "8%", width2: "20%", width3: "45%", width4: "6%" });
+    }, 1000);
+  }, []);
+
   return (
     <div className={classes.content}>
       <div className={classes.personalInfo}>
@@ -86,7 +99,7 @@ const ProfileSettingsPanel = (props) => {
             <span>Sousse, Tunisia</span>
           </div>
           <div>
-            <b>Current career:</b>
+            <b>Current career</b>
           </div>
           <div className={classes.details}>
             <span>Frontend Developer</span>
@@ -120,49 +133,69 @@ const ProfileSettingsPanel = (props) => {
         <div className={classes.progress}>
           <div className={classes.header}>
             <Highlight>
-              <Words>Total Achievements: </Words>
+              <Words>Total Achievements </Words>
             </Highlight>
             <Highlight>
               <Words>08/100</Words>
             </Highlight>
           </div>
-          <progress value="8" max="100"></progress>
+          <div
+            className="progress"
+            style={{
+              width: width.width1,
+            }}
+          ></div>
         </div>
         <br></br>
         <div className={classes.progress}>
           <div className={classes.header}>
             <Highlight>
-              <Words>Total Missions: </Words>
+              <Words>Total Missions </Words>
             </Highlight>
             <Highlight>
               <Words>20/100</Words>
             </Highlight>
           </div>
-          <progress value="20" max="100"></progress>
+          <div
+            className="progress"
+            style={{
+              width: width.width2,
+            }}
+          ></div>
         </div>
         <br></br>
         <div className={classes.progress}>
           <div className={classes.header}>
             <Highlight>
-              <Words>Total Tasks: </Words>
+              <Words>Total Tasks </Words>
             </Highlight>
             <Highlight>
               <Words>45/100</Words>
             </Highlight>
           </div>
-          <progress value="45" max="100"></progress>
+          <div
+            className="progress"
+            style={{
+              width: width.width3,
+            }}
+          ></div>
         </div>
         <br></br>
         <div className={classes.progress}>
           <div className={classes.header}>
             <Highlight>
-              <Words>Total projects: </Words>
+              <Words>Total projects</Words>
             </Highlight>
             <Highlight>
               <Words>06/100</Words>
             </Highlight>
           </div>
-          <progress value="06" max="100"></progress>
+          <div
+            className="progress"
+            style={{
+              width: width.width4,
+            }}
+          ></div>
         </div>
       </div>
     </div>

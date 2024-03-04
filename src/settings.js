@@ -1,16 +1,16 @@
 const resources = {
   background: {
-    coworking_space: "/img/wallpapers/office.jpg",
-    side_view_office: "/img/wallpapers/office2.png",
-    front_view_office: "/img/wallpapers/meeting.png",
+    coworking_space: "/img/wallpapers/office1.jpg",
+    side_view_office: "/img/wallpapers/desktop2.jpg",
+    front_view_office: "/img/wallpapers/meeting1.jpg",
     desktop: "/img/wallpapers/desktop1.jpg",
-    meeting_1: "/img/wallpapers/meeting.png",
-    meeting_2: "/img/wallpapers/meeting2.webp",
-    meeting_3: "/img/wallpapers/meeting.png",
-    hr_office: "/img/wallpapers/office4.jpg",
-    cto_office: "/img/wallpapers/ctoffice.jpg",
+    meeting_1: "/img/wallpapers/meeting1.jpg",
+    meeting_2: "/img/wallpapers/meeting2.jpg",
+    meeting_3: "/img/wallpapers/meeting1.jpg",
+    hr_office: "/img/wallpapers/desktop2.jpg",
+    cto_office: "/img/wallpapers/admin.jpg",
     recreation: "/img/wallpapers/recreation.jpg",
-    training_center: "/img/wallpapers/coworking.jpg",
+    training_center: "/img/wallpapers/meeting3.jpg",
   },
 };
 

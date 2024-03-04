@@ -162,7 +162,7 @@ const Header = (props) => {
               </Link>
             </Highlight>
           </Clickable>
-          <Link to="/world/desktop/task" className="slide-panel-item">
+          <Link to="/world/desktop/code-task" className="slide-panel-item">
             <Button layer={"success"} animate className="checkin">
               <div
                 style={{

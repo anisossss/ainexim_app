@@ -3,8 +3,8 @@ import { withStyles } from "arwes";
 import { Frame, Button, Words, Line } from "arwes";
 import { CONSTANTS } from "../../../constants/api";
 import { useParams } from "react-router-dom";
-
 import axios from "axios";
+import { Link } from "react-router-dom";
 const styles = () => ({
   validationFrame: {},
   criteriaContainer: {
@@ -27,7 +27,7 @@ const styles = () => ({
   },
 });
 
-const Verification = (props) => {
+const CodeVerification = (props) => {
   const [width, setWidth] = useState("0%");
 
   const { classes } = props;
@@ -77,7 +77,7 @@ const Verification = (props) => {
   return (
     <div className={classes.validationFrame}>
       <Words animate style={{ color: scoreColor, fontWeight: "bold" }}>
-        Task Title
+        Task 1 Evaluation
       </Words>
       <br></br>
       {taskData && <Words animate>{taskData.title}</Words>}
@@ -88,6 +88,7 @@ const Verification = (props) => {
           <Words style={{ color: scoreColor, fontWeight: "bold" }}>
             Evaluation Description
           </Words>
+          <br></br>
           <Words>{evaluationData.description}</Words>
           <br></br>
           <br></br>
@@ -136,11 +137,13 @@ const Verification = (props) => {
         </div>
       )}
       <div className={classes.btns}>
-        <Button className={classes.btn}>Next Task</Button>
+        <Link to="/world/desktop/github-task">
+          <Button className={classes.btn}>Next Task</Button>
+        </Link>
         <Button>Tasks Board</Button>
       </div>
     </div>
   );
 };
 
-export default withStyles(styles)(Verification);
+export default withStyles(styles)(CodeVerification);

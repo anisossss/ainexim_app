@@ -13,9 +13,7 @@ const CurrentTasks = (props) => {
       </Frame>
       <br></br>
       <br></br>
-      <div style={{}}>
-        <CurrentTasksTable />
-      </div>
+      <CurrentTasksTable />
     </>
   );
 };
