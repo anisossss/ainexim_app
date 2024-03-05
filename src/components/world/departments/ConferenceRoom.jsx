@@ -48,13 +48,11 @@ const styles = () => ({
   },
   message: {
     fontSize: "16px",
-    borderRadius: "10px",
-    width: "20em !important",
-    border: "1px solid #000",
     backgroundColor: "#f0f0f0",
     color: "black",
-    marginTop: "4px",
-    padding: "10px",
+    marginTop: "16px",
+    padding: "6px ",
+    borderRadius: "15px",
   },
   chatContainer: {
     overflow: "scroll",
