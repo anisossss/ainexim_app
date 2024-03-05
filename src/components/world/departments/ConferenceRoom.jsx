@@ -176,7 +176,7 @@ const ConferenceRoom = (props) => {
     }
   };
   useEffect(() => {
-    const client = io(`ws://${CONSTANTS.SOCKET_URL}`);
+    const client = io(`${CONSTANTS.SOCKET_URL}`);
     setSocket(client);
 
     client.on("send", (message) => {
