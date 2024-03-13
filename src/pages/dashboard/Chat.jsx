@@ -14,11 +14,9 @@ const Chat = () => {
       </Frame>
       <br></br>
       <br></br>
-      <div style={{}}>
-        <TeamChat />
-        <br></br>
-        <PersonalChat />
-      </div>
+      <PersonalChat />
+      <br></br>
+      <TeamChat />
     </>
   );
 };

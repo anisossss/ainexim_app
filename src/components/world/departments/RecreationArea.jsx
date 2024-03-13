@@ -2,29 +2,32 @@ import { Highlight, withStyles } from "arwes";
 import { Frame } from "arwes";
 const styles = () => ({
   root: {
-    width: 1200,
-    marginLeft: "20%",
+    width: "1000",
+    height: "63vh",
   },
   "@media (max-width: 800px)": {
     root: {
       margin: "0 12px",
     },
   },
+  frame: {
+    width: "100%",
+    margin: "auto",
+    height: "65vh",
+  },
 });
 
 const RecreationArea = (props) => {
   const { classes, className } = props;
   return (
-    <Frame
-      animate={true}
-      corners={1}
-      style={{
-        top: "50px",
-        right: "10px",
-        zIndex: 1000,
-        width: "20%",
-      }}
-    ></Frame>
+    <Frame animate={true} className={classes.root}>
+      <div>
+        <iframe
+          src="https://fritz.chessbase.com"
+          className={classes.frame}
+        ></iframe>
+      </div>
+    </Frame>
   );
 };
 

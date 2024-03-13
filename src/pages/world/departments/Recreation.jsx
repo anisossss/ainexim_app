@@ -8,7 +8,7 @@ const Recreation = (props) => {
       <Helmet title="Task N° 2 | AINEXIM" />
       <Frame level={2} corners={1}>
         <Words animate style={{ padding: "1em" }}>
-          Recreation & Cafeteria Area
+          Recreation Area
         </Words>
       </Frame>
       <br></br>

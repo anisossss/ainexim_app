@@ -40,7 +40,7 @@ const styles = () => ({
     height: "30px",
     marginRight: "10px",
     borderRadius: "50%",
-    marginLeft: "10px", // Adjusted margin
+    marginLeft: "10px",
   },
   username: {
     fontSize: "17px",

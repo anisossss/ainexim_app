@@ -1,7 +1,6 @@
 import { withStyles } from "arwes";
 import VerificationFrame from "../../../components/world/desktop/VerificationFrame";
 import { Helmet } from "react-helmet";
-import { Frame, Words } from "arwes";
 const styles = () => ({
   root: {
     width: 1200,

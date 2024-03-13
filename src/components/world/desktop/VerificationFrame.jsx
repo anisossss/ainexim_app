@@ -6,7 +6,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 const styles = () => ({
-  validationFrame: {},
+  validationFrame: {
+    padding: "1em",
+  },
   criteriaContainer: {
     marginBottom: "1em",
   },
@@ -60,11 +62,11 @@ const CodeVerification = (props) => {
           const score = response.data.taskEvaluation.rating;
           setWidth(`${score}%`);
           if (score < 20) {
-            setScoreColor("red");
+            setScoreColor("#C70039");
           } else if (score >= 20 && score <= 70) {
-            setScoreColor("yellow");
+            setScoreColor("#FFC300");
           } else {
-            setScoreColor("green");
+            setScoreColor("#4CBB17");
           }
         })
         .catch((error) => {
@@ -75,74 +77,81 @@ const CodeVerification = (props) => {
   }, []);
 
   return (
-    <div className={classes.validationFrame}>
-      <Words animate style={{ color: scoreColor, fontWeight: "bold" }}>
-        Task 1 Evaluation
-      </Words>
-      <br></br>
-      {taskData && <Words animate>{taskData.title}</Words>}
-      <br></br>
-      <br></br>
-      {evaluationData && (
-        <div className={classes.criteriaContainer}>
-          <Words style={{ color: scoreColor, fontWeight: "bold" }}>
-            Evaluation Description
-          </Words>
-          <br></br>
-          <Words>{evaluationData.description}</Words>
-          <br></br>
-          <br></br>
-          <Line />
-        </div>
-      )}
-      {evaluationData && (
-        <div className={classes.criteriaContainer}>
-          <Words style={{ color: scoreColor, fontWeight: "bold" }}>
-            Code Correction
-          </Words>
-          <Words>{evaluationData.codeCorrection}</Words>
-          <br></br>
-          <br></br>
-          <Line />
-        </div>
-      )}
-      {evaluationData && (
-        <div className={classes.criteriaContainer}>
-          <Words style={{ color: scoreColor, fontWeight: "bold" }}>
-            Advice
-          </Words>
-          <Words>{evaluationData.advice}</Words>
-          <br></br>
-          <br></br>
-          <Line />
-        </div>
-      )}
-      {evaluationData && (
-        <div className={classes.criteriaContainer}>
-          <div
-            className={classes.progress}
-            style={{
-              width: width,
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <Words style={{ fontWeight: "bold" }}>
-              Your Evaluation Score: &nbsp;{" "}
-              <span style={{ color: scoreColor }}>
-                {evaluationData && evaluationData.rating}
-              </span>
+    <Frame animate={true}>
+      <div className={classes.validationFrame}>
+        <Words animate style={{ color: scoreColor, fontWeight: "bold" }}>
+          Task 1 Evaluation
+        </Words>
+        <br></br>
+        {taskData && <Words animate>{taskData.title}</Words>}
+        <br></br>
+        {evaluationData && (
+          <div className={classes.criteriaContainer}>
+            <Words style={{ color: scoreColor, fontWeight: "bold" }}>
+              Evaluation Description
             </Words>
+            <br></br>
+            <Words>{evaluationData.description}</Words>
+            <br></br>
+            <br></br>
+            <Line />
           </div>
+        )}
+        {evaluationData && (
+          <div className={classes.criteriaContainer}>
+            <Words style={{ color: scoreColor, fontWeight: "bold" }}>
+              Code Correction
+            </Words>
+            <br></br>
+            <Words>{evaluationData.codeCorrection}</Words>
+            <br></br>
+            <br></br>
+            <Line />
+          </div>
+        )}
+        {evaluationData && (
+          <div className={classes.criteriaContainer}>
+            <Words style={{ color: scoreColor, fontWeight: "bold" }}>
+              Advice
+            </Words>
+            <Words>{evaluationData.advice}</Words>
+            <br></br>
+            <br></br>
+            <Line />
+          </div>
+        )}
+        {evaluationData && (
+          <div className={classes.criteriaContainer}>
+            <div
+              className={classes.progress}
+              style={{
+                width: `${evaluationData.rating}%`,
+                display: "flex",
+                backgroundColor: scoreColor,
+                alignItems: "center",
+                marginBottom: "20px",
+              }}
+            >
+              <Words
+                style={{
+                  fontWeight: "bold",
+                  padding: "1em",
+                }}
+              >
+                Your Evaluation Score: &nbsp; {evaluationData.rating}
+                <span style={{ color: scoreColor }}></span>
+              </Words>
+            </div>
+          </div>
+        )}
+        <div className={classes.btns}>
+          <Link to="/world/desktop/github-task">
+            <Button className={classes.btn}>Next Task</Button>
+          </Link>
+          <Button>Tasks Board</Button>
         </div>
-      )}
-      <div className={classes.btns}>
-        <Link to="/world/desktop/github-task">
-          <Button className={classes.btn}>Next Task</Button>
-        </Link>
-        <Button>Tasks Board</Button>
       </div>
-    </div>
+    </Frame>
   );
 };
 

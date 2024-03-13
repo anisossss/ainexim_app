@@ -6,6 +6,15 @@ import { CONSTANTS } from "../../../constants/api";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import CodeMirror from "@uiw/react-codemirror";
+import { javascript } from "@codemirror/lang-javascript"; // Correct import path for JavaScript language mode
+import { css } from "@codemirror/lang-css"; // Correct import path for CSS language mode
+import { html } from "@codemirror/lang-html";
+import { python } from "@codemirror/lang-python";
+import { cpp } from "@codemirror/lang-cpp";
+import { java } from "@codemirror/lang-java";
+import { php } from "@codemirror/lang-php"; // Correct import path for HTML language mode
+import { vscodeDark } from "@uiw/codemirror-theme-vscode"; // Import okaidia theme
 
 const styles = () => ({
   chatBox: {
@@ -39,7 +48,10 @@ const styles = () => ({
 
 const CodeTaskFrame = (props) => {
   const { classes } = props;
-
+  const [selectedLanguage, setSelectedLanguage] = useState("javascript");
+  const handleLanguageChange = (e) => {
+    setSelectedLanguage(e.target.value);
+  };
   const [taskData, setTaskData] = useState(null);
 
   useEffect(() => {
@@ -87,8 +99,14 @@ const CodeTaskFrame = (props) => {
   }, []);
 
   const handleConfirmClick = () => {
+    if (!inputMessage || inputMessage == "") {
+      toast.error("Please provide a response before validating.");
+      return;
+    }
+
     setIsLoadingConfirmation(true);
     setModalOpen(false);
+    console.log("Task response:", inputMessage);
     axios
       .post(
         `${CONSTANTS.API_URL}/evaluation/evaluate-web-task/65d7d404b74ede7428d938ad`,
@@ -114,9 +132,10 @@ const CodeTaskFrame = (props) => {
 
   const [inputMessage, setInputMessage] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false); // State variable for expansion
 
-  const handleInputChange = (e) => {
-    setInputMessage(e.target.value);
+  const handleInputChange = (value) => {
+    setInputMessage(value);
   };
 
   const handleInputResize = (e) => {
@@ -130,6 +149,9 @@ const CodeTaskFrame = (props) => {
 
   const handleCloseModal = () => {
     setModalOpen(false);
+  };
+  const toggleExpansion = () => {
+    setIsExpanded(!isExpanded);
   };
 
   return (
@@ -151,20 +173,35 @@ const CodeTaskFrame = (props) => {
           </div>
         ) : (
           <div style={{ padding: "1em", fontSize: "smaller" }}>
-            <Words animate style={{ fontWeight: "bold" }}>
-              Task 1 Title
-            </Words>
-            <br></br>
-            {taskData && <Words animate>{taskData.title}</Words>}
+            <span animate style={{ fontWeight: "bold" }}>
+              Task 1: {taskData && <Words animate>{taskData.title}</Words>}
+            </span>
             <br></br>
             <br></br>
             {taskData && <Words animate>{taskData.description}</Words>}
-
             <br></br>
             <br></br>
-            {taskData && <span>{taskData.content}</span>}
-
-            <br></br>
+            <Words animate style={{ fontWeight: "bold" }}>
+              Instructions
+            </Words>
+            {taskData && (
+              <div>
+                {taskData.content.map((stepString, index) => {
+                  let stepIndex = 0;
+                  return stepString.split(/\d+\.\s*/).map(
+                    (step, innerIndex) =>
+                      step.trim() && (
+                        <div
+                          key={index * 100 + innerIndex}
+                          style={{ fontSize: "15px" }}
+                        >
+                          {++stepIndex}. {step.trim()}
+                        </div>
+                      )
+                  );
+                })}
+              </div>
+            )}
             <br></br>
             <Words animate style={{ fontWeight: "bold" }}>
               Helpful Resources
@@ -175,33 +212,97 @@ const CodeTaskFrame = (props) => {
                 <span key={index}>
                   {resource.split(",").map((link, linkIndex) => (
                     <React.Fragment key={linkIndex}>
-                      <a href={link.trim()}>{link.trim()}</a>
+                      💡{" "}
+                      <a
+                        href={link.trim()}
+                        target="_blank"
+                        style={{ fontSize: "15px" }}
+                      >
+                        {link.trim()}
+                      </a>
                       <br />
                     </React.Fragment>
                   ))}
                 </span>
               ))}
-
             <br></br>
             <br></br>
-            <div id="chatContainer">
-              <textarea
-                id="task_input"
-                className={classes.textArea}
+            <div>
+              <label htmlFor="language">Select Programming Language:</label>
+              &nbsp;{" "}
+              <select
+                id="language"
+                value={selectedLanguage}
+                onChange={handleLanguageChange}
+              >
+                <option value="javascript">JavaScript</option>
+                <option value="css">CSS</option>
+                <option value="html">HTML</option>
+                <option value="python">Python</option>
+                <option value="cpp">C++</option>
+                <option value="java">Java</option>
+                <option value="php">PHP</option>
+              </select>
+            </div>
+            {isExpanded ? (
+              <CodeMirror
+                height="100vh"
+                extensions={[
+                  selectedLanguage === "javascript"
+                    ? javascript()
+                    : selectedLanguage === "css"
+                    ? css()
+                    : selectedLanguage === "html"
+                    ? html()
+                    : selectedLanguage === "python"
+                    ? python()
+                    : selectedLanguage === "cpp"
+                    ? cpp()
+                    : selectedLanguage === "java"
+                    ? java()
+                    : php(),
+                ]}
+                theme={vscodeDark}
+                options={{ mode: selectedLanguage }}
                 placeholder="Type your response here..."
                 value={inputMessage}
                 onChange={handleInputChange}
                 onInput={handleInputResize}
               />
-              <br></br>
-              <br></br>
-              <Button
-                className={classes.sendButton}
-                onClick={handleVerifyClick}
-              >
-                Validate
-              </Button>
-            </div>
+            ) : (
+              <CodeMirror
+                height="200px"
+                extensions={[
+                  selectedLanguage === "javascript"
+                    ? javascript()
+                    : selectedLanguage === "css"
+                    ? css()
+                    : selectedLanguage === "html"
+                    ? html()
+                    : selectedLanguage === "python"
+                    ? python()
+                    : selectedLanguage === "cpp"
+                    ? cpp()
+                    : selectedLanguage === "java"
+                    ? java()
+                    : php(),
+                ]}
+                theme={vscodeDark}
+                options={{ mode: selectedLanguage }}
+                placeholder="Type your response here..."
+                value={inputMessage}
+                onChange={handleInputChange}
+                onInput={handleInputResize}
+              />
+            )}
+            <br></br>
+            <Button onClick={toggleExpansion}>
+              {isExpanded ? "Minimize" : "Expand"} Code Editor
+            </Button>
+            &nbsp; &nbsp;
+            <Button className={classes.sendButton} onClick={handleVerifyClick}>
+              Validate
+            </Button>
           </div>
         )}{" "}
       </Frame>

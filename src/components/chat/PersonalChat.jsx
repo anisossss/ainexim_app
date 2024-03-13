@@ -19,7 +19,7 @@ const PersonalChat = (props) => {
   const [chats] = useState([
     {
       id: 1,
-      colleagueName: "John Doe",
+      colleagueName: "Alex Mbewe",
       lastMessage: "Hey there!",
       unreadMessages: 2,
       timestamp: "10:30 AM",
@@ -33,14 +33,14 @@ const PersonalChat = (props) => {
     },
     {
       id: 2,
-      colleagueName: "Jane Smith",
+      colleagueName: "Anis Khalef",
       lastMessage: "How are you doing?",
       unreadMessages: 0,
       timestamp: "11:45 AM",
     },
     {
       id: 2,
-      colleagueName: "Jane Smith",
+      colleagueName: "Kabelo Smith",
       lastMessage: "How are you doing?",
       unreadMessages: 0,
       timestamp: "11:45 AM",

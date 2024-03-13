@@ -20,7 +20,7 @@ const TeamChat = (props) => {
   const [chats] = useState([
     {
       id: 1,
-      colleagueName: "John Doe",
+      colleagueName: "Alex Mbewe",
       lastMessage: "Hey there!",
       unreadMessages: 2,
       avatar: "john_avatar.png",
@@ -36,7 +36,7 @@ const TeamChat = (props) => {
     },
     {
       id: 2,
-      colleagueName: "Jane Smith",
+      colleagueName: "Anis Khalef",
       lastMessage: "How are you doing?",
       unreadMessages: 0,
       avatar: "jane_avatar.png",
@@ -59,7 +59,7 @@ const TeamChat = (props) => {
           <ArwesHeader>
             <div className="chat_item">
               <div className="chat_name">
-                <img src="/img/avat" />
+                <FaUsers />
                 <span className="header">{chat.colleagueName}</span>
               </div>
               <span className="timestamp">{chat.timestamp}</span>

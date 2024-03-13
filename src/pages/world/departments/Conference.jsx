@@ -5,7 +5,7 @@ import ConferenceRoom from "../../../components/world/departments/ConferenceRoom
 const Conference = (props) => {
   return (
     <>
-      <Helmet title="Task N° 2 | AINEXIM" />
+      <Helmet title="Conference Room | AINEXIM" />
       <Frame level={2} corners={1}>
         <Words animate style={{ padding: "1em" }}>
           Conference Room

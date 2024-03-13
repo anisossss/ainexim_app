@@ -39,13 +39,32 @@ const styles = () => ({
 
 const GithubTaskFrame = (props) => {
   const { classes } = props;
-
   const [taskData, setTaskData] = useState({
     title: "Create GitHub Repository and Push Code Task",
     description:
       "This task requires you to create a GitHub repository and push your code to it.",
-    content:
-      "Instructions:\n1. Create a new GitHub repository.\n2. Initialize it with a README file.\n3. Push your code to the repository.\n4. Provide the repository link as the response.",
+    instructions: [
+      {
+        text: "1. Create a new GitHub repository.",
+        loading: false,
+        completed: false,
+      },
+      {
+        text: "2. Initialize it with a README file.",
+        loading: false,
+        completed: false,
+      },
+      {
+        text: "3. Push your code to the repository.",
+        loading: false,
+        completed: false,
+      },
+      {
+        text: "4. Provide the repository link as the response.",
+        loading: false,
+        completed: false,
+      },
+    ],
     resources: [
       "https://docs.github.com/en/get-started/quickstart/create-a-repo",
     ],
@@ -65,7 +84,7 @@ const GithubTaskFrame = (props) => {
   const [isLoadingConfirmation, setIsLoadingConfirmation] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
-
+  const [isAllTasksCompleted, setIsAllTasksCompleted] = useState(false);
   useEffect(() => {
     const handleTabActivityChange = () => {
       if (document.hidden) {
@@ -86,17 +105,32 @@ const GithubTaskFrame = (props) => {
     };
   }, []);
 
-  const handleConfirmClick = () => {
+  const handleConfirmClick = async () => {
     setIsLoadingConfirmation(true);
     setModalOpen(false);
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoadingConfirmation(false);
-      toast.success("Task validated successfully");
-      history.push("/world/desktop/github-activity");
-    }, 2000);
-  };
 
+    for (let i = 0; i < taskData.instructions.length; i++) {
+      const newInstructions = [...taskData.instructions];
+      newInstructions[i].loading = true;
+      setTaskData({ ...taskData, instructions: newInstructions });
+
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds
+
+      newInstructions[i].loading = false;
+      newInstructions[i].completed = true;
+      setTaskData({ ...taskData, instructions: newInstructions });
+    }
+
+    setIsLoadingConfirmation(false);
+    const isAllCompleted = taskData.instructions.every(
+      (inst) => inst.completed
+    );
+    setIsAllTasksCompleted(isAllCompleted);
+
+    if (isAllCompleted) {
+      toast.success("All tasks validated successfully.");
+    }
+  };
   const handleInputChange = (e) => {
     setInputMessage(e.target.value);
   };
@@ -125,29 +159,54 @@ const GithubTaskFrame = (props) => {
       <Frame animate={true}>
         {!isLoading ? (
           <div style={{ padding: "1em", fontSize: "smaller" }}>
-            <Words animate style={{ fontWeight: "bold" }}>
-              Task 2 Title
-            </Words>
-            <br></br>
-            <br></br>
-            <Words animate>{taskData.title}</Words>
+            <span animate style={{ fontWeight: "bold" }}>
+              Task 2: {taskData.title}
+            </span>
+
             <br></br>
             <br></br>
             <Words animate>{taskData.description}</Words>
 
             <br></br>
             <br></br>
-            <span>{taskData.content}</span>
+            <Words animate style={{ fontWeight: "bold" }}>
+              Instructions
+            </Words>
+            {taskData.instructions.map((instruction, index) => (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  fontSize: "15px",
+                  lineHeight: "30px",
+                }}
+              >
+                {instruction.text}
+                {instruction.loading && (
+                  <div className="tiny-loadingio">
+                    <div className="loading">
+                      <div></div>
+                    </div>
+                  </div>
+                )}
+                {instruction.completed && (
+                  <span style={{ marginLeft: "10px" }}>✅</span>
+                )}
+              </div>
+            ))}
+            <br></br>
 
-            <br></br>
-            <br></br>
             <Words animate style={{ fontWeight: "bold" }}>
               Helpful Resources
             </Words>
             <br></br>
             {taskData.resources.map((resource, index) => (
               <span key={index}>
-                <a href={resource}>{resource}</a>
+                💡{" "}
+                <a href={resource} style={{ fontSize: "15px" }}>
+                  {resource}
+                </a>
                 <br />
               </span>
             ))}
@@ -165,12 +224,7 @@ const GithubTaskFrame = (props) => {
               />
               <br></br>
               <br></br>
-              <Button
-                className={classes.sendButton}
-                onClick={handleVerifyClick}
-              >
-                Validate
-              </Button>
+              <Button onClick={handleVerifyClick}>Validate</Button>
             </div>
           </div>
         ) : (
@@ -209,21 +263,30 @@ const GithubTaskFrame = (props) => {
           </Frame>
         </>
       )}
-      {isLoadingConfirmation && (
-        <div
-          style={{
-            position: "absolute",
-            zIndex: 1000,
-            top: "60%",
-            left: "40%",
-            transform: "translate(-60%, -40%)",
-          }}
-        >
-          <div className="loadingio">
-            <div className="loading">
-              <div></div>
+      {isAllTasksCompleted && (
+        <div className={classes.modalBackdrop}>
+          <Frame className={classes.modalFrame} animate={true} corners={1}>
+            <div style={{ padding: "1em" }}>
+              <Words>Congratulations! You have completed all the tasks.</Words>
+              <br />
+              <br />
+              <div className="btns_confirm">
+                <Button
+                  onClick={() => history.push("/some/next/task/link")}
+                  layer="success"
+                >
+                  Go to Next Task
+                </Button>
+
+                <Button
+                  onClick={() => history.push("/task/board/link")}
+                  layer="secondary"
+                >
+                  Go to Task Board
+                </Button>
+              </div>
             </div>
-          </div>
+          </Frame>
         </div>
       )}
     </div>
