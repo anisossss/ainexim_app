@@ -47,6 +47,6 @@ jobs:
         chmod 600 ~/.ssh/id_rsa_ainexim
         ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.SERVER }} << 'EOF'
           docker pull anisossss/ainexim_app:latest
-          cd cd /home/ubuntu/ainexim_app
+          cd /home/ubuntu/ainexim_app
           docker-compose up -d frontend
         EOF
