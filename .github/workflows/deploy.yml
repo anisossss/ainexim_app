@@ -45,7 +45,6 @@ jobs:
         USER: ${{ secrets.USER }}
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa_ainexim
         chmod 600 ~/.ssh/id_rsa_ainexim
         ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.SERVER }} << 'EOF'
           docker pull anisossss/ainexim_app:latest
