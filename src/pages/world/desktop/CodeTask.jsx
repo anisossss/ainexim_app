@@ -1,29 +1,28 @@
-import { withStyles } from "arwes";
+import { withStyles } from 'arwes'
 
-import { Words, Frame } from "arwes";
-import CodeTaskFrame from "../../../components/world/desktop/CodeTaskFrame";
-import { Helmet } from "react-helmet";
+import { Words, Frame } from 'arwes'
+import CodeTaskFrame from '../../../components/world/desktop/CodeTaskFrame'
+import { Helmet } from 'react-helmet'
 
 const styles = () => ({
   root: {
     width: 1200,
-    marginLeft: "20%",
+    marginLeft: '20%',
   },
-  "@media (max-width: 800px)": {
+  '@media (max-width: 800px)': {
     root: {
-      margin: "0 12px",
+      margin: '0 12px',
     },
   },
-});
+})
 
-const CodeTask = (props) => {
-  const { classes, className } = props;
+const CodeTask = () => {
   return (
     <>
       <Helmet title="Task N° 1 | AINEXIM" />
       <CodeTaskFrame />
     </>
-  );
-};
+  )
+}
 
-export default withStyles(styles)(CodeTask);
+export default withStyles(styles)(CodeTask)

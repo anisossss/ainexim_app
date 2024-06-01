@@ -1,117 +1,141 @@
-import React, { useState } from "react";
-import { withStyles } from "arwes";
-import { Frame, Button, Words } from "arwes";
-import axios from "axios";
-import { CONSTANTS } from "../../../constants/api";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react'
+import { Highlight, withStyles } from 'arwes'
+import { Frame, Button, Words } from 'arwes'
+import axios from 'axios'
+import { CONSTANTS } from '../../../constants/api'
+import { useLocation } from 'react-router-dom'
+import { selectSelectedJob } from '../../../redux/Job/jobSlice'
+import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
+
 const styles = () => ({
-  "@media (max-width: 800px)": {
+  '@media (max-width: 800px)': {
     root: {
-      margin: "0 12px",
+      margin: '0 12px',
     },
   },
   modalFrame: {
-    width: "100%",
-    margin: "auto",
-    maxWidth: "600px", // Added 'px' here
+    width: '100%',
+    margin: 'auto',
+    maxWidth: '600px',
   },
-});
-
+})
 const ApplyFrame = (props) => {
-  const { classes } = props;
+  const { classes } = props
+  const location = useLocation()
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [resume, setResume] = useState(null);
-  const [coverLetter, setCoverLetter] = useState("");
+  const selectedJob = useSelector(selectSelectedJob)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [resume, setResume] = useState(null)
+  const [coverLetter, setCoverLetter] = useState('')
+  const [resumeFileName, setResumeFileName] = useState('')
 
-    // Example of sending form data using Axios
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("resume", resume);
-    formData.append("coverLetter", coverLetter);
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    setResume(file)
+    setResumeFileName(file.name)
+  }
+
+  const handleSubmit = async () => {
+    const formData = new FormData()
+    formData.append('jobTitle', selectedJob)
+    formData.append('applicantName', name)
+    formData.append('email', email)
+    formData.append('resume', resume)
+    formData.append('coverLetter', coverLetter)
 
     try {
-      const response = await axios.post(CONSTANTS.API_URL, formData);
-      console.log(response.data);
-      // Handle success, show confirmation, or redirect
+      const response = await axios.post(`${CONSTANTS.API_URL}/user/apply`, formData)
+      toast.success(response.data.message)
+      window.location.href = '/dashboard'
     } catch (error) {
-      console.error("Error submitting form:", error);
-      // Handle error, show error message to the user
+      console.error('Error submitting form:', error)
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message)
+      } else {
+        toast.error('An error occurred while submitting the form')
+      }
     }
-  };
+  }
 
   return (
     <Frame className={classes.modalFrame}>
-      <form onSubmit={handleSubmit}>
-        <div style={{ padding: "1em" }}>
-          <Words animate>Apply for Frontend Developer job</Words>
-          <br></br>
-          <br></br>
-          <Words>
-            Enter your information and upload your resume and a cover letter
-          </Words>
-          <br></br>
-          <br></br>
-          <label>Name:</label>
-          <br></br>{" "}
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            style={{ width: "100%" }}
-          />
-          <br></br>
-          <br></br>
-          <label>Email:</label>
-          <br></br>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{ width: "100%" }}
-            required
-          />
-          <br></br>
-          <br></br>
-          <label>Resume:</label>
-          <br></br>
+      <div style={{ padding: '1em' }}>
+        <Highlight animate>Apply for {selectedJob} job</Highlight>
+        <br></br>
+        <br></br>
+        <Words>Enter your information and upload your resume and a cover letter</Words>
+        <br></br>
+        <br></br>
+        <div className="form-group">
+          <label htmlFor="resume">Your Resume: </label>
           <input
             type="file"
             accept=".pdf,.doc,.docx"
-            onChange={(e) => setResume(e.target.files[0])}
-            style={{ width: "100%" }}
+            name="resume"
+            id="resume"
+            style={{
+              display: 'none',
+            }}
+            onChange={handleFileChange}
             required
           />
-          <br></br>
-          <br></br>
-          <label>Cover Letter:</label>
-          <br></br>
-          <textarea
-            value={coverLetter}
-            onChange={(e) => setCoverLetter(e.target.value)}
-            required
-            style={{ height: "10em", width: "100%", background: "#000" }}
-          />
-          <br></br>
-          <br></br>
-          <div className="btns_confirm">
-            <Link to="/dashboard">
-              <Button layer="success">Submit</Button>
-            </Link>
-            <Button type="button" layer="secondary">
-              Cancel
-            </Button>
-          </div>
+          <Button
+            layer={'secondary'}
+            style={{
+              marginLeft: '1em',
+            }}
+            onClick={() => document.getElementById('resume').click()}
+          >
+            {resumeFileName ? resumeFileName : 'Upload'}{' '}
+          </Button>
         </div>
-      </form>
-    </Frame>
-  );
-};
+        <label>Name:</label>
+        <br></br>{' '}
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          style={{ width: '100%' }}
+        />
+        <br></br>
+        <br></br>
+        <label>Email:</label>
+        <br></br>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={{ width: '100%' }}
+          required
+        />
+        <br></br>
+        <br></br>
+        <label>Cover Letter:</label>
+        <br></br>
+        <textarea
+          value={coverLetter}
+          onChange={(e) => setCoverLetter(e.target.value)}
+          required
+          style={{ height: '10em', width: '100%', background: '#000' }}
+        />
+        <br></br>
+        <br></br>
+        <div className="btns_confirm">
+          <Button type="button" layer="secondary">
+            Cancel
+          </Button>
 
-export default withStyles(styles)(ApplyFrame);
+          <Button layer="success" onClick={handleSubmit}>
+            Submit
+          </Button>
+        </div>
+      </div>
+    </Frame>
+  )
+}
+
+export default withStyles(styles)(ApplyFrame)

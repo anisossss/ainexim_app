@@ -1,51 +1,53 @@
-import { Frame, Highlight, withStyles, Button } from "arwes";
-
+import { Frame, Highlight, withStyles, Button } from 'arwes'
+import React from 'react'
+import { Link } from 'react-router-dom'
 const styles = () => ({
   root: {
-    position: "absolute",
-    top: "50px",
-    right: "10px",
+    position: 'absolute',
+    top: '50px',
+    right: 1,
     zIndex: 1000,
+    width: '600px',
   },
   frame: {
-    padding: "10px",
-    background: "rgba(0, 0, 0, 0.8)",
+    padding: '10px',
+    background: 'rgba(0, 0, 0, 0.8)',
   },
-  "@media (max-width: 800px)": {
+  '@media (max-width: 800px)': {
     root: {
-      margin: "0 12px",
+      margin: '0 12px',
     },
   },
   text: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
-});
+})
 
 const messages = [
   {
-    sender: "Intern Coordinator",
-    text: "Welcome to your virtual work experience !",
-    time: "09:00 am",
+    sender: 'Intern Coordinator',
+    text: 'Welcome to your virtual work experience !',
+    time: '09:00 am',
   },
   {
-    sender: "Mentor",
+    sender: 'Mentor',
     text: "Let's begin with the first task for today. Please check the task board.",
-    time: "10:30 am",
+    time: '10:30 am',
   },
   {
-    sender: "Teammate Anis",
-    text: "Hi mate! If you need any help, feel free to ask. Meeting Code: AX_NEW",
-    time: "02:45 pm",
+    sender: 'Teammate Anis',
+    text: 'Hi mate! If you need any help, feel free to ask. Meeting Code: AX_NEW',
+    time: '02:45 pm',
   },
   {
-    sender: "HR",
+    sender: 'HR',
     text: "Don't forget to submit your onboarding documents by end of the day.",
-    time: "03:00 pm",
+    time: '03:00 pm',
   },
-];
+]
 
 const ChatPanel = (props) => {
-  const { classes, className } = props;
+  const { classes, className } = props
   return (
     <div className={classes.root}>
       {messages.map((message, index) => (
@@ -59,26 +61,22 @@ const ChatPanel = (props) => {
           </Highlight>
         </Frame>
       ))}
-      <div
+      <Button
+        animate
+        layer="success"
         style={{
-          display: "flex",
-          justifyContent: "center",
-          background: "rgba(0, 0, 0, 0.8)",
+          justifyContent: 'center',
+          background: 'rgba(0, 0, 0, 0.8)',
+          width: '100%',
+          textAlign: 'center',
         }}
       >
-        <Button
-          animate
-          style={{ width: "100%", textAlign: "center" }}
-          layer="success"
-          onClick={() => {
-            window.location.href = "YOUR-PAGE-URL-HERE";
-          }}
-        >
-          Show More
-        </Button>
-      </div>
+        <Link to="/chat" style={{ textDecoration: 'none' }}>
+          <div>Show More</div>
+        </Link>
+      </Button>
     </div>
-  );
-};
+  )
+}
 
-export default withStyles(styles)(ChatPanel);
+export default withStyles(styles)(ChatPanel)

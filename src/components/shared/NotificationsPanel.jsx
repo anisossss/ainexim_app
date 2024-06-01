@@ -1,47 +1,48 @@
-import { Frame, Highlight, withStyles, Button } from "arwes";
+import { Frame, Highlight, withStyles, Button } from 'arwes'
+import { Link } from 'react-router-dom'
 
 const styles = () => ({
   root: {
-    position: "absolute",
-    top: "50px",
-    right: "10px",
+    position: 'absolute',
+    top: '50px',
+    right: 1,
     zIndex: 1000,
   },
   frame: {
-    padding: "10px",
-    background: "rgba(0, 0, 0, 0.8)",
+    padding: '10px',
+    background: 'rgba(0, 0, 0, 0.8)',
   },
-  "@media (max-width: 800px)": {
+  '@media (max-width: 800px)': {
     root: {
-      margin: "0 12px",
+      margin: '0 12px',
     },
   },
   text: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
-});
+})
 
 const messages = [
   {
-    sender: "Platform Assistant",
-    text: "Welcome, Dev! Your virtual software development work experience begins now.",
-    time: "09:00 am",
+    sender: 'Platform Assistant',
+    text: 'Welcome, Dev! Your virtual software development work experience begins now.',
+    time: '09:00 am',
   },
 
   {
-    sender: "Lead Developer",
-    text: "Our daily standup begins in 30 minutes. Join in with Meeting Code: COD_DAILY.",
-    time: "10:00 am",
+    sender: 'Lead Developer',
+    text: 'Our daily standup begins in 30 minutes. Join in with Meeting Code: COD_DAILY.',
+    time: '10:00 am',
   },
 
   {
-    sender: "Team Member Alex",
-    text: "Need your help regarding the cart feature. Can we connect at 2pm?",
-    time: "12:30 pm",
+    sender: 'Team Member Alex',
+    text: 'Need your help regarding the cart feature. Can we connect at 2pm?',
+    time: '12:30 pm',
   },
-];
+]
 const NotificationsPanel = (props) => {
-  const { classes, className } = props;
+  const { classes, className } = props
   return (
     <div className={classes.root}>
       {messages.map((message, index) => (
@@ -55,26 +56,22 @@ const NotificationsPanel = (props) => {
           </Highlight>
         </Frame>
       ))}
-      <div
+      <Button
+        animate
+        layer="success"
         style={{
-          display: "flex",
-          justifyContent: "center",
-          background: "rgba(0, 0, 0, 0.8)",
+          justifyContent: 'center',
+          background: 'rgba(0, 0, 0, 0.8)',
+          width: '100%',
+          textAlign: 'center',
         }}
       >
-        <Button
-          animate
-          style={{ width: "100%", textAlign: "center" }}
-          layer="success"
-          onClick={() => {
-            window.location.href = "YOUR-PAGE-URL-HERE";
-          }}
-        >
-          Show More
-        </Button>
-      </div>
+        <Link to="/notifications" style={{ textDecoration: 'none' }}>
+          <div>Show More</div>
+        </Link>
+      </Button>
     </div>
-  );
-};
+  )
+}
 
-export default withStyles(styles)(NotificationsPanel);
+export default withStyles(styles)(NotificationsPanel)

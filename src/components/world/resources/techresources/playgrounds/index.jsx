@@ -1,55 +1,55 @@
-import React, { useEffect, useState } from "react";
-import { withStyles } from "arwes";
-import { CONSTANTS } from "../../../../../constants/api";
-import axios from "axios";
-import { Frame, Words } from "arwes";
+import React, { useEffect, useState } from 'react'
+import { withStyles } from 'arwes'
+import { CONSTANTS } from '../../../../../constants/api'
+import axios from 'axios'
+import { Frame, Words } from 'arwes'
 const styles = () => ({
   root: {
-    height: "80vh",
-    overflowY: "auto",
+    height: '80vh',
+    overflowY: 'auto',
   },
   searchInput: {
     marginBottom: 10,
-    position: "sticky",
+    position: 'sticky',
     top: 0,
     zIndex: 999,
-    width: "100%",
+    width: '100%',
   },
-});
+})
 
 const PlaygroundsFrame = (props) => {
-  const { classes } = props;
-  const [courses, setCourses] = useState([]);
-  const [filteredCourses, setFilteredCourses] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const { classes } = props
+  const [courses, setCourses] = useState([])
+  const [filteredCourses, setFilteredCourses] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = `${CONSTANTS.API_URL}/resources/get-software-playgrounds`;
-        const response = await axios.get(url);
-        const coursesWithoutFirst = response.data.titles.slice(1);
-        setCourses(coursesWithoutFirst);
-        setFilteredCourses(coursesWithoutFirst);
-        setIsLoading(false);
+        const url = `${CONSTANTS.API_URL}/resources/get-software-playgrounds`
+        const response = await axios.get(url)
+        const coursesWithoutFirst = response.data.titles.slice(1)
+        setCourses(coursesWithoutFirst)
+        setFilteredCourses(coursesWithoutFirst)
+        setIsLoading(false)
       } catch (error) {
-        console.error("Error fetching:", error);
-        setIsLoading(false);
+        console.error('Error fetching:', error)
+        setIsLoading(false)
       }
-    };
+    }
 
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   const handleSearch = (event) => {
-    const query = event.target.value;
-    setSearchQuery(query);
+    const query = event.target.value
+    setSearchQuery(query)
     const filtered = courses.filter((course) =>
       course.title.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredCourses(filtered);
-  };
+    )
+    setFilteredCourses(filtered)
+  }
 
   return (
     <div className={classes.root}>
@@ -65,9 +65,9 @@ const PlaygroundsFrame = (props) => {
       ) : (
         filteredCourses.map((titleObj, index) => (
           <Frame key={index} animate={true}>
-            <div>
+            <div style={{ padding: '1em' }}>
               <h2>{titleObj.title}</h2>
-              <ul style={{ lineHeight: "2em" }}>
+              <ul style={{ lineHeight: '2em' }}>
                 {titleObj.courses.map((course, idx) => (
                   <li key={idx}>
                     <a href={`#${course}`}>{course}</a>
@@ -79,7 +79,7 @@ const PlaygroundsFrame = (props) => {
         ))
       )}
     </div>
-  );
-};
+  )
+}
 
-export default withStyles(styles)(PlaygroundsFrame);
+export default withStyles(styles)(PlaygroundsFrame)

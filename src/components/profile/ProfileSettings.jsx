@@ -1,84 +1,117 @@
-import { CONSTANTS } from "../../constants/api";
-import { Frame, Highlight, withStyles, Words } from "arwes";
-import React, { useEffect, useRef, useState } from "react";
-
+import React, { useEffect, useRef, useState } from 'react'
+import { Button, Frame, Highlight, withStyles, Words } from 'arwes'
+import { useSelector } from 'react-redux'
+import { selectUser } from '../../redux/Auth/authSelectors'
+import { FaPen } from 'react-icons/fa'
+import { updateUser } from '../../redux/Auth/authOperations'
+import { toast } from 'react-hot-toast'
 const styles = () => ({
   content: {
-    display: "flex",
+    display: 'flex',
     padding: 20,
-    justifyContent: "center",
-    textAlign: "left",
-    width: "100%",
+    justifyContent: 'center',
+    textAlign: 'left',
+    width: '100%',
   },
   picture: {
-    borderRadius: "50%",
+    borderRadius: '50%',
     marginRight: 20,
+    cursor: 'pointer',
   },
   userDetails: {
-    marginTop: "0.5em",
+    marginTop: '0.5em',
   },
   details: {
-    marginBottom: "0.5em",
+    marginBottom: '0.5em',
   },
-  progressBar: {},
   personalInfo: {
-    width: "40%",
+    width: '50%',
   },
-  progressSection: {
-    width: "50%",
-    justifyContent: "center",
-  },
+
   top_section: {
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
+    textAlign: 'left',
   },
-  "@media (max-width: 800px)": {
+  '@media (max-width: 800px)': {
     root: {
-      margin: "0 12px",
+      margin: '0 12px',
     },
   },
   badge: {
-    display: "inline-block",
-    padding: "0.2em 0.5em",
-    borderRadius: "1em",
-    background: "#029DBB",
-    color: "#fff",
-    margin: "0.5em 0",
+    width: '150px',
+    textAlign: 'center',
+    display: 'inline-block',
+    padding: '0.2em 0.5em',
+    borderRadius: '1em',
+    background: '#029DBB',
+    color: '#fff',
+    margin: '0.5em 0',
   },
   header: {
-    display: "flex",
-    justifyContent: "space-between",
-    width: "100%",
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
   },
-});
+})
 
 const ProfileSettingsPanel = (props) => {
-  const { classes, className } = props;
-  const [width, setWidth] = useState({
-    width1: "1%",
-    width2: "1%",
-    width3: "1%",
-    width4: "1%",
-  });
-  useEffect(() => {
-    setTimeout(() => {
-      setWidth({ width1: "8%", width2: "20%", width3: "45%", width4: "6%" });
-    }, 1000);
-  }, []);
+  const { classes, className } = props
+  const [avatar, setAvatar] = useState(null)
 
+  const userData = useSelector(selectUser)
+  const user = userData ? userData.user : null
+
+  const handleAvatarChange = (event) => {
+    setAvatar(event.target.files[0])
+  }
+
+  const handleAvatarUpdate = async () => {
+    const formData = new FormData()
+    formData.append('avatar', avatar)
+
+    try {
+      updateUser(formData)
+      toast.success('Avatar updated successfully.')
+    } catch (error) {
+      console.error('Error updating avatar:', error)
+      alert('Error updating avatar. Please try again later.')
+    }
+  }
   return (
     <div className={classes.content}>
       <div className={classes.personalInfo}>
         <div className={classes.top_section}>
-          <img
-            src="/img/avatars/me.jpeg"
-            alt="Profile Picture"
-            className={classes.picture}
-            style={{ objectFit: "cover", width: "8em", height: "8em" }}
-          />
           <div>
-            <div>
-              <b>Anis Khalef</b>
+            <label htmlFor="avatarInput">
+              {avatar ? (
+                <img
+                  src={URL.createObjectURL(avatar)}
+                  alt="Profile Picture"
+                  className={classes.picture}
+                  style={{ objectFit: 'cover', width: '8em', height: '8em' }}
+                />
+              ) : (
+                <img
+                  src={user.avatar}
+                  alt="Profile Picture"
+                  className={classes.picture}
+                  style={{ objectFit: 'cover', width: '8em', height: '8em' }}
+                />
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                style={{ display: 'none' }}
+                id="avatarInput"
+              />
+            </label>
+          </div>
+
+          <div>
+            <div style={{ textTransform: 'uppercase' }}>
+              <b>{user.name}</b>
             </div>
 
             <span className={classes.badge}>Web Developer</span>
@@ -86,120 +119,22 @@ const ProfileSettingsPanel = (props) => {
         </div>
 
         <div className={classes.userDetails}>
-          <div>
-            <b>Email</b>
+          <div className={classes.details}>
+            <b>Email:</b> <span>anis.khalef98@ainexim.com</span> <FaPen />
           </div>
           <div className={classes.details}>
-            <span>anis.khalef98@ainexim.com</span>
+            <b>Location:</b> <span>Sousse, Tunisia</span> <FaPen />
           </div>
-          <div>
-            <b>Location</b>
-          </div>
-          <div className={classes.details}>
-            <span>Sousse, Tunisia</span>
-          </div>
-          <div>
-            <b>Current career</b>
-          </div>
-          <div className={classes.details}>
-            <span>Frontend Developer</span>
-          </div>
-          <div>
-            <b>Department</b>
-          </div>
-          <div className={classes.details}>
-            <span>Software Development</span>
-          </div>
-          <div>
-            <b>Level</b>
-          </div>
-          <div className={classes.details}>
-            <span>Expert</span>
-          </div>
-        </div>
-      </div>
-      <hr className={classes.hr}></hr>
 
-      <div className={classes.progressSection}>
-        <div>
-          <Highlight>
-            <Words style={{ fontWeight: "bold" }}>Current Project </Words>
-          </Highlight>
-          <Highlight>
-            <Words>AINEXIM SHOWCASE WEBSITE</Words>
-          </Highlight>
+          <div className={classes.details}>
+            <b>Password</b> <FaPen />
+          </div>
         </div>
         <br></br>
-        <div className={classes.progress}>
-          <div className={classes.header}>
-            <Highlight>
-              <Words>Total Achievements </Words>
-            </Highlight>
-            <Highlight>
-              <Words>08/100</Words>
-            </Highlight>
-          </div>
-          <div
-            className="progress"
-            style={{
-              width: width.width1,
-            }}
-          ></div>
-        </div>
-        <br></br>
-        <div className={classes.progress}>
-          <div className={classes.header}>
-            <Highlight>
-              <Words>Total Missions </Words>
-            </Highlight>
-            <Highlight>
-              <Words>20/100</Words>
-            </Highlight>
-          </div>
-          <div
-            className="progress"
-            style={{
-              width: width.width2,
-            }}
-          ></div>
-        </div>
-        <br></br>
-        <div className={classes.progress}>
-          <div className={classes.header}>
-            <Highlight>
-              <Words>Total Tasks </Words>
-            </Highlight>
-            <Highlight>
-              <Words>45/100</Words>
-            </Highlight>
-          </div>
-          <div
-            className="progress"
-            style={{
-              width: width.width3,
-            }}
-          ></div>
-        </div>
-        <br></br>
-        <div className={classes.progress}>
-          <div className={classes.header}>
-            <Highlight>
-              <Words>Total projects</Words>
-            </Highlight>
-            <Highlight>
-              <Words>06/100</Words>
-            </Highlight>
-          </div>
-          <div
-            className="progress"
-            style={{
-              width: width.width4,
-            }}
-          ></div>
-        </div>
+        <Button onClick={handleAvatarUpdate}>Update Profile</Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default withStyles(styles)(ProfileSettingsPanel);
+export default withStyles(styles)(ProfileSettingsPanel)

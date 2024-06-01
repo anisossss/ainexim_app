@@ -1,23 +1,21 @@
-import React, { useState } from "react";
-import { Frame, Words, Button } from "arwes";
-import { Toaster, toast } from "react-hot-toast";
-import { useHistory } from "react-router-dom";
+import React, { useState } from 'react'
+import { Frame, Words, Button } from 'arwes'
+import { Toaster, toast } from 'react-hot-toast'
+import { Link } from 'react-router-dom' // Import Link
 const ForgetPasswordForm = () => {
-  let router = useHistory();
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+    email: '',
+    password: '',
+  })
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
+    const { name, value } = e.target
+    setFormData((prevData) => ({ ...prevData, [name]: value }))
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    router.push("/reset-password");
-  };
+    e.preventDefault()
+  }
 
   return (
     <div className="form-container">
@@ -26,24 +24,22 @@ const ForgetPasswordForm = () => {
         reverseOrder={false}
         toastOptions={{
           style: {
-            border: "4px solid #029DBB",
-            background: "#484D4E",
-            color: "#fff",
+            border: '4px solid #029DBB',
+            background: '#484D4E',
+            color: '#fff',
             borderRadius: 0,
             zIndex: 1,
           },
         }}
       />
       <Frame animate={true} level={3} corners={1} layer="primary">
-        <div style={{ padding: "2em" }}>
-          <Words animate style={{ fontWeight: "bold" }}>
+        <div style={{ padding: '2em' }}>
+          <Words animate style={{ fontWeight: 'bold' }}>
             Recover Your Password
           </Words>
           <br></br>
           <br></br>
-          <Words animate>
-            Please enter your email address to reset your password
-          </Words>
+          <Words animate>Please enter your email address to reset your password</Words>
         </div>
         <form className="login">
           <div className="form-group">
@@ -59,20 +55,21 @@ const ForgetPasswordForm = () => {
             />
           </div>
           <div className="login-btn">
-            <Button
-              animate
-              layer="success"
-              type="submit"
-              style={{ width: "100%", textAlign: "center" }}
-              onClick={handleSubmit}
-            >
-              Send Reset Link
-            </Button>{" "}
+            <Link to="/reset-password" style={{ textDecoration: 'none', color: 'white' }}>
+              <Button
+                animate
+                layer="success"
+                type="submit"
+                style={{ width: '100%', textAlign: 'center' }}
+              >
+                Send Reset Link
+              </Button>
+            </Link>
           </div>
         </form>
       </Frame>
     </div>
-  );
-};
+  )
+}
 
-export default ForgetPasswordForm;
+export default ForgetPasswordForm

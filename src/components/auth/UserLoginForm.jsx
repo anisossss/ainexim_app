@@ -1,102 +1,110 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Frame, Words, Button } from "arwes";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Toaster, toast } from "react-hot-toast";
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Frame, Words, Button } from 'arwes'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
+import { useDispatch, useSelector } from 'react-redux'
+import { Formik } from 'formik'
+import { login } from '../../redux/Auth/authOperations'
+import { useValidation } from '../../helpers'
+import { useAuth } from '../../hooks'
+import { setError } from '../../redux/Auth/authSlice'
+import { selectIsLoading } from '../../redux/Auth/authSelectors'
+import { toast } from 'react-toastify'
 
 const UserLoginForm = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [showPassword, setShowPassword] = useState(false)
+  const { error } = useAuth()
+  const { loginValidationSchema } = useValidation()
+  const isLoading = useSelector(selectIsLoading)
+  const dispatch = useDispatch()
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  const handlePasswordToggle = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    toast.success("Loggedin successfully!");
-  };
-
+  const handleSubmitForm = async (values) => {
+    try {
+      const res = await dispatch(login(values)).unwrap()
+      toast.success('You are logged in successfully')
+    } catch (rejectedValueOrSerializedError) {
+      toast.error(rejectedValueOrSerializedError)
+    }
+  }
   return (
     <div className="form-container">
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        toastOptions={{
-          style: {
-            border: "3px solid #029DBB",
-            background: "#484D4E",
-            color: "#fff",
-            borderRadius: 0,
-          },
-        }}
-      />
       <Frame animate={true} level={3} corners={1} layer="primary">
-        <Words animate style={{ padding: "2em", fontWeight: "bold" }}>
+        <Words animate style={{ padding: '2em', fontWeight: 'bold' }}>
           Login to AINEXIM, Your Portal to Seamless Development
         </Words>
-        <form className="login">
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="text"
-              placeholder="Enter your email"
-              name="email"
-              id="email"
-              className=" full-width"
-              value={formData.email}
-              onChange={handleInputChange}
-            />
-          </div>
-          <br></br>
-          <div className="form-group pass-box">
-            <label htmlFor="password">Password</label>
-            <div className="password-input">
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                name="password"
-                id="password"
-                className="full-width"
-                value={formData.password}
-                onChange={handleInputChange}
-              />
-              <span className="password-toggle" onClick={handlePasswordToggle}>
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
-            </div>
-          </div>
 
-          <div className="forgot-link">
-            <Link to="/forgot-password" className="pass-link">
-              <span style={{ fontSize: "15px" }}>Forgot password?</span>
-            </Link>
-          </div>
+        <Formik
+          initialValues={{ email: '', password: '' }}
+          validationSchema={loginValidationSchema}
+          onSubmit={(values) => handleSubmitForm(values)}
+        >
+          {({ values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
+            <form className="login" onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <input
+                  type="text"
+                  placeholder="Enter your email"
+                  name="email"
+                  id="email"
+                  className=" full-width"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+                {errors.email && touched.email && <div className="alert error">{errors.email}</div>}
+              </div>
+              <br />
+              <div className="form-group pass-box">
+                <label htmlFor="password">Password</label>
+                <div className="password-input">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Password"
+                    name="password"
+                    id="password"
+                    className="full-width"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                  <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+                </div>
+                {errors.password && touched.password && (
+                  <div className="alert error">{errors.password}</div>
+                )}
+              </div>
 
-          <div className="login-btn">
-            <Link to="/preworld/complete-profile">
-              <Button
-                animate
-                layer="success"
-                type="submit"
-                style={{ width: "100%", textAlign: "center" }}
-              >
-                Login
-              </Button>
-            </Link>
-          </div>
-        </form>
+              <div className="forgot-link">
+                <Link to="/forgot-password" className="pass-link">
+                  <span style={{ fontSize: '15px' }}>Forgot password?</span>
+                </Link>
+              </div>
+
+              <div className="login-btn">
+                <Button
+                  animate
+                  layer="success"
+                  style={{ width: '100%', textAlign: 'center', position: 'relative' }}
+                >
+                  Login
+                  {isLoading && (
+                    <div className="loadingio" style={{ position: 'absolute', width: '1%' }}>
+                      <div className="loading">
+                        <div></div>
+                      </div>
+                    </div>
+                  )}
+                </Button>
+              </div>
+            </form>
+          )}
+        </Formik>
       </Frame>
     </div>
-  );
-};
+  )
+}
 
-export default UserLoginForm;
+export default UserLoginForm

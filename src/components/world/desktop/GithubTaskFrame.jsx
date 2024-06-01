@@ -1,152 +1,147 @@
-import React, { useState, useEffect } from "react";
-import { withStyles } from "arwes";
-import { Frame, Button, Words } from "arwes";
-import { Link } from "react-router-dom";
-import { CONSTANTS } from "../../../constants/api";
-import axios from "axios";
-import { useHistory } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import React, { useState, useEffect } from 'react'
+import { withStyles } from 'arwes'
+import { Frame, Button, Words } from 'arwes'
+import { Link } from 'react-router-dom'
+import { CONSTANTS } from '../../../constants/api'
+import axios from 'axios'
+import { useLocation } from 'react-router-dom'
+import toast, { Toaster } from 'react-hot-toast'
 
 const styles = () => ({
   chatBox: {
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
   },
   chatContainer: {},
   modalFrame: {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    maxWidth: "80%",
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    maxWidth: '80%',
     zIndex: 1000,
   },
   modalBackdrop: {
-    position: "fixed",
+    position: 'fixed',
     top: 0,
     left: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(0, 0, 0, 0.5)",
+    width: '100%',
+    height: '100%',
+    background: 'rgba(0, 0, 0, 0.5)',
     zIndex: 999,
   },
   textArea: {
-    border: "1px solid white",
-    color: "#fff",
-    height: "100px",
+    border: '1px solid white',
+    color: '#fff',
+    height: '100px',
   },
-});
+})
 
 const GithubTaskFrame = (props) => {
-  const { classes } = props;
+  const { classes } = props
   const [taskData, setTaskData] = useState({
-    title: "Create GitHub Repository and Push Code Task",
-    description:
-      "This task requires you to create a GitHub repository and push your code to it.",
+    title: 'Create GitHub Repository and Push Your Last Code',
+    description: 'This task requires you to create a GitHub repository and push your code to it.',
     instructions: [
       {
-        text: "1. Create a new GitHub repository.",
+        text: '1. Create a new GitHub repository.',
         loading: false,
         completed: false,
       },
       {
-        text: "2. Initialize it with a README file.",
+        text: '2. Initialize it with a README file.',
         loading: false,
         completed: false,
       },
       {
-        text: "3. Push your code to the repository.",
+        text: '3. Push your code to the repository.',
         loading: false,
         completed: false,
       },
       {
-        text: "4. Provide the repository link as the response.",
+        text: '4. Provide the repository link as the response.',
         loading: false,
         completed: false,
       },
     ],
-    resources: [
-      "https://docs.github.com/en/get-started/quickstart/create-a-repo",
-    ],
-  });
+    resources: ['https://docs.github.com/en/get-started/quickstart/create-a-repo'],
+  })
 
   useEffect(() => {
     const fetchTask = () => {
       // No need to fetch data since we're using static data
-    };
-    fetchTask();
-  }, []);
+    }
+    fetchTask()
+  }, [])
 
-  const history = useHistory();
-  const [clickCount, setClickCount] = useState(0);
-  const [tabActivityCount, setTabActivityCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false); // Set to false since we're using static data
-  const [isLoadingConfirmation, setIsLoadingConfirmation] = useState(false);
-  const [inputMessage, setInputMessage] = useState("");
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [isAllTasksCompleted, setIsAllTasksCompleted] = useState(false);
+  const history = useLocation()
+  const [clickCount, setClickCount] = useState(0)
+  const [tabActivityCount, setTabActivityCount] = useState(0)
+  const [isLoading, setIsLoading] = useState(false) // Set to false since we're using static data
+  const [isLoadingConfirmation, setIsLoadingConfirmation] = useState(false)
+  const [inputMessage, setInputMessage] = useState('')
+  const [isModalOpen, setModalOpen] = useState(false)
+  const [isAllTasksCompleted, setIsAllTasksCompleted] = useState(false)
   useEffect(() => {
     const handleTabActivityChange = () => {
       if (document.hidden) {
-        setTabActivityCount((prevCount) => prevCount + 1);
+        setTabActivityCount((prevCount) => prevCount + 1)
       }
-    };
+    }
 
     const handleClick = () => {
-      setClickCount((prevCount) => prevCount + 1);
-    };
+      setClickCount((prevCount) => prevCount + 1)
+    }
 
-    document.addEventListener("visibilitychange", handleTabActivityChange);
-    document.body.addEventListener("click", handleClick);
+    document.addEventListener('visibilitychange', handleTabActivityChange)
+    document.body.addEventListener('click', handleClick)
 
     return () => {
-      document.removeEventListener("visibilitychange", handleTabActivityChange);
-      document.body.removeEventListener("click", handleClick);
-    };
-  }, []);
+      document.removeEventListener('visibilitychange', handleTabActivityChange)
+      document.body.removeEventListener('click', handleClick)
+    }
+  }, [])
 
   const handleConfirmClick = async () => {
-    setIsLoadingConfirmation(true);
-    setModalOpen(false);
+    setIsLoadingConfirmation(true)
+    setModalOpen(false)
 
     for (let i = 0; i < taskData.instructions.length; i++) {
-      const newInstructions = [...taskData.instructions];
-      newInstructions[i].loading = true;
-      setTaskData({ ...taskData, instructions: newInstructions });
+      const newInstructions = [...taskData.instructions]
+      newInstructions[i].loading = true
+      setTaskData({ ...taskData, instructions: newInstructions })
 
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds
+      await new Promise((resolve) => setTimeout(resolve, 2000)) // Wait for 2 seconds
 
-      newInstructions[i].loading = false;
-      newInstructions[i].completed = true;
-      setTaskData({ ...taskData, instructions: newInstructions });
+      newInstructions[i].loading = false
+      newInstructions[i].completed = true
+      setTaskData({ ...taskData, instructions: newInstructions })
     }
 
-    setIsLoadingConfirmation(false);
-    const isAllCompleted = taskData.instructions.every(
-      (inst) => inst.completed
-    );
-    setIsAllTasksCompleted(isAllCompleted);
+    setIsLoadingConfirmation(false)
+    const isAllCompleted = taskData.instructions.every((inst) => inst.completed)
+    setIsAllTasksCompleted(isAllCompleted)
 
     if (isAllCompleted) {
-      toast.success("All tasks validated successfully.");
+      toast.success('All tasks validated successfully.')
     }
-  };
+  }
   const handleInputChange = (e) => {
-    setInputMessage(e.target.value);
-  };
+    setInputMessage(e.target.value)
+  }
 
   const handleInputResize = (e) => {
-    e.target.style.height = "auto";
-    e.target.style.height = `${e.target.scrollHeight}px`;
-  };
+    e.target.style.height = 'auto'
+    e.target.style.height = `${e.target.scrollHeight}px`
+  }
 
   const handleVerifyClick = () => {
-    setModalOpen(true);
-  };
+    setModalOpen(true)
+  }
 
   const handleCloseModal = () => {
-    setModalOpen(false);
-  };
+    setModalOpen(false)
+  }
 
   return (
     <div className="isModalOpen">
@@ -158,8 +153,8 @@ const GithubTaskFrame = (props) => {
       />
       <Frame animate={true}>
         {!isLoading ? (
-          <div style={{ padding: "1em", fontSize: "smaller" }}>
-            <span animate style={{ fontWeight: "bold" }}>
+          <div style={{ padding: '1em', fontSize: 'smaller' }}>
+            <span animate style={{ fontWeight: 'bold' }}>
               Task 2: {taskData.title}
             </span>
 
@@ -169,17 +164,17 @@ const GithubTaskFrame = (props) => {
 
             <br></br>
             <br></br>
-            <Words animate style={{ fontWeight: "bold" }}>
+            <Words animate style={{ fontWeight: 'bold' }}>
               Instructions
             </Words>
             {taskData.instructions.map((instruction, index) => (
               <div
                 key={index}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  fontSize: "15px",
-                  lineHeight: "30px",
+                  display: 'flex',
+                  alignItems: 'center',
+                  fontSize: '15px',
+                  lineHeight: '30px',
                 }}
               >
                 {instruction.text}
@@ -190,21 +185,19 @@ const GithubTaskFrame = (props) => {
                     </div>
                   </div>
                 )}
-                {instruction.completed && (
-                  <span style={{ marginLeft: "10px" }}>✅</span>
-                )}
+                {instruction.completed && <span style={{ marginLeft: '10px' }}>✅</span>}
               </div>
             ))}
             <br></br>
 
-            <Words animate style={{ fontWeight: "bold" }}>
+            <Words animate style={{ fontWeight: 'bold' }}>
               Helpful Resources
             </Words>
             <br></br>
             {taskData.resources.map((resource, index) => (
               <span key={index}>
-                💡{" "}
-                <a href={resource} style={{ fontSize: "15px" }}>
+                💡{' '}
+                <a href={resource} style={{ fontSize: '15px' }}>
                   {resource}
                 </a>
                 <br />
@@ -228,7 +221,7 @@ const GithubTaskFrame = (props) => {
             </div>
           </div>
         ) : (
-          <div style={{ textAlign: "center", marginTop: "8em" }}>
+          <div style={{ textAlign: 'center', marginTop: '8em' }}>
             <div className="loadingio">
               <div className="loading">
                 <div></div>
@@ -240,13 +233,10 @@ const GithubTaskFrame = (props) => {
 
       {isModalOpen && (
         <>
-          <div
-            className={classes.modalBackdrop}
-            onClick={handleCloseModal}
-          ></div>
+          <div className={classes.modalBackdrop} onClick={handleCloseModal}></div>
 
           <Frame className={classes.modalFrame} animate={true} corners={1}>
-            <div style={{ padding: "1em" }}>
+            <div style={{ padding: '1em' }}>
               <Words>Are you sure you want to Validate the task?</Words>
               <br />
               <br />
@@ -266,22 +256,16 @@ const GithubTaskFrame = (props) => {
       {isAllTasksCompleted && (
         <div className={classes.modalBackdrop}>
           <Frame className={classes.modalFrame} animate={true} corners={1}>
-            <div style={{ padding: "1em" }}>
+            <div style={{ padding: '1em' }}>
               <Words>Congratulations! You have completed all the tasks.</Words>
               <br />
               <br />
               <div className="btns_confirm">
-                <Button
-                  onClick={() => history.push("/some/next/task/link")}
-                  layer="success"
-                >
+                <Button onClick={() => history.push('/some/next/task/link')} layer="success">
                   Go to Next Task
                 </Button>
 
-                <Button
-                  onClick={() => history.push("/task/board/link")}
-                  layer="secondary"
-                >
+                <Button onClick={() => history.push('/task/board/link')} layer="secondary">
                   Go to Task Board
                 </Button>
               </div>
@@ -290,7 +274,7 @@ const GithubTaskFrame = (props) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default withStyles(styles)(GithubTaskFrame);
+export default withStyles(styles)(GithubTaskFrame)

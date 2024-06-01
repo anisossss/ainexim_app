@@ -1,119 +1,69 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Frame, Table, withStyles, Button } from "arwes";
-import {
-  FaCheckCircle,
-  FaTimesCircle,
-  FaExclamationCircle,
-} from "react-icons/fa";
-import { HiOutlineDotsVertical } from "react-icons/hi";
+import React, { useState, useRef, useEffect } from 'react'
+import { Frame, Table, withStyles, Button } from 'arwes'
+import { FaCheckCircle, FaTimesCircle, FaExclamationCircle } from 'react-icons/fa'
+import { HiOutlineDotsVertical } from 'react-icons/hi'
+import axios from 'axios' // Import axios for making HTTP requests
+import { selectUser } from '../../redux/Auth/authSelectors'
+import { useSelector } from 'react-redux'
+import { CONSTANTS } from '../../constants/api'
 
-const styles = (theme) => ({});
+const styles = (theme) => ({})
 
 const CurrentTasksTable = (props) => {
-  const menuRef = useRef(null);
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setOpenTask(null);
-      }
-    };
+  const userData = useSelector(selectUser)
+  const user = userData ? userData.user : null
+  const level = user ? user.level : null
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-  const staticTasks = [
-    {
-      id: 1,
-      title: "Implement social media integration",
-      status: "pending",
-      deadline: "2024-03-15",
-    },
-    {
-      id: 2,
-      title: "Design landing page graphics",
-      status: "completed",
-      deadline: "2024-02-18",
-    },
-    {
-      id: 3,
-      title: "Optimize database queries",
-      status: "pending",
-      deadline: "2024-02-10",
-    },
-    {
-      id: 4,
-      title: "Fix broken links in footer",
-      status: "pending",
-      deadline: "2024-02-05",
-    },
-    {
-      id: 5,
-      title: "Implement client-side form validation",
-      status: "pending",
-      deadline: "2024-02-20",
-    },
-    {
-      id: 6,
-      title: "Deploy website to production server",
-      status: "completed",
-      deadline: "2024-02-25",
-    },
-    {
-      id: 7,
-      title: "Create API endpoints for user data",
-      status: "pending",
-      deadline: "2024-03-08",
-    },
-    {
-      id: 8,
-      title: "Optimize image assets for web",
-      status: "completed",
-      deadline: "2024-02-27",
-    },
-    {
-      id: 9,
-      title: "Integrate payment gateway",
-      status: "pending",
-      deadline: "2024-03-18",
-    },
-    {
-      id: 10,
-      title: "Update terms and conditions page",
-      status: "completed",
-      deadline: "2024-02-22",
-    },
-  ];
+  const menuRef = useRef(null)
+  const [taskData, setTaskData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (level) {
+          const response = await axios.get(
+            `${CONSTANTS.API_URL}/generation/get-web-tasks?level=${level}`
+          )
+          setTaskData(response.data.tasks)
+          setIsLoading(false)
+        }
+      } catch (error) {
+        console.error('Error getting task data from backend:', error)
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [level])
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case "completed":
-        return <FaCheckCircle color="green" />;
-      case "pending":
-        return <FaExclamationCircle color="orange" />;
-      case "failed":
-        return <FaTimesCircle color="red" />;
+      case 'completed':
+        return <FaCheckCircle color="green" />
+      case 'pending':
+        return <FaExclamationCircle color="orange" />
+      case 'failed':
+        return <FaTimesCircle color="red" />
       default:
-        return null;
+        return null
     }
-  };
+  }
 
-  const [openTask, setOpenTask] = useState(null);
+  const [openTask, setOpenTask] = useState(null)
 
   const handleOpenTask = (taskId) => {
     if (openTask === taskId) {
-      setOpenTask(null);
+      setOpenTask(null)
     } else {
-      setOpenTask(taskId);
+      setOpenTask(taskId)
     }
-  };
+  }
 
   const TaskActionsMenu = ({ taskId }) => {
     if (openTask === taskId) {
       return (
         <div className="toggle_menu_container" ref={menuRef}>
-          <ul style={{ listStyle: "none", padding: 0 }}>
+          <ul style={{ listStyle: 'none', padding: 0 }}>
             <li>
               <Button className="menu_btn">
                 <span className="menu_span">Mark as done</span>
@@ -126,40 +76,31 @@ const CurrentTasksTable = (props) => {
             </li>
           </ul>
         </div>
-      );
+      )
     }
-    return null;
-  };
-
+    return null
+  }
   return (
     <Table className="table">
       <table>
         <thead>
           <tr>
-            <th>ID</th>
             <th>Title</th>
-            <th>Status</th>
-            <th>Deadline</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {staticTasks.map((rowData) => (
+          {taskData.map((rowData) => (
             <tr key={rowData.id}>
-              <td>{rowData.id}</td>
               <td>{rowData.title}</td>
-              <td style={{}}>{getStatusIcon(rowData.status)}</td>
-              <td>{rowData.deadline}</td>
               <td
                 style={{
-                  cursor: "pointer",
-                  display: "flex",
-                  justifyContent: "center",
+                  cursor: 'pointer',
+                  display: 'flex',
+                  justifyContent: 'center',
                 }}
               >
-                <HiOutlineDotsVertical
-                  onClick={() => handleOpenTask(rowData.id)}
-                />
+                <HiOutlineDotsVertical />
                 <TaskActionsMenu taskId={rowData.id} />
               </td>
             </tr>
@@ -167,7 +108,7 @@ const CurrentTasksTable = (props) => {
         </tbody>
       </table>
     </Table>
-  );
-};
+  )
+}
 
-export default withStyles(styles)(CurrentTasksTable);
+export default withStyles(styles)(CurrentTasksTable)
