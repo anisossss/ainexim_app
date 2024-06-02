@@ -1,20 +1,25 @@
-import { Arwes, SoundsProvider, ThemeProvider, createSounds, createTheme } from 'arwes'
-import { BrowserRouter as Router } from 'react-router-dom'
-import AppLayout from './pages/AppLayout'
-import React, { useEffect } from 'react'
-import { theme, resources, sounds } from './settings'
+import {
+  Arwes,
+  SoundsProvider,
+  ThemeProvider,
+  createSounds,
+  createTheme,
+} from "arwes";
+import { BrowserRouter as Router } from "react-router-dom";
+import AppLayout from "./pages/AppLayout";
+import React, { useEffect } from "react";
+import { theme, resources, sounds } from "./settings";
 
-import { Provider } from 'react-redux'
-import { store, persistor } from './redux/store'
-import { PersistGate } from 'redux-persist/integration/react'
-import { PrimeReactProvider } from 'primereact/api'
+import { Provider } from "react-redux";
+import { store, persistor } from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 
 const App = () => {
   useEffect(() => {
-    document.addEventListener('contextmenu', (e) => {
-      e.preventDefault()
-    })
-  }, [])
+    document.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    });
+  }, []);
 
   return (
     <React.StrictMode>
@@ -32,7 +37,7 @@ const App = () => {
         </PersistGate>
       </Provider>
     </React.StrictMode>
-  )
-}
+  );
+};
 
-export default App
+export default App;
