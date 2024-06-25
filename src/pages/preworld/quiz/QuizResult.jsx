@@ -1,5 +1,5 @@
 import { Highlight, withStyles } from "arwes";
-import QuizResultFrame from "../../../components/preworld/quiz/QuizResultFrame";
+import WebQuizResultFrame from "../../../components/world/desktop/tasks/quiz/WebQuizResultFrame";
 const styles = () => ({
   root: {
     width: 1200,
@@ -12,9 +12,9 @@ const styles = () => ({
   },
 });
 
-const QuizResult = (props) => {
+const WebQuizResult = (props) => {
   const { classes, className } = props;
-  return <QuizResultFrame />;
+  return <WebQuizResultFrame />;
 };
 
-export default withStyles(styles)(QuizResult);
+export default withStyles(styles)(WebQuizResult);

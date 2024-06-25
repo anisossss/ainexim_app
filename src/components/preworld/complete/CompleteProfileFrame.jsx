@@ -1,126 +1,126 @@
-import React, { useState } from 'react'
-import { Frame, Button } from 'arwes'
-import { withStyles } from 'arwes'
-import axios from 'axios'
-import { IoClose } from 'react-icons/io5'
-import { toast } from 'react-toastify'
-import { completeProfile } from '../../../redux/Auth/authOperations'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from "react";
+import { Frame, Button, Grid } from "arwes";
+import { withStyles } from "arwes";
+import axios from "axios";
+import { IoClose } from "react-icons/io5";
+import { toast } from "react-toastify";
+import { completeProfile } from "../../../redux/Auth/authOperations";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const styles = () => ({
-  '@media (max-width: 800px)': {
+  "@media (max-width: 800px)": {
     root: {
-      margin: '0 12px',
+      margin: "0 12px",
     },
   },
   quizContainer: {
-    padding: '20px',
-    width: '100%',
-    overflowY: 'auto',
-    margin: 'auto',
-    justifyContent: 'center',
+    padding: "20px",
+    width: "100%",
+    overflowY: "auto",
+    margin: "auto",
+    justifyContent: "center",
   },
 
   buttonContainer: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginTop: '2em',
+    display: "flex",
+    justifyContent: "flex-end",
+    marginTop: "2em",
   },
   submitButton: {
-    textAlign: 'right',
+    textAlign: "right",
   },
   progressBarContainer: {
-    height: '5px',
-    width: '100%',
-    background: '#222',
-    position: 'relative',
-    overflow: 'hidden',
+    height: "5px",
+    width: "100%",
+    background: "#222",
+    position: "relative",
+    overflow: "hidden",
   },
   modalFrame: {
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     zIndex: 1000,
-    width: '50%',
+    width: "50%",
   },
   modalBackdrop: {
-    position: 'fixed',
+    position: "fixed",
     top: 0,
     left: 0,
-    width: '100%',
-    height: '100%',
-    background: 'rgba(0, 0, 0, 0.5)',
+    width: "100%",
+    height: "100%",
+    background: "rgba(0, 0, 0, 0.5)",
     zIndex: 999,
   },
   textArea: {
-    border: '1px solid white',
-    color: '#fff',
+    border: "1px solid white",
+    color: "#fff",
   },
   modalContent: {
-    display: 'flex',
-    overflowX: 'auto',
+    display: "flex",
+    overflowX: "auto",
   },
   modalEntry: {
-    width: '80vw',
-    height: '100%',
+    width: "80vw",
+    height: "100%",
   },
   step2: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
   },
   entryContainer: {
-    marginBottom: '20px',
-    background: 'rgba(255, 255, 255, 0.2)',
-    width: '80%',
-    padding: '10px',
-    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-    backdropFilter: 'blur(10px)',
-    border: '1px solid rgba(255, 255, 255, 0.3)',
+    marginBottom: "20px",
+    background: "rgba(255, 255, 255, 0.2)",
+    width: "90%",
+    padding: "10px",
+    boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(255, 255, 255, 0.3)",
   },
   proficiencyTabs: {
-    display: 'flex',
-    marginBottom: '20px',
+    display: "flex",
+    marginBottom: "20px",
   },
   tab: {
-    padding: '10px 20px',
-    marginRight: '10px',
-    cursor: 'pointer',
-    border: 'none',
-    background: 'transparent',
-    color: '#fff',
-    outline: 'none',
-    borderBottom: '2px solid transparent',
-    transition: 'border-bottom-color 0.3s',
+    padding: "10px 20px",
+    marginRight: "10px",
+    cursor: "pointer",
+    border: "none",
+    background: "transparent",
+    color: "#fff",
+    outline: "none",
+    borderBottom: "2px solid transparent",
+    transition: "border-bottom-color 0.3s",
   },
   selectedTab: {
-    borderBottomColor: '#00FF00',
+    borderBottomColor: "#00FF00",
   },
-})
+});
 
 const CompleteProfileFrame = (props) => {
-  const { classes, className } = props
-  const [isModalOpen, setModalOpen] = useState(false)
-  const [step, setStep] = useState(1)
-  const [loadingLocation, setLoadingLocation] = useState(false)
-  const [currentEntries, setCurrentEntries] = useState([])
-  const [modalType, setModalType] = useState('')
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const { classes, className } = props;
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [step, setStep] = useState(1);
+  const [loadingLocation, setLoadingLocation] = useState(false);
+  const [currentEntries, setCurrentEntries] = useState([]);
+  const [modalType, setModalType] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     step1: {
-      firstName: '',
-      lastName: '',
-      jobTitle: '',
-      phoneNumber: '',
-      location: '',
-      email: '',
-      portfolioLink: '',
-      linkedinLink: '',
-      githubLink: '',
+      firstName: "",
+      lastName: "",
+      jobTitle: "",
+      phoneNumber: "",
+      location: "",
+      email: "",
+      portfolioLink: "",
+      linkedinLink: "",
+      githubLink: "",
     },
     step2: {
       education: [],
@@ -128,140 +128,142 @@ const CompleteProfileFrame = (props) => {
       languages: [],
       certifications: [],
     },
-  })
+  });
   const handleRemoveEntry = (type, index) => {
-    const updatedEntries = formData.step2[type].filter((_, i) => i !== index)
+    const updatedEntries = formData.step2[type].filter((_, i) => i !== index);
     setFormData((prevData) => ({
       ...prevData,
       step2: {
         ...prevData.step2,
         [type]: updatedEntries,
       },
-    }))
-  }
+    }));
+  };
   const handleCloseModal = () => {
-    setModalOpen(false)
-    setCurrentEntries([])
-    setModalType('')
-  }
+    setModalOpen(false);
+    setCurrentEntries([]);
+    setModalType("");
+  };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
-    const stepData = { ...formData[`step${step}`], [name]: value }
-    setFormData((prevData) => ({ ...prevData, [`step${step}`]: stepData }))
-  }
+    const { name, value } = e.target;
+    const stepData = { ...formData[`step${step}`], [name]: value };
+    setFormData((prevData) => ({ ...prevData, [`step${step}`]: stepData }));
+  };
 
   const handleModalInputChange = (index, e, type) => {
-    const { value } = e.target
-    const updatedEntry = { ...currentEntries[0], [type]: value }
-    setCurrentEntries([updatedEntry])
-  }
+    const { value } = e.target;
+    const updatedEntry = { ...currentEntries[0], [type]: value };
+    setCurrentEntries([updatedEntry]);
+  };
   const nextStep = () => {
-    setStep(step + 1)
-  }
+    setStep(step + 1);
+  };
 
   const prevStep = () => {
-    setStep(step - 1)
-  }
+    setStep(step - 1);
+  };
 
   const handleLocationClick = () => {
-    setLoadingLocation(true)
+    setLoadingLocation(true);
 
     if (navigator.geolocation) {
-      navigator.permissions.query({ name: 'geolocation' }).then((result) => {
-        if (result.state === 'denied') {
-          toast.error('Please enable location permissions in your browser settings and try again.')
-          setLoadingLocation(false)
+      navigator.permissions.query({ name: "geolocation" }).then((result) => {
+        if (result.state === "denied") {
+          toast.error(
+            "Please enable location permissions in your browser settings and try again."
+          );
+          setLoadingLocation(false);
         } else {
           navigator.geolocation.getCurrentPosition(
             async (position) => {
-              const { latitude, longitude } = position.coords
+              const { latitude, longitude } = position.coords;
               try {
                 const response = await axios.get(
                   `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
-                )
-                const { address } = response.data
-                const location = `${address.country}`
+                );
+                const { address } = response.data;
+                const location = `${address.country}`;
                 setFormData((prevData) => ({
                   ...prevData,
                   step1: {
                     ...prevData.step1,
                     location,
                   },
-                }))
+                }));
               } catch (error) {
-                console.error('Error getting location data', error)
+                console.error("Error getting location data", error);
               }
-              setLoadingLocation(false)
+              setLoadingLocation(false);
             },
             (error) => {
-              console.error('Error getting location', error)
-              setLoadingLocation(false)
+              console.error("Error getting location", error);
+              setLoadingLocation(false);
             }
-          )
+          );
         }
-      })
+      });
     } else {
-      console.error('Geolocation is not supported by this browser.')
-      setLoadingLocation(false)
+      console.error("Geolocation is not supported by this browser.");
+      setLoadingLocation(false);
     }
-  }
+  };
   const handleAddEntry = (type) => {
     if (formData.step2[type].length >= 3) {
-      console.log(`Maximum limit reached for ${type}`)
-      return
+      console.log(`Maximum limit reached for ${type}`);
+      return;
     }
 
-    setModalType(type)
-    setCurrentEntries([initializeCurrentEntry(type)])
-    setModalOpen(true)
-  }
+    setModalType(type);
+    setCurrentEntries([initializeCurrentEntry(type)]);
+    setModalOpen(true);
+  };
 
   const initializeCurrentEntry = (type) => {
     switch (type) {
-      case 'education':
+      case "education":
         return {
-          Degree: '',
-          School: '',
-          From: '',
-          To: '',
-          Location: '',
-        }
-      case 'experience':
+          Degree: "",
+          School: "",
+          From: "",
+          To: "",
+          Location: "",
+        };
+      case "experience":
         return {
-          Title: '',
-          Location: '',
-          From: '',
-          To: '',
-          Skills: '',
-        }
-      case 'certifications':
+          Title: "",
+          Location: "",
+          From: "",
+          To: "",
+          Skills: "",
+        };
+      case "certifications":
         return {
-          Name: '',
-          Date: '',
-          ExpirationDate: '',
-        }
-      case 'languages':
+          Name: "",
+          Date: "",
+          ExpirationDate: "",
+        };
+      case "languages":
         return {
-          Language: '',
-          Proficiency: 'Basic',
-        }
+          Language: "",
+          Proficiency: "Basic",
+        };
       default:
-        return null
+        return null;
     }
-  }
+  };
   const handleUpdateEntry = (type, index) => {
-    setModalType(type)
-    setCurrentEntries([{ ...formData.step2[type][index], index }])
-    setModalOpen(true)
-  }
+    setModalType(type);
+    setCurrentEntries([{ ...formData.step2[type][index], index }]);
+    setModalOpen(true);
+  };
 
   const handleSaveEntry = () => {
-    const updatedEntries = [...formData.step2[modalType]]
+    const updatedEntries = [...formData.step2[modalType]];
     if (currentEntries[0].index !== undefined) {
-      updatedEntries.splice(currentEntries[0].index, 1, currentEntries[0])
+      updatedEntries.splice(currentEntries[0].index, 1, currentEntries[0]);
     } else {
-      updatedEntries.push(currentEntries[0])
+      updatedEntries.push(currentEntries[0]);
     }
     setFormData((prevData) => ({
       ...prevData,
@@ -269,12 +271,12 @@ const CompleteProfileFrame = (props) => {
         ...prevData.step2,
         [modalType]: updatedEntries,
       },
-    }))
-    setCurrentEntries([])
-    handleCloseModal()
-  }
+    }));
+    setCurrentEntries([]);
+    handleCloseModal();
+  };
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const profileData = {
         phoneNumber: formData.step1.phoneNumber,
@@ -286,17 +288,19 @@ const CompleteProfileFrame = (props) => {
         experience: formData.step2.experience,
         languages: formData.step2.languages,
         certifications: formData.step2.certifications,
-      }
-      console.log(profileData)
-      await dispatch(completeProfile(profileData)).unwrap()
+      };
+      console.log(profileData);
+      await dispatch(completeProfile(profileData)).unwrap();
 
-      toast.success('Your profile is successfully updated, redirecting to start assessments')
-      navigate('/preworld/quiz')
+      toast.success(
+        "Your profile is successfully updated, redirecting to start assessments"
+      );
+      navigate("/preworld/quiz");
     } catch (error) {
-      console.log(error)
-      toast.error(error)
+      console.log(error);
+      toast.error(error);
     }
-  }
+  };
   return (
     <>
       <h3>Complete Your Profile - Step {step}</h3>
@@ -363,7 +367,11 @@ const CompleteProfileFrame = (props) => {
               name="location"
               id="location"
               className="full-width"
-              value={loadingLocation ? 'Loading location...' : formData.step1.location}
+              value={
+                loadingLocation
+                  ? "Loading location..."
+                  : formData.step1.location
+              }
               onChange={handleInputChange}
               onClick={handleLocationClick}
               required
@@ -427,14 +435,22 @@ const CompleteProfileFrame = (props) => {
                         <strong>{key}:</strong> {edu[key]}
                       </p>
                     ))}
-                    <Button onClick={() => handleUpdateEntry('education', index)}>Update</Button>
-                    <Button onClick={() => handleRemoveEntry('education', index)} layer={'alert'}>
+                    <Button
+                      onClick={() => handleUpdateEntry("education", index)}
+                    >
+                      Update
+                    </Button>
+                    &nbsp;
+                    <Button
+                      onClick={() => handleRemoveEntry("education", index)}
+                      layer={"alert"}
+                    >
                       Remove
                     </Button>
                   </div>
                 ))}
                 <Button
-                  onClick={() => handleAddEntry('education')}
+                  onClick={() => handleAddEntry("education")}
                   disabled={formData.step2.education.length >= 3}
                 >
                   Add Education
@@ -452,14 +468,24 @@ const CompleteProfileFrame = (props) => {
                         <strong>{key}:</strong> {exp[key]}
                       </p>
                     ))}
-                    <Button onClick={() => handleUpdateEntry('experience', index)}>Update</Button>
-                    <Button onClick={() => handleRemoveEntry('experience', index)} layer={'alert'}>
-                      Remove
-                    </Button>
+                    <Grid>
+                      <Button
+                        onClick={() => handleUpdateEntry("experience", index)}
+                      >
+                        Update
+                      </Button>
+                      &nbsp;
+                      <Button
+                        onClick={() => handleRemoveEntry("experience", index)}
+                        layer={"alert"}
+                      >
+                        Remove
+                      </Button>
+                    </Grid>
                   </div>
                 ))}
                 <Button
-                  onClick={() => handleAddEntry('experience')}
+                  onClick={() => handleAddEntry("experience")}
                   disabled={formData.step2.experience.length >= 3}
                 >
                   Add Experience
@@ -477,13 +503,15 @@ const CompleteProfileFrame = (props) => {
                         <strong>{key}:</strong> {cert[key]}
                       </p>
                     ))}
-
-                    <Button onClick={() => handleUpdateEntry('certifications', index)}>
+                    <Button
+                      onClick={() => handleUpdateEntry("certifications", index)}
+                    >
                       Update
                     </Button>
+                    &nbsp;
                     <Button
-                      onClick={() => handleRemoveEntry('certifications', index)}
-                      layer={'alert'}
+                      onClick={() => handleRemoveEntry("certifications", index)}
+                      layer={"alert"}
                     >
                       Remove
                     </Button>
@@ -492,7 +520,7 @@ const CompleteProfileFrame = (props) => {
 
                 <Button
                   css
-                  onClick={() => handleAddEntry('certifications')}
+                  onClick={() => handleAddEntry("certifications")}
                   disabled={formData.step2.certifications.length >= 3}
                 >
                   Add Certification
@@ -511,16 +539,23 @@ const CompleteProfileFrame = (props) => {
                     <p>
                       <strong>Proficiency:</strong> {lang.Proficiency}
                     </p>
-
-                    <Button onClick={() => handleUpdateEntry('languages', index)}>Update</Button>
-                    <Button onClick={() => handleRemoveEntry('languages', index)} layer={'alert'}>
+                    <Button
+                      onClick={() => handleUpdateEntry("languages", index)}
+                    >
+                      Update
+                    </Button>
+                    &nbsp;
+                    <Button
+                      onClick={() => handleRemoveEntry("languages", index)}
+                      layer={"alert"}
+                    >
                       Remove
                     </Button>
                   </div>
                 ))}
 
                 <Button
-                  onClick={() => handleAddEntry('languages')}
+                  onClick={() => handleAddEntry("languages")}
                   disabled={formData.step2.languages.length >= 3}
                 >
                   Add Language
@@ -531,11 +566,11 @@ const CompleteProfileFrame = (props) => {
         </>
       )}
       <div className={classes.submitButton}>
-        <Button onClick={prevStep} layer={'secondary'} disabled={step === 1}>
+        <Button onClick={prevStep} layer={"secondary"} disabled={step === 1}>
           Previous
         </Button>
         {step === 1 && (
-          <Button layer={'secondary'} onClick={nextStep}>
+          <Button layer={"secondary"} onClick={nextStep}>
             Next
           </Button>
         )}
@@ -545,16 +580,23 @@ const CompleteProfileFrame = (props) => {
       {isModalOpen && (
         <>
           <div className={classes.modalBackdrop}></div>
-          <Frame animate level={3} corners={4} className={`${classes.modalFrame} ${className}`}>
+          <Frame
+            animate
+            level={3}
+            corners={4}
+            className={`${classes.modalFrame} ${className}`}
+          >
             <div className={classes.quizContainer}>
               <IoClose
                 size={20}
                 onClick={handleCloseModal}
-                style={{ cursor: 'pointer', position: 'absolute', right: 50 }}
+                style={{ cursor: "pointer", position: "absolute", right: 50 }}
               />
-              <h2>{`Add ${modalType.charAt(0).toUpperCase() + modalType.slice(1)}`}</h2>
+              <h2>{`Add ${
+                modalType.charAt(0).toUpperCase() + modalType.slice(1)
+              }`}</h2>
               <div className={classes.modalContent}>
-                {modalType === 'languages' ? (
+                {modalType === "languages" ? (
                   <div className={classes.modalEntry}>
                     <div className="form-group">
                       <label htmlFor="languageName">Language</label>
@@ -565,7 +607,9 @@ const CompleteProfileFrame = (props) => {
                         id="languageName"
                         className="full-width  "
                         value={currentEntries[0].Language}
-                        onChange={(e) => handleModalInputChange(0, e, 'Language')}
+                        onChange={(e) =>
+                          handleModalInputChange(0, e, "Language")
+                        }
                       />
                     </div>
                     <div className="form-group">
@@ -575,7 +619,9 @@ const CompleteProfileFrame = (props) => {
                         id="languageProficiency"
                         className="full-width  "
                         value={currentEntries[0].Proficiency}
-                        onChange={(e) => handleModalInputChange(0, e, 'Proficiency')}
+                        onChange={(e) =>
+                          handleModalInputChange(0, e, "Proficiency")
+                        }
                       >
                         <option value="Basic">Basic</option>
                         <option value="Intermediate">Intermediate</option>
@@ -585,26 +631,28 @@ const CompleteProfileFrame = (props) => {
                   </div>
                 ) : (
                   <div className={classes.modalEntry}>
-                    {Object.keys(initializeCurrentEntry(modalType)).map((key, index) => (
-                      <div key={index} className="form-group">
-                        <label htmlFor={key}>{key}</label>
-                        <input
-                          type="text"
-                          required
-                          name={key}
-                          id={key}
-                          className="full-width"
-                          value={currentEntries[0][key]}
-                          onChange={(e) => handleModalInputChange(0, e, key)}
-                        />
-                      </div>
-                    ))}
+                    {Object.keys(initializeCurrentEntry(modalType)).map(
+                      (key, index) => (
+                        <div key={index} className="form-group">
+                          <label htmlFor={key}>{key}</label>
+                          <input
+                            type="text"
+                            required
+                            name={key}
+                            id={key}
+                            className="full-width"
+                            value={currentEntries[0][key]}
+                            onChange={(e) => handleModalInputChange(0, e, key)}
+                          />
+                        </div>
+                      )
+                    )}
                   </div>
                 )}
               </div>
               <div className={classes.buttonContainer}>
                 <Button onClick={handleCloseModal}>Cancel</Button>
-                <Button layer={'success'} onClick={handleSaveEntry}>
+                <Button layer={"success"} onClick={handleSaveEntry}>
                   Save
                 </Button>
               </div>
@@ -613,7 +661,7 @@ const CompleteProfileFrame = (props) => {
         </>
       )}
     </>
-  )
-}
+  );
+};
 
-export default withStyles(styles)(CompleteProfileFrame)
+export default withStyles(styles)(CompleteProfileFrame);

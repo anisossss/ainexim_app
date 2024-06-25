@@ -1,5 +1,5 @@
 import { withStyles } from "arwes";
-import QuizFrame from "../../../components/preworld/quiz/QuizFrame";
+import QuizFrame from "../../../components/world/desktop/tasks/quiz/WebQuizFrame";
 const styles = () => ({
   root: {
     width: 1200,
