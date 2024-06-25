@@ -206,11 +206,11 @@ const MeetingRoom = (props) => {
     return () => {
       client.disconnect();
     };
-  }, []); // Empty dependency array ensures this useEffect runs only once, when the component mounts
+  }, []);
 
   const joinRoom = () => {
     if (!roomId.trim()) return;
-    setStep(2); // Move to step 2 (Chat Interface)
+    setStep(2);
     socket.emit("joined", {
       userName: user.name,
       userId: user._id,
