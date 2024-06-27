@@ -17,12 +17,11 @@ import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "../components/layout/index/Sidebar";
 import Dashboard from "./world/dashboard/Dashboard";
 import CurrentTasks from "./user/CurrentTasks";
-import AchievementsTable from "./user/Achievements";
 
 import Login from "./auth/Login";
 import Notifications from "./world/dashboard/Notifications";
-import Chat from "./world/desktop/chat";
-import OpenJobs from "./preworld/jobs/OpenJobs";
+import Chat from "./world/chat";
+import OpenJobs from "./preworld/careers/OpenJobs";
 import ForgotPassword from "./auth/ForgotPassword";
 import ResetPassword from "./auth/ResetPassword";
 import ProfileSettings from "./user/ProfileSettings";
@@ -32,31 +31,36 @@ import Admin from "./world/departments/administration";
 import Meeting from "./world/departments/meeting/Meeting";
 import MeetingEvaluation from "./world/departments/meeting/MeetingEvaluation";
 
-import Timeline from "./world/desktop/Timeline";
+import Timeline from "./world/progress/timeline";
 import Recreation from "./world/departments/recreation";
 import CompleteProfile from "./preworld/complete/CompleteProfile";
 import MyDesktop from "./world/desktop/MyDesktop";
 
 import CodeTask from "./world/desktop/tasks/dev/CodeTask";
-import GithubTask from "./world/desktop/tasks/github/GithubTask";
 import Verification from "./world/desktop/tasks/dev/Verification";
+import GithubTask from "./world/desktop/tasks/github/GithubTask";
+
+import WebQuiz from "./world/desktop/tasks/webquiz/WebQuiz";
+import WebQuizResult from "./world/desktop/tasks/webquiz/WebQuizResult";
+import ProblemSolvingTest from "./world/desktop/tasks/problemsolving/ProblemSolvingTest";
+import ProblemSolvingTestResult from "./world/desktop/tasks/problemsolving/ProblemSolvingTestResult";
 
 import Mentor from "./world/mentor";
 import TechResources from "./world/resources";
 
-import BooksFrame from "../components/world/techresources/books";
-import CoursesFrame from "../components/world/techresources/casts";
-import PlaygroundsFrame from "../components/world/techresources/playgrounds";
-import CheatsheetsFrame from "../components/world/techresources/cheatsheets";
-import CastsFrame from "../components/world/techresources/courses";
-import ProblemSetsFrame from "../components/world/techresources/problemsets";
-import TutosFrame from "../components/world/techresources/tutos";
+import BooksFrame from "../components/world/web/techresources/books";
+import CoursesFrame from "../components/world/web/techresources/casts";
+import PlaygroundsFrame from "../components/world/web/techresources/playgrounds";
+import CheatsheetsFrame from "../components/world/web/techresources/cheatsheets";
+import CastsFrame from "../components/world/web/techresources/courses";
+import ProblemSetsFrame from "../components/world/web/techresources/problemsets";
+import TutosFrame from "../components/world/web/techresources/tutos";
 
-import Quiz from "./preworld/quiz/Quiz";
-import QuizResult from "./preworld/quiz/QuizResult";
+import Quiz from "./preworld/quiz/SoftwareQuiz";
+import QuizResult from "./preworld/quiz/SoftwareQuizResult";
 import Test from "./world/desktop/tasks/problemsolving/ProblemSolvingTest";
 import TestResult from "./world/desktop/tasks/problemsolving/ProblemSolvingTestResult";
-import Apply from "./preworld/jobs/Apply";
+import Apply from "./preworld/careers/Apply";
 import { Flip } from "react-toastify";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -215,13 +219,10 @@ const AppLayout = (props) => {
                   element={<PrivateRoute component={CurrentTasks} />}
                 />
                 <Route
-                  path="/world/desktop/tasks-timeline"
+                  path="/world/current-mission-timeline"
                   element={<PrivateRoute component={Timeline} />}
                 />
-                <Route
-                  path="/achievements"
-                  element={<PrivateRoute component={AchievementsTable} />}
-                />
+
                 <Route
                   path="/chat"
                   element={<PrivateRoute component={Chat} />}
@@ -288,6 +289,24 @@ const AppLayout = (props) => {
                 <Route
                   path="/world/desktop/my-dock"
                   element={<PrivateRoute component={MyDesktop} />}
+                />
+                <Route
+                  path="/world/desktop/web-quiz"
+                  element={<PrivateRoute component={WebQuiz} />}
+                />
+                <Route
+                  path="/world/desktop/web-quiz/verification/:id"
+                  element={<PrivateRoute component={WebQuizResult} />}
+                />
+                <Route
+                  path="/world/desktop/probelm-solving-test"
+                  element={<PrivateRoute component={ProblemSolvingTest} />}
+                />
+                <Route
+                  path="/world/desktop/probelm-solving-test/verification/:id"
+                  element={
+                    <PrivateRoute component={ProblemSolvingTestResult} />
+                  }
                 />
                 <Route
                   path="/world/desktop/code-task"

@@ -95,28 +95,36 @@ const Sidebar = () => {
 
       <Frame>
         <div className="sidebar-item">
-          <NavLink to="/current-tasks">
+          <NavLink to="/world/current-mission-timeline">
             <Button className="sidebar-button">
               <div style={{ display: "flex", alignItems: "center" }}>
                 <FaTasks />
-                <Words> Current Tasks</Words>
+                <Words> Current Mission Timeline</Words>
               </div>
             </Button>
           </NavLink>
         </div>
       </Frame>
-      <Frame>
-        <div className="sidebar-item">
-          <NavLink to="/achievements">
-            <Button className="sidebar-button">
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <GrAchievement />
-                <Words> Achievements</Words>
-              </div>
-            </Button>
-          </NavLink>
-        </div>
-      </Frame>
+
+      <SidebarItem title="Achievements" icon={<GrAchievement />}>
+        <NavLink to="/profile-settings">
+          <Button className="sidebar-button">
+            <div className="sidebar-list">
+              <RiUserSettingsLine />
+              <Words>Total Badges</Words>
+            </div>
+          </Button>
+        </NavLink>
+
+        <NavLink to="/world/mentor">
+          <Button className="sidebar-button">
+            <div className="sidebar-list">
+              <MdOutlineSupport />
+              <Words>Total Missions</Words>
+            </div>
+          </Button>
+        </NavLink>
+      </SidebarItem>
       <SidebarItem
         title="Preferences"
         icon={<MdOutlineRoomPreferences size={20} />}

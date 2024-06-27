@@ -1,5 +1,5 @@
 import { Words, Frame } from "arwes";
-import Admin from "../../../../components/world/departments/administration/Admin";
+import Admin from "../../../../components/world/web/departments/administration/Admin";
 import { Helmet } from "react-helmet";
 
 const Administration = (props) => {

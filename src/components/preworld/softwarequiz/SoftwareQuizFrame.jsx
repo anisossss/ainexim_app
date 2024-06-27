@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { withStyles } from "arwes";
 import { Frame, Button, Words } from "arwes";
 import axios from "axios";
-import { CONSTANTS } from "../../../../../../constants/api";
+import { CONSTANTS } from "../../../constants/api";
 import { Link } from "react-router-dom";
 const styles = () => ({
   "@media (max-width: 800px)": {

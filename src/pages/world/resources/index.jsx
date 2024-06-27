@@ -1,5 +1,5 @@
 import { Words, Frame } from "arwes";
-import TechResourcesFrame from "../../../components/world/techresources";
+import TechResourcesFrame from "../../../components/world/web/techresources";
 import { Helmet } from "react-helmet";
 
 const TechResources = (props) => {

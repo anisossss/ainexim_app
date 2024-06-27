@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Frame, Words, Button } from "arwes";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 
 const ResetPasswordForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,18 +27,6 @@ const ResetPasswordForm = () => {
 
   return (
     <div className="form-container">
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        toastOptions={{
-          style: {
-            border: "4px solid #029DBB",
-            background: "#484D4E",
-            color: "#fff",
-            borderRadius: 0,
-          },
-        }}
-      />
       <Frame animate={true} level={3} corners={1} layer="primary">
         <div style={{ padding: "2em" }}>
           <Words style={{ fontWeight: "bold" }}>Set a new password</Words>

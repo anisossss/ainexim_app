@@ -1,5 +1,5 @@
 import { Words, Frame } from "arwes";
-import MentorChat from "../../../components/world/mentor";
+import MentorChat from "../../../components/world/web/mentor";
 import { Helmet } from "react-helmet";
 
 const Mentor = (props) => {

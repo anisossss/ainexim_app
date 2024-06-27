@@ -1,5 +1,5 @@
 import { withStyles } from "arwes";
-import ProblemSolvingTestResultFrame from "../../../../../components/world/desktop/tasks/problemsolvingtest/ProblemSolvingTestResultFrame";
+import ProblemSolvingTestResultFrame from "../../../../../components/world/web/desktop/tasks/problemsolvingtest/ProblemSolvingTestResultFrame";
 const styles = () => ({
   root: {
     width: 1200,

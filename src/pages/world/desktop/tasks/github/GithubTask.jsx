@@ -1,6 +1,6 @@
 import { withStyles } from "arwes";
 
-import GithubTaskFrame from "../../../../../components/world/desktop/tasks/github/GithubTaskFrame";
+import GithubTaskFrame from "../../../../../components/world/web/desktop/tasks/github/GithubTaskFrame";
 import { Helmet } from "react-helmet";
 
 const styles = () => ({

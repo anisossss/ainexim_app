@@ -226,7 +226,7 @@ const SoftwareTestFrame = (props) => {
               <br />
               <br />
               <Link to="/preworld/test/result">
-                <Button>Submit</Button>
+                <Button onClick={handleConfirmClick}>Submit</Button>
               </Link>
             </div>
           </Frame>

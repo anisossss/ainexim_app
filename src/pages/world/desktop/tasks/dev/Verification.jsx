@@ -1,5 +1,5 @@
 import { withStyles } from "arwes";
-import VerificationFrame from "../../../../../components/world/desktop/tasks/dev/VerificationFrame";
+import VerificationFrame from "../../../../../components/world/web/desktop/tasks/dev/VerificationFrame";
 import { Helmet } from "react-helmet";
 const styles = () => ({
   root: {

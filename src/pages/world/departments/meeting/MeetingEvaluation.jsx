@@ -1,5 +1,5 @@
 import { Words, Frame } from "arwes";
-import MeetingEvaluationFrame from "../../../../components/world/departments/meeting/MeetingEvaluationFrame";
+import MeetingEvaluationFrame from "../../../../components/world/web/departments/meeting/MeetingEvaluationFrame";
 import { Helmet } from "react-helmet";
 
 const MeetingEvaluation = (props) => {

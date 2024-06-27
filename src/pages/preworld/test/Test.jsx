@@ -1,5 +1,5 @@
 import { withStyles } from "arwes";
-import TestFrame from "../../../components/world/desktop/tasks/problemsolvingtest/ProblemSolvingTestFrame";
+import SoftwareTestFrame from "../../../components/preworld/softwaretest/SoftwareTestFrame";
 const styles = () => ({
   root: {
     width: 1200,
@@ -12,9 +12,9 @@ const styles = () => ({
   },
 });
 
-const Test = (props) => {
+const SoftwareTest = (props) => {
   const { classes, className } = props;
-  return <TestFrame />;
+  return <SoftwareTestFrame />;
 };
 
-export default withStyles(styles)(Test);
+export default withStyles(styles)(SoftwareTest);

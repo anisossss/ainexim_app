@@ -1,7 +1,7 @@
 import { withStyles } from "arwes";
 
 import { Words, Frame } from "arwes";
-import MyDekstopDock from "../../../components/world/desktop/layout/MyDesktopDock";
+import MyDekstopDock from "../../../components/world/web/desktop/layout/MyDesktopDock";
 import { Helmet } from "react-helmet";
 
 const styles = () => ({

@@ -1,21 +1,22 @@
-import {
-  Words,
-  Header as ArwesHeader,
-  Highlight,
-  withStyles,
-  Frame,
-  Appear,
-  Table,
-} from "arwes";
-import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { withStyles, Frame, Header, Highlight, Line } from "arwes";
 import { FaUsers } from "react-icons/fa6";
-
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { selectUser, selectToken } from "../../redux/Auth/authSelectors";
+import moment from "moment";
+import { io } from "socket.io-client";
+import { fetchTeamConversations } from "../../redux/Chat/chatOperations";
+import { Link } from "react-router-dom";
 const styles = (theme) => ({
   chatItem: {
-    display: "flex",
+    textDecoration: "none",
+  },
+  chatFrame: {
     alignItems: "center",
+    display: "flex",
     padding: "8px",
+    textDecoration: "none",
   },
   avatar: {
     marginRight: "16px",
@@ -26,65 +27,62 @@ const styles = (theme) => ({
   primaryText: {
     fontWeight: "bold",
   },
+  unseenMessage: {
+    backgroundColor: "yellow",
+  },
 });
-const TeamChat = (props) => {
-  const { classes } = props;
-  const [chats] = useState([
-    {
-      id: 1,
-      teamName: "Frontend Team",
-      lastMessage: "Completed the new user dashboard views",
-      unreadMessages: 2,
-      avatar: "frontend_team_avatar.png",
-      timestamp: "10:30 AM",
-    },
-    {
-      id: 2,
-      teamName: "Backend Team",
-      lastMessage: "API endpoints for user registration completed",
-      unreadMessages: 5,
-      avatar: "backend_team_avatar.png",
-      timestamp: "Yesterday, 11:45 AM",
-    },
-    {
-      id: 3,
-      teamName: "QA Team",
-      lastMessage: "Started testing on the new updates",
-      unreadMessages: 3,
-      avatar: "qa_team_avatar.png",
-      timestamp: "Yesterday, 9:00 PM",
-    },
-    {
-      id: 4,
-      teamName: "DevOps Team",
-      lastMessage: "Set up new CI/CD pipeline for the project",
-      unreadMessages: 0,
-      avatar: "devops_team_avatar.png",
-      timestamp: "Today, 1:00 PM",
-    },
-    {
-      id: 5,
-      teamName: "Mobile Team",
-      lastMessage: "Finished integration of new chat feature on app",
-      unreadMessages: 3,
-      avatar: "mobile_team_avatar.png",
-      timestamp: "Today, 1:15 PM",
-    },
-  ]);
+
+const PersonalChat = ({ classes }) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchTeamConversations()).then((response) => {
+      if (response.payload) {
+        setTeamChats(response.payload);
+      }
+    });
+  }, [dispatch]);
+  const [teamChats, setTeamChats] = useState([]);
+
+  const formatTime = (time) => {
+    const now = moment();
+    const messageTime = moment(time);
+    if (now.isSame(messageTime, "day")) {
+      return messageTime.format("HH:mm");
+    } else {
+      return messageTime.format("D/M/Y");
+    }
+  };
+
   return (
     <Frame animate>
-      {chats.map((chat) => (
-        <Frame key={chat.id} className={classes.chatItem}>
-          <div className={classes.primaryText}>
-            <FaUsers /> {chat.teamName}
-          </div>
-          <span className={classes.secondaryText}>{chat.lastMessage}</span>
-          <br></br>
-          <span>{chat.timestamp}</span>
-        </Frame>
+      {teamChats?.map((chat) => (
+        <Link to={`/chat`} className={classes.chatItem}>
+          <Frame key={chat.id} className={classes.chatFrame}>
+            <div className={classes.chatItem}>
+              <div className={classes.chatItemContent}>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <FaUsers />
+                  &nbsp;
+                  <div className={classes.chatItemName}>{chat.name}</div>
+                </div>
+                <div className={classes.chatItemLastMessage}>
+                  {chat.lastMessage.sentByCurrentUser ? "You: " : ""}
+                  {chat.lastMessage.text}
+                </div>
+                <div className={classes.chatItemTime}>
+                  {formatTime(chat.lastMessage.timestamp)}
+                </div>
+                <div className={classes.chatItemTime}>
+                  {chat.lastMessage.seen ? 1 : ""}
+                </div>
+              </div>
+            </div>
+          </Frame>
+        </Link>
       ))}
     </Frame>
   );
 };
 
-export default withStyles(styles)(TeamChat);
+export default withStyles(styles)(PersonalChat);

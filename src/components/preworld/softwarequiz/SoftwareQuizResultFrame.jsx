@@ -1,4 +1,4 @@
-import { CONSTANTS } from "../../../../../../constants/api";
+import { CONSTANTS } from "../../../constants/api";
 import React, { useState } from "react";
 import { withStyles } from "arwes";
 import { Link } from "react-router-dom";

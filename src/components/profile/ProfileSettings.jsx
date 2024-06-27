@@ -4,7 +4,8 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/Auth/authSelectors";
 import { FaPen } from "react-icons/fa";
 import { updateUser } from "../../redux/Auth/authOperations";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
+
 const styles = () => ({
   content: {
     display: "flex",

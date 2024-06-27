@@ -1,5 +1,5 @@
 import { Words, Frame } from "arwes";
-import RecreationArea from "../../../../components/world/departments/recreation";
+import RecreationArea from "../../../../components/world/web/departments/recreation";
 import { Helmet } from "react-helmet";
 
 const Recreation = (props) => {

@@ -1,6 +1,6 @@
 import { withStyles } from "arwes";
 
-import CodeTaskFrame from "../../../../../components/world/desktop/tasks/dev/CodeTaskFrame";
+import CodeTaskFrame from "../../../../../components/world/web/desktop/tasks/dev/CodeTaskFrame";
 import { Helmet } from "react-helmet";
 
 const styles = () => ({

@@ -1,6 +1,6 @@
 import { Words, Frame } from "arwes";
 import { Helmet } from "react-helmet";
-import MeetingRoom from "../../../../components/world/departments/meeting/MeetingRoom";
+import MeetingRoom from "../../../../components/world/web/departments/meeting/MeetingRoom";
 
 const Meeting = (props) => {
   return (
