@@ -5,11 +5,12 @@ import { io } from "socket.io-client";
 import { TbDoorExit } from "react-icons/tb";
 import { CONSTANTS } from "../../../../../constants/api";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FaMicrophoneAlt } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../../../redux/Auth/authSelectors";
-
+import { toast } from "react-toastify";
+import { FaCopy } from "react-icons/fa";
 const styles = () => ({
   voiceButton: {
     display: "flex",
@@ -108,39 +109,45 @@ const styles = () => ({
 });
 const MeetingRoom = (props) => {
   const [meetingData, setMeetingData] = useState([]);
+  const [webMeetingID, setWebMeetingID] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const userData = useSelector(selectUser);
   const user = userData ? userData.user : null;
-  const level = user ? user.level : null;
   const name = user ? user.name : null;
+  const userId = user ? user._id : null;
+  const location = useLocation();
 
   const [isModalOpen, setModalOpen] = useState(false);
   const handleCloseModal = () => {
     setModalOpen(false);
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${CONSTANTS.API_URL}/generation/get-web-meeting/667b7eb1d0e5667b582491f8`
-        );
-        setMeetingData(response.data.meeting);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error getting task data from backend:", error);
-        setIsLoading(false);
-      }
-    };
+  const webMeetingId = location.pathname.split("/").pop();
 
-    fetchData();
-  }, [level]);
+  const fetchWebMeetingAssignment = async () => {
+    try {
+      const response = await axios.get(
+        `${CONSTANTS.API_URL}/generation/get-web-meeting-assignment/${webMeetingId}/?userId=${userId}`
+      );
+      setMeetingData(response.data.assignment);
+      setWebMeetingID(response.data.assignment.webMeeting._id);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching web meeting assignment:", error);
+      toast.error("Error fetching web meeting assignment");
+    }
+  };
+  useEffect(() => {
+    if (userId && webMeetingId) {
+      fetchWebMeetingAssignment();
+    }
+  }, []);
+
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
   const { classes } = props;
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const [roomId, setRoomId] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [socket, setSocket] = useState(null);
   const [voiceMode, setVoiceMode] = useState(false);
   const [audioChunks, setAudioChunks] = useState([]);
@@ -245,7 +252,7 @@ const MeetingRoom = (props) => {
     const messageData = {
       conversationId: roomId,
       text: inputMessage,
-      sender: user.name,
+      sender: name,
       timestamp: new Date().toISOString(),
     };
 
@@ -260,48 +267,78 @@ const MeetingRoom = (props) => {
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
   }, [messages]);
+
   const exitMeeting = async () => {
     const userAResponses = [];
     const userBResponses = [];
-    const userIdA = meetingData.userA;
-    const userIdB = meetingData.userB;
+    console.log(meetingData.webMeeting);
 
+    // Extract user IDs from meetingData
+    const userIdA = meetingData.webMeeting.userA;
+    const userIdB = meetingData.webMeeting.userB;
+    const webMeetingId = meetingData.webMeeting._id;
+    console.log(userIdA);
+    console.log(messages);
     messages.forEach((message) => {
-      if (message.userId === userIdA) {
-        userAResponses.push(message.message);
-      } else if (message.userId === userIdB) {
-        userBResponses.push(message.message);
+      if (message.sender === user.name) {
+        userAResponses.push(message.text);
+      } else {
+        userBResponses.push(message.text);
       }
     });
     setIsEvaluating(true);
 
     try {
       const response = await axios.post(
-        `${CONSTANTS.API_URL}/evaluation/evaluate-meeting`,
+        `${CONSTANTS.API_URL}/evaluation/evaluate-web-meeting/${webMeetingId}/?userId=${userId}`,
         {
           userAResponses,
           userBResponses,
-          subject: meetingData.subject,
+          subject: meetingData.webMeeting.content,
           userIdA,
           userIdB,
-          webMeetingId: meetingData._id,
+          webMeetingId,
         }
       );
-      console.log(response.data);
-      navigate(
-        `/world/departments/meeting-evaluation/${response.data.meetingChatEvaluation._id}`
-      );
+      const meetingResult = response.data;
+
+      if (userId === userIdA) {
+        navigate(
+          `/world/departments/meeting-evaluation/${meetingResult.updatedUserAAssignment.evaluation}/${userId}`
+        );
+      } else {
+        navigate(
+          `/world/departments/meeting-evaluation/${meetingResult.updatedUserBAssignment.evaluation}/${userId}`
+        );
+      }
     } catch (error) {
       console.error("Error:", error);
     } finally {
       setIsEvaluating(false);
     }
   };
+
   const handleVerifyClick = () => {
     setModalOpen(true);
   };
-  const handleConfirmClick = () => {
-    setModalOpen(false);
+
+  const [copied, setCopied] = useState(false);
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        toast.success("ID Copied");
+        setCopied(true);
+
+        setTimeout(() => {
+          setCopied(false);
+        }, 2000); // Adjust delay as needed
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+        toast.error("Failed to copy ID");
+      });
   };
   return (
     <Frame animate={true} className={classes.frame}>
@@ -311,10 +348,16 @@ const MeetingRoom = (props) => {
           style={{ padding: "2em", height: "59.6dvh" }}
         >
           <div style={{ height: "80%" }}>
-            <p>
-              Welcome <span style={{ color: "#23CAEA" }}>{name}</span>! Check
-              your last task for room ID
-            </p>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <p>
+                COPY ROOM ID:{" "}
+                <span style={{ color: "#23CAEA" }}>{webMeetingID}</span>
+              </p>
+              <FaCopy
+                style={{ cursor: "pointer", marginLeft: "10px" }}
+                onClick={() => copyToClipboard(webMeetingID)}
+              />
+            </div>
             <span
               style={{ marginTop: "1em", lineHeight: "2em", fontSize: "14px" }}
             >
@@ -381,8 +424,13 @@ const MeetingRoom = (props) => {
               </Button>
             </div>
             <div className={classes.content}>
-              <h2>{meetingData.title}</h2>
-              <p style={{ fontSize: "14px" }}>{meetingData.description}</p>
+              <h2>{meetingData.webMeeting.title}</h2>
+              <p style={{ fontSize: "14px" }}>
+                {meetingData.webMeeting.description}
+              </p>
+              <p style={{ fontSize: "14px" }}>
+                {meetingData.webMeeting.content}
+              </p>
             </div>
             <div className="messages">
               {messages.map((message, index) => (

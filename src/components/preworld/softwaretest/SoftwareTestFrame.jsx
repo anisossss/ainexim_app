@@ -2,8 +2,11 @@ import React, { useState, useEffect, useMemo } from "react";
 import { withStyles } from "arwes";
 import { Frame, Button, Words } from "arwes";
 import axios from "axios";
-import { CONSTANTS } from "../../../../../constants/api";
-import { Link } from "react-router-dom";
+import { CONSTANTS } from "../../../constants/api";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../redux/Auth/authSelectors";
 const styles = () => ({
   "@media (max-width: 800px)": {
     root: {
@@ -72,11 +75,43 @@ const SoftwareTestFrame = (props) => {
   const [isTimeModalOpen, setTimeModalOpen] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(30);
   const [textareaValues, setTextareaValues] = useState({});
+  const [quizData, setQuizData] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingConfirmation, setIsLoadingConfirmation] = useState(false);
+  const userData = useSelector(selectUser);
+  const user = userData ? userData.user : null;
+  const userId = user ? user._id : null;
+  const fetchQuizData = () => {
+    axios
+      .get(`${CONSTANTS.API_URL}/generation/get-software-test`)
+      .then((response) => {
+        setQuizData(response.data.tests);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching quiz data:", error);
+      });
+  };
+
+  useEffect(() => {
+    fetchQuizData();
+  }, []);
+
   useEffect(() => {
     if (timeRemaining === 0) {
       setTimeModalOpen(true);
     }
   }, [timeRemaining]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeRemaining((prevTime) => Math.max(0, prevTime - 1));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeRemaining]);
+
   const handleTextareaChange = (event) => {
     const { id, value } = event.target;
     setTextareaValues((prevValues) => ({
@@ -84,11 +119,13 @@ const SoftwareTestFrame = (props) => {
       [id]: value,
     }));
   };
+
   const handleNextQuestion = () => {
     setCurrentQuestionIndex((prevIndex) =>
       prevIndex === quizData.length - 1 ? 0 : prevIndex + 1
     );
   };
+  const navigate = useNavigate();
 
   const handlePreviousQuestion = () => {
     setCurrentQuestionIndex((prevIndex) =>
@@ -103,39 +140,37 @@ const SoftwareTestFrame = (props) => {
   const handleCloseModal = () => {
     setModalOpen(false);
   };
-
   const handleConfirmClick = () => {
+    const responses = quizData.map((test, index) => ({
+      testId: test._id,
+      response: textareaValues[`question_${index}_input`],
+    }));
+
+    setIsLoadingConfirmation(true);
     setModalOpen(false);
+
+    axios
+      .post(
+        `${CONSTANTS.API_URL}/evaluation/evaluate-software-test?userId=${userId}`,
+        {
+          softwareTestResponses: responses,
+        }
+      )
+      .then((response) => {
+        setIsLoadingConfirmation(false);
+        toast.success("Tests validated successfully");
+        navigate(`/preworld/test/result`);
+      })
+      .catch((error) => {
+        toast.error("Error validating Test");
+        setIsLoadingConfirmation(false);
+        console.error("Error validating Test:", error);
+      });
   };
-
-  const [quizData, setQuizData] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const progressPercentage =
-    (currentQuestionIndex / (quizData.length - 1)) * 100;
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const url = `${CONSTANTS.API_URL}/generation/get-software-test`;
-        const response = await axios.get(url);
-        setQuizData(response.data.tests);
-      } catch (error) {
-        console.error("Error fetching quiz data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeRemaining((prevTime) => Math.max(0, prevTime - 1));
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [timeRemaining]);
-
   const currentTest = quizData[currentQuestionIndex];
   const totalQuestions = quizData.length;
+  const progressPercentage =
+    (currentQuestionIndex / (quizData.length - 1)) * 100;
 
   return (
     <div className={classes.quizContainer}>
@@ -203,16 +238,33 @@ const SoftwareTestFrame = (props) => {
               <br />
               <br />
               <div className="btns_confirm">
-                <Link to="/preworld/test/result">
-                  <Button layer="success">Confirm</Button>
-                </Link>
-                <Button layer="secondary" onClick={handleCloseModal}>
+                <Button onClick={handleConfirmClick} layer="success">
+                  Confirm
+                </Button>
+                <Button onClick={handleCloseModal} layer="secondary">
                   Cancel
                 </Button>
               </div>
             </div>
           </Frame>
         </>
+      )}
+      {isLoadingConfirmation && (
+        <div
+          style={{
+            position: "absolute",
+            zIndex: 1000,
+            top: "60%",
+            left: "40%",
+            transform: "translate(-60%, -40%)",
+          }}
+        >
+          <div className="loadingio">
+            <div className="loading">
+              <div></div>
+            </div>
+          </div>
+        </div>
       )}
       {isTimeModalOpen && (
         <>
@@ -225,9 +277,9 @@ const SoftwareTestFrame = (props) => {
               <Words>Time is up! You need to submit the test.</Words>
               <br />
               <br />
-              <Link to="/preworld/test/result">
-                <Button onClick={handleConfirmClick}>Submit</Button>
-              </Link>
+              <Button onClick={handleConfirmClick} layer="success">
+                Submit
+              </Button>
             </div>
           </Frame>
         </>
@@ -235,4 +287,5 @@ const SoftwareTestFrame = (props) => {
     </div>
   );
 };
+
 export default withStyles(styles)(SoftwareTestFrame);

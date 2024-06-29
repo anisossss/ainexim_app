@@ -3,7 +3,10 @@ import { withStyles } from "arwes";
 import { Frame, Button, Words } from "arwes";
 import axios from "axios";
 import { CONSTANTS } from "../../../constants/api";
-import { Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../redux/Auth/authSelectors";
 const styles = () => ({
   "@media (max-width: 800px)": {
     root: {
@@ -70,6 +73,9 @@ const SoftwareQuizFrame = (props) => {
   const [isTimeModalOpen, setTimeModalOpen] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(30);
   const [checkedItems, setCheckedItems] = useState({});
+  const userData = useSelector(selectUser);
+  const user = userData ? userData.user : null;
+  const userId = user ? user._id : null;
   useEffect(() => {
     if (timeRemaining === 0) {
       setTimeModalOpen(true);
@@ -95,10 +101,6 @@ const SoftwareQuizFrame = (props) => {
     setModalOpen(false);
   };
 
-  const handleConfirmClick = () => {
-    setModalOpen(false);
-  };
-
   const [quizData, setQuizData] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const progressPercentage =
@@ -119,6 +121,7 @@ const SoftwareQuizFrame = (props) => {
 
     fetchData();
   }, []);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -143,6 +146,29 @@ const SoftwareQuizFrame = (props) => {
     },
     [setCheckedItems, currentQuestionIndex]
   );
+
+  const handleConfirmClick = () => {
+    const quizResponses = quizData.map((quiz, index) => ({
+      quizId: quiz._id,
+      response: checkedItems[index] || {},
+    }));
+    axios
+      .post(
+        `${CONSTANTS.API_URL}/evaluation/evaluate-software-quiz?userId=${userId}`,
+        {
+          quizResponses,
+        }
+      )
+      .then((response) => {
+        toast.success("Task validated successfully");
+        navigate(`/preworld/quiz/result`);
+      })
+      .catch((error) => {
+        toast.error("Error validating Quiz");
+        console.error("Error validating Quiz:", error);
+      });
+  };
+
   return (
     <div className={classes.quizContainer}>
       {isLoading ? (
@@ -229,9 +255,9 @@ const SoftwareQuizFrame = (props) => {
                   <br />
 
                   <div className="btns_confirm">
-                    <Link to="/preworld/quiz/result">
-                      <Button layer="success">Confirm</Button>
-                    </Link>
+                    <Button layer="success" onClick={handleConfirmClick}>
+                      Confirm
+                    </Button>
                     <Button layer="secondary" onClick={handleCloseModal}>
                       Cancel
                     </Button>
@@ -251,9 +277,7 @@ const SoftwareQuizFrame = (props) => {
                   <Words>Time is up! You need to submit the quiz.</Words>
                   <br />
                   <br />
-                  <Link to="/preworld/quiz/result">
-                    <Button>Submit</Button>
-                  </Link>
+                  <Button>Submit</Button>
                 </div>
               </Frame>
             </>

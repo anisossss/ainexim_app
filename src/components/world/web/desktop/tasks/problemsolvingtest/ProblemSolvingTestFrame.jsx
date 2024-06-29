@@ -3,7 +3,10 @@ import { withStyles } from "arwes";
 import { Frame, Button, Words } from "arwes";
 import axios from "axios";
 import { CONSTANTS } from "../../../../../../constants/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../../../../redux/Auth/authSelectors";
+import { toast } from "react-toastify";
 
 const styles = () => ({
   "@media (max-width: 800px)": {
@@ -66,43 +69,48 @@ const styles = () => ({
     color: "#fff",
   },
 });
-
 const ProblemSolvingTestFrame = (props) => {
-  const { classes, className } = props;
+  const { classes } = props;
   const [isModalOpen, setModalOpen] = useState(false);
   const [isTimeModalOpen, setTimeModalOpen] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(30);
-  const [textareaValues, setTextareaValues] = useState({});
-  const [quizData, setQuizData] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const userData = useSelector(selectUser);
+  const user = userData ? userData.user : null;
+  const userId = user ? user._id : null;
+  const location = useLocation();
+  const webProblemSolvingTestId = location.pathname.split("/").pop();
+  const [isLoadingConfirmation, setIsLoadingConfirmation] = useState(false);
+  const [assignment, setAssignment] = useState(null);
+  const [inputMessage, setInputMessage] = useState("");
 
   useEffect(() => {
-    if (timeRemaining === 0) {
-      setTimeModalOpen(true);
+    if (userId && webProblemSolvingTestId) {
+      fetchWebQuizAssignment();
     }
+  }, [userId, webProblemSolvingTestId]);
+
+  const fetchWebQuizAssignment = async () => {
+    try {
+      const response = await axios.get(
+        `${CONSTANTS.API_URL}/generation/get-web-problem-solving-test-assignment/${webProblemSolvingTestId}/?userId=${userId}`
+      );
+      setAssignment(response.data.assignment);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching web quiz assignment:", error);
+      toast.error("Error fetching web quiz assignment");
+    }
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeRemaining((prevTime) => Math.max(0, prevTime - 1));
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, [timeRemaining]);
-
-  const handleTextareaChange = (event) => {
-    const { id, value } = event.target;
-    setTextareaValues((prevValues) => ({
-      ...prevValues,
-      [id]: value,
-    }));
-  };
-
-  const handleNextQuestion = () => {
-    setCurrentQuestionIndex((prevIndex) =>
-      prevIndex === quizData.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  const handlePreviousQuestion = () => {
-    setCurrentQuestionIndex((prevIndex) =>
-      prevIndex === 0 ? quizData.length - 1 : prevIndex - 1
-    );
-  };
 
   const handleVerifyClick = () => {
     setModalOpen(true);
@@ -113,137 +121,137 @@ const ProblemSolvingTestFrame = (props) => {
   };
 
   const handleConfirmClick = () => {
+    setIsLoadingConfirmation(true);
     setModalOpen(false);
-    navigate("/preworld/test/result");
+
+    const testResponse = {
+      webProblemSolvingResponse: inputMessage,
+    };
+
+    axios
+      .post(
+        `${CONSTANTS.API_URL}/evaluation/evaluate-web-problem-solving-test/${webProblemSolvingTestId}/?userId=${userId}`,
+        testResponse
+      )
+      .then((response) => {
+        setIsLoadingConfirmation(false);
+        navigate(
+          `/world/desktop/problem-solving-test/verification/${response.data.updatedAssignment.evaluation}`
+        );
+      })
+      .catch((error) => {
+        setIsLoadingConfirmation(false);
+        console.error("Error evaluating test:", error);
+        if (error.response) {
+          console.error("Error response:", error.response);
+          toast.error(
+            `Error: ${error.response.data.message || error.response.statusText}`
+          );
+        } else {
+          toast.error("Error evaluating test");
+        }
+      });
   };
 
   const handleTimeUpSubmit = () => {
-    setTimeModalOpen(false);
-    navigate("/preworld/test/result");
+    handleConfirmClick();
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const url = `${CONSTANTS.API_URL}/generation/get-software-test`;
-        const response = await axios.get(url);
-        setQuizData(response.data.tests);
-      } catch (error) {
-        console.error("Error fetching quiz data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeRemaining((prevTime) => Math.max(0, prevTime - 1));
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [timeRemaining]);
-
-  const currentTest = quizData[currentQuestionIndex];
-  const totalQuestions = quizData.length;
-
-  const progressPercentage =
-    (currentQuestionIndex / (quizData.length - 1)) * 100;
+  if (isLoading) {
+    return (
+      <div className="loadingio">
+        <div className="loading">
+          <div></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className={classes.quizContainer}>
-      <div className="timer">
-        <div>{`${currentQuestionIndex + 1}/${totalQuestions}`}</div>
-        <div style={{ color: timeRemaining === 0 ? "red" : "inherit" }}>
-          {`${Math.floor(timeRemaining / 60)}:${(timeRemaining % 60)
-            .toString()
-            .padStart(2, "0")}`}
-        </div>
-      </div>
-      <div className={classes.progressBarContainer}>
-        <div
-          className={classes.progressBarFill}
-          style={{ width: `${progressPercentage}%` }}
-        />
-      </div>
-      {currentTest && (
-        <>
-          <div className={classes.question}>
-            <h3>{currentTest.title}</h3>
-            <p style={{ fontSize: "16px" }}>{currentTest.question}</p>
-            <p style={{ fontSize: "14px" }}>{currentTest.explanation}</p>
-            <br />
+    <Frame level={0}>
+      <div className={classes.quizContainer}>
+        <div className="timer">
+          <div style={{ color: timeRemaining === 0 ? "red" : "inherit" }}>
+            {`${Math.floor(timeRemaining / 20)}:${(timeRemaining % 60)
+              .toString()
+              .padStart(2, "0")}`}
           </div>
-          <textarea
-            id={`question_${currentQuestionIndex}_input`}
-            className="text_area"
-            style={{ height: "10em" }}
-            value={
-              textareaValues[`question_${currentQuestionIndex}_input`] || ""
-            }
-            onChange={handleTextareaChange}
-          />
-        </>
-      )}
-      <div className={classes.buttonsContainer}>
-        <div className={classes.buttonContainer}>
-          <Button
-            onClick={handlePreviousQuestion}
-            disabled={currentQuestionIndex === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            onClick={handleNextQuestion}
-            disabled={currentQuestionIndex === quizData.length - 1}
-          >
-            Next
-          </Button>
         </div>
-        <div className={classes.submitButton}>
-          <Button onClick={handleVerifyClick}>Submit</Button>
+        <div className={classes.progressBarContainer}>
+          <div className={classes.progressBarFill} />
         </div>
-      </div>
-      {isModalOpen && (
-        <>
-          <div
-            className={classes.modalBackdrop}
-            onClick={handleCloseModal}
-          ></div>
-          <Frame className={classes.modalFrame} animate={true} corners={1}>
-            <div style={{ padding: "1em" }}>
-              <Words>Are you sure you want to Validate the test?</Words>
-              <br />
-              <br />
-              <div className="btns_confirm">
-                <Button layer="success" onClick={handleConfirmClick}>
-                  Confirm
-                </Button>
-                <Button layer="secondary" onClick={handleCloseModal}>
-                  Cancel
-                </Button>
+        {assignment && (
+          <>
+            <div className={classes.question}>
+              <h3>{assignment.webProblemSolvingTest.title}</h3>
+              <p style={{ fontSize: "16px" }}>
+                {assignment.webProblemSolvingTest.content}
+              </p>
+              <p style={{ fontSize: "14px" }}>
+                Estimated Time: {assignment.webProblemSolvingTest.estimatedTime}
+              </p>
+              <p style={{ fontSize: "14px" }}>
+                Level: {assignment.webProblemSolvingTest.level}
+              </p>
+              <p style={{ fontSize: "14px" }}>
+                Resources:{" "}
+                {assignment.webProblemSolvingTest.resources.join(", ")}
+              </p>
+            </div>
+          </>
+        )}
+        <textarea
+          className="text_area"
+          style={{ marginTop: "2em", height: "10em" }}
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+        />
+        <div className={classes.buttonsContainer}>
+          <div className={classes.submitButton}>
+            <Button onClick={handleVerifyClick}>Submit</Button>
+          </div>
+        </div>
+        {isModalOpen && (
+          <>
+            <div
+              className={classes.modalBackdrop}
+              onClick={handleCloseModal}
+            ></div>
+            <Frame className={classes.modalFrame} animate={true} corners={1}>
+              <div style={{ padding: "1em" }}>
+                <Words>Are you sure you want to Validate the test?</Words>
+                <br />
+                <br />
+                <div className="btns_confirm">
+                  <Button layer="success" onClick={handleConfirmClick}>
+                    Confirm
+                  </Button>
+                  <Button layer="secondary" onClick={handleCloseModal}>
+                    Cancel
+                  </Button>
+                </div>
               </div>
-            </div>
-          </Frame>
-        </>
-      )}
-      {isTimeModalOpen && (
-        <>
-          <div
-            className={classes.modalBackdrop}
-            onClick={handleCloseModal}
-          ></div>
-          <Frame className={classes.modalFrame} animate={true} corners={1}>
-            <div style={{ padding: "1em", textAlign: "center" }}>
-              <Words>Time is up! You need to submit the test.</Words>
-              <br />
-              <br />
-              <Button onClick={handleTimeUpSubmit}>Submit</Button>
-            </div>
-          </Frame>
-        </>
-      )}
-    </div>
+            </Frame>
+          </>
+        )}
+        {isTimeModalOpen && (
+          <>
+            <div
+              className={classes.modalBackdrop}
+              onClick={handleCloseModal}
+            ></div>
+            <Frame className={classes.modalFrame} animate={true} corners={1}>
+              <div style={{ padding: "1em", textAlign: "center" }}>
+                <Words>Time is up! You need to submit the test.</Words>
+                <br />
+                <br />
+                <Button onClick={handleTimeUpSubmit}>Submit</Button>
+              </div>
+            </Frame>
+          </>
+        )}
+      </div>
+    </Frame>
   );
 };
 

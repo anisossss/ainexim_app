@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { withStyles } from "arwes";
 import { Frame, Button, Words, Line } from "arwes";
 import { CONSTANTS } from "../../../../../../constants/api";
-import { useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 const styles = () => ({
@@ -35,28 +35,18 @@ const CodeVerification = (props) => {
   const [width, setWidth] = useState("0%");
 
   const { classes } = props;
-  const [taskData, setTaskData] = useState(null);
-  const { id } = useParams();
+  const location = useLocation();
+  const webTaskId = location.pathname.split("/").pop();
   const [evaluationData, setEvaluationData] = useState(null);
-  const [scoreColor, setScoreColor] = useState("");
 
   useEffect(() => {
     const fetchEvaluation = () => {
       axios
         .get(
-          `${CONSTANTS.API_URL}/evaluation/get-web-task-evaluation/660e0755c5f7913ef8fb370a`
+          `${CONSTANTS.API_URL}/evaluation/get-web-task-evaluation/${webTaskId}`
         )
         .then((response) => {
           setEvaluationData(response.data.taskEvaluation);
-          const score = response.data.taskEvaluation.rating;
-          setWidth(`${score}%`);
-          if (score < 20) {
-            setScoreColor("#C70039");
-          } else if (score >= 20 && score <= 70) {
-            setScoreColor("#FFC300");
-          } else {
-            setScoreColor("#4CBB17");
-          }
         })
         .catch((error) => {
           console.error("Error getting evaluation data from backend:", error);
@@ -65,6 +55,15 @@ const CodeVerification = (props) => {
     fetchEvaluation();
   }, []);
 
+  let scoreColor = "#4CBB17";
+
+  if (evaluationData) {
+    if (evaluationData.rating < 20 || evaluationData.rating === 0) {
+      scoreColor = "#C70039";
+    } else if (evaluationData.rating >= 20 && evaluationData.rating <= 70) {
+      scoreColor = "#FFC300";
+    }
+  }
   return (
     <Frame animate={true}>
       <div className={classes.validationFrame}>
@@ -72,7 +71,6 @@ const CodeVerification = (props) => {
           Task 1 Evaluation
         </Words>
         <br></br>
-        {taskData && <Words animate>{taskData.title}</Words>}
         <br></br>
         {evaluationData && (
           <div className={classes.criteriaContainer}>
@@ -134,15 +132,9 @@ const CodeVerification = (props) => {
           </div>
         )}
         <div className={classes.btns}>
-          <Link
-            to={{
-              pathname: "/world/desktop/my-dock",
-              state: { openGithub: true },
-            }}
-          >
-            <Button className={classes.btn}>Next Task</Button>
+          <Link to="/world/current-mission-timeline">
+            <Button className={classes.btn}>Tasks Timeline</Button>
           </Link>
-          <Button>Tasks Board</Button>
         </div>
       </div>
     </Frame>

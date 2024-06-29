@@ -15,6 +15,7 @@ const styles = () => ({
   chatBox: {
     display: "flex",
     flexDirection: "column",
+    height: "20em",
   },
   voiceButton: {
     display: "flex",
@@ -56,9 +57,7 @@ const styles = () => ({
     padding: "10px",
     margin: "10px 0",
   },
-  chatContainer: {
-    height: "71.2vh",
-  },
+  chatContainer: { height: "80%" },
 });
 const Typewriter = ({ text, onFinish }) => {
   const [displayText, setDisplayText] = useState("");

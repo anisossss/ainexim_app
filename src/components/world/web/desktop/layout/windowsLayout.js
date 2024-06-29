@@ -9,7 +9,6 @@ import {
 import { IoVolumeHigh, IoBatteryCharging } from "react-icons/io5";
 import CodeTaskFrame from "../tasks/dev/CodeTaskFrame";
 import GithubTaskFrame from "../tasks/github/GithubTaskFrame";
-import VerificationFrame from "../tasks/dev/VerificationFrame";
 
 const styles = (theme) => ({
   desktop: {
@@ -153,12 +152,8 @@ const WindowsLayout = ({ classes, userName, selectOS }) => {
           </div>
         </div>
       </div>
+
       {activeDockItem === 4 && (
-        <div className={classes.modalFrame}>
-          <VerificationFrame height="74vh" />
-        </div>
-      )}
-      {activeDockItem === 2 && (
         <div className={classes.modalFrame}>
           <GithubTaskFrame height="74vh" />
         </div>

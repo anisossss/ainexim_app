@@ -1,8 +1,11 @@
-import { CONSTANTS } from "../../../../../../constants/api";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withStyles } from "arwes";
 import { Link } from "react-router-dom";
 import { Frame, Button, Words, Line } from "arwes";
+import axios from "axios";
+import { CONSTANTS } from "../../../../../../constants/api";
+import { useNavigate, useLocation } from "react-router-dom";
+
 const styles = () => ({
   validationFrame: {
     padding: "1em",
@@ -13,40 +16,45 @@ const styles = () => ({
   btn: {
     marginRight: "2em",
   },
+  progress: {
+    transition: "width 0.5s ease-in-out",
+    height: "30px",
+    border: "none",
+    marginTop: "10px",
+    backgroundColor: "#029dbb",
+    borderRadius: 0,
+  },
 });
 
 const WebQuizResultFrame = (props) => {
   const { classes, className } = props;
-  const evaluationData = [
-    {
-      testName: "Test 1",
-      criteria: [
-        {
-          task: "Technical Understanding: ",
-          comment:
-            "The test results demonstrate a profound understanding of the technical concepts tested. It's apparent that concepts have been studied thoroughly and there's a strong foundation of technical knowledge.",
-          score: "90/100",
-        },
-        {
-          task: "Problem-solving Skills: ",
-          comment:
-            "The problem-solving aspect of the test was handled excellently. There's a solid application of technical knowledge to solve challenges. This reflects strong critical thinking and problem-solving skills.",
-          score: "100/100",
-        },
-        {
-          task: "Testing and Debugging: ",
-          comment:
-            "The test results reflect well-written code that effectively handles errors and unexpected input. There's clear evidence of careful testing and debugging, demonstrating a strong attention to details and focus on producing robust code.",
-          score: "90/100",
-        },
-      ],
-      overallScore: "95/100",
-      pointsRewarded: "1200",
-    },
-  ];
-  const [score, setScore] = useState(0);
-  const [pointsRewarded, setPointsRewarded] = useState(0);
+  const [evaluationData, setEvaluationData] = useState("null");
+  const location = useLocation();
+  const webQuizEvaluationId = location.pathname.split("/").pop();
+  useEffect(() => {
+    const fetchEvaluationData = async () => {
+      try {
+        const response = await axios.get(
+          `${CONSTANTS.API_URL}/evaluation/get-web-quiz-evaluation/${webQuizEvaluationId}`
+        );
+        console.log(response.data.quizEvaluation);
+        setEvaluationData(response.data.quizEvaluation);
+      } catch (error) {
+        console.error("Error fetching evaluation data:", error);
+      }
+    };
 
+    fetchEvaluationData();
+  }, []);
+  let scoreColor = "#4CBB17";
+
+  if (evaluationData) {
+    if (evaluationData.rating < 20) {
+      scoreColor = "#C70039";
+    } else if (evaluationData.rating >= 20 && evaluationData.rating <= 70) {
+      scoreColor = "#FFC300";
+    }
+  }
   return (
     <Frame animate={true}>
       <div className={classes.validationFrame}>
@@ -54,35 +62,49 @@ const WebQuizResultFrame = (props) => {
           Quiz Validation
         </Words>
         <br></br>
-        <br></br>
-        {evaluationData.map((test, i) => (
-          <div key={i}>
-            {test.criteria.map((criterion, j) => (
-              <div key={j} className={classes.criteriaContainer}>
-                <span layer="header" style={{ fontWeight: "bold" }}>
-                  {criterion.task}
-                </span>
-                <Words>{criterion.comment}</Words>
-                <br></br>
-                <br></br>
-                <Line />
-              </div>
-            ))}
-            <span animate style={{ fontWeight: "bold" }}>
-              Overall Score: {test.overallScore}
-            </span>
+        {evaluationData && (
+          <div>
+            <div className={classes.criteriaContainer}>
+              <span layer="header" style={{ fontWeight: "bold" }}>
+                {evaluationData.description}
+              </span>
+              <br />
+              <br />
+              <b>Correct Response </b>
+              <br />
+
+              <Words layer="success">{evaluationData.codeCorrection}</Words>
+              <br />
+              <br />
+              <Line />
+            </div>
+            <span>{evaluationData.advice}</span>
             <br></br>
-            <span animate style={{ fontWeight: "bold" }}>
-              Points Rewarded: {test.pointsRewarded}
-            </span>
+            <br></br>
+            <div className={classes.criteriaContainer}>
+              <div
+                className={classes.progress}
+                style={{
+                  width: `${evaluationData.rating}%`,
+                  display: "flex",
+                  alignItems: "center",
+                  backgroundColor: scoreColor,
+                }}
+              >
+                <Words style={{ fontWeight: "bold", padding: "1em" }}>
+                  Your Evaluation Score: &nbsp; {evaluationData.rating}
+                </Words>
+              </div>
+            </div>
           </div>
-        ))}
-        <br></br>
-        <Link to="/preworld/test">
-          <Button className={classes.btn}>Next</Button>
+        )}
+        <br />
+        <Link to="/world/current-mission-timeline">
+          <Button className={classes.btn}>Tasks Timeline</Button>
         </Link>
       </div>
     </Frame>
   );
 };
+
 export default withStyles(styles)(WebQuizResultFrame);

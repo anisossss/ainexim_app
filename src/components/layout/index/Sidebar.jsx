@@ -81,20 +81,6 @@ const Sidebar = () => {
 
       <Frame>
         <div className="sidebar-item">
-          <NavLink
-            to="/world/desktop/my-dock"
-            isActive={() => isActiveRoute("/dashboard")}
-          >
-            <Button className="sidebar-button">
-              <MdDeveloperMode />
-              <Words>My desktop</Words>{" "}
-            </Button>
-          </NavLink>
-        </div>
-      </Frame>
-
-      <Frame>
-        <div className="sidebar-item">
           <NavLink to="/world/current-mission-timeline">
             <Button className="sidebar-button">
               <div style={{ display: "flex", alignItems: "center" }}>
@@ -106,7 +92,7 @@ const Sidebar = () => {
         </div>
       </Frame>
 
-      <SidebarItem title="Achievements" icon={<GrAchievement />}>
+      {/* <SidebarItem title="Achievements" icon={<GrAchievement />}>
         <NavLink to="/profile-settings">
           <Button className="sidebar-button">
             <div className="sidebar-list">
@@ -124,7 +110,7 @@ const Sidebar = () => {
             </div>
           </Button>
         </NavLink>
-      </SidebarItem>
+      </SidebarItem> */}
       <SidebarItem
         title="Preferences"
         icon={<MdOutlineRoomPreferences size={20} />}

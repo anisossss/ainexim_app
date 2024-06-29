@@ -58,8 +58,8 @@ import TutosFrame from "../components/world/web/techresources/tutos";
 
 import Quiz from "./preworld/quiz/SoftwareQuiz";
 import QuizResult from "./preworld/quiz/SoftwareQuizResult";
-import Test from "./world/desktop/tasks/problemsolving/ProblemSolvingTest";
-import TestResult from "./world/desktop/tasks/problemsolving/ProblemSolvingTestResult";
+import Test from "./preworld/test/Test";
+import TestResult from "./preworld/test/TestResult";
 import Apply from "./preworld/careers/Apply";
 import { Flip } from "react-toastify";
 
@@ -271,11 +271,11 @@ const AppLayout = (props) => {
                   element={<PrivateRoute component={Admin} />}
                 />
                 <Route
-                  path="/world/departments/meeting-room"
+                  path="/world/departments/meeting-room/:webMeetingId"
                   element={<PrivateRoute component={Meeting} />}
                 />
                 <Route
-                  path="/world/departments/meeting-evaluation/:id"
+                  path="/world/departments/meeting-evaluation/:meetingEvaluationId/:userId"
                   element={<PrivateRoute component={MeetingEvaluation} />}
                 />
                 <Route
@@ -287,33 +287,33 @@ const AppLayout = (props) => {
                   element={<PrivateRoute component={Recreation} />}
                 />
                 <Route
-                  path="/world/desktop/my-dock"
+                  path="/world/desktop/my-dock/:webTaskId"
                   element={<PrivateRoute component={MyDesktop} />}
                 />
                 <Route
-                  path="/world/desktop/web-quiz"
+                  path="/world/desktop/web-quiz/:webQuizId"
                   element={<PrivateRoute component={WebQuiz} />}
                 />
                 <Route
-                  path="/world/desktop/web-quiz/verification/:id"
+                  path="/world/desktop/web-quiz/verification/:webQuizEvaluationId"
                   element={<PrivateRoute component={WebQuizResult} />}
                 />
                 <Route
-                  path="/world/desktop/probelm-solving-test"
+                  path="/world/desktop/problem-solving-test/:webProblemSolvingTestId"
                   element={<PrivateRoute component={ProblemSolvingTest} />}
                 />
                 <Route
-                  path="/world/desktop/probelm-solving-test/verification/:id"
+                  path="/world/desktop/problem-solving-test/verification/:webProblemSolvingTestEvaluationId"
                   element={
                     <PrivateRoute component={ProblemSolvingTestResult} />
                   }
                 />
                 <Route
-                  path="/world/desktop/code-task"
+                  path="/world/desktop/code-task/:webTaskId"
                   element={<PrivateRoute component={CodeTask} />}
                 />
                 <Route
-                  path="/world/desktop/task/verification/:id"
+                  path="/world/desktop/task/verification/:webTaskEvaluationId"
                   element={<PrivateRoute component={Verification} />}
                 />
                 <Route
@@ -338,11 +338,11 @@ const AppLayout = (props) => {
                   element={<PrivateRoute component={QuizResult} />}
                 />
                 <Route
-                  path="/preworld/open-jobs"
+                  path="/preworld/web-programs"
                   element={<PrivateRoute component={OpenJobs} />}
                 />
                 <Route
-                  path="/preworld/apply"
+                  path="/preworld/apply/:programId"
                   element={<PrivateRoute component={Apply} />}
                 />
                 <Route element={<NotFound />} />

@@ -3,8 +3,10 @@ import { withStyles } from "arwes";
 import { Frame, Button, Words } from "arwes";
 import axios from "axios";
 import { CONSTANTS } from "../../../../../../constants/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../../../../redux/Auth/authSelectors";
 
 const styles = () => ({
   "@media (max-width: 800px)": {
@@ -67,82 +69,82 @@ const styles = () => ({
   },
 });
 const WebQuizFrame = (props) => {
-  const { classes, className } = props;
+  const { classes } = props;
   const [isModalOpen, setModalOpen] = useState(false);
   const [isTimeModalOpen, setTimeModalOpen] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(30);
   const [checkedItems, setCheckedItems] = useState({});
-  const [quizData, setQuizData] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [quizData, setQuizData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingConfirmation, setIsLoadingConfirmation] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [tabActivityCount, setTabActivityCount] = useState(0);
   const navigate = useNavigate();
+  const userData = useSelector(selectUser);
+  const user = userData ? userData.user : null;
+  const userId = user ? user._id : null;
+  const location = useLocation();
+  const webQuizId = location.pathname.split("/").pop();
 
   useEffect(() => {
-    if (timeRemaining === 0) {
-      setTimeModalOpen(true);
+    if (userId && webQuizId) {
+      fetchWebQuizAssignment();
     }
-  }, [timeRemaining]);
+  }, [userId, webQuizId]);
 
-  const handleNextQuestion = () => {
-    setCurrentQuestionIndex((prevIndex) =>
-      prevIndex === quizData.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  const handlePreviousQuestion = () => {
-    setCurrentQuestionIndex((prevIndex) =>
-      prevIndex === 0 ? quizData.length - 1 : prevIndex - 1
-    );
-  };
-
-  const handleVerifyClick = () => {
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
+  const fetchWebQuizAssignment = async () => {
+    try {
+      const response = await axios.get(
+        `${CONSTANTS.API_URL}/generation/get-web-quiz-assignment/${webQuizId}/?userId=${userId}`
+      );
+      setQuizData(response.data.assignment);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching web quiz assignment:", error);
+      toast.error("Error fetching web quiz assignment");
+    }
   };
 
   const handleConfirmClick = () => {
     setIsLoadingConfirmation(true);
     setModalOpen(false);
-    console.log("Task response:", checkedItems);
+
+    const quizResponse = Object.keys(checkedItems).reduce((acc, key) => {
+      const index = parseInt(key, 10);
+      const responseIndex = index + 1;
+      acc[responseIndex.toString()] = checkedItems[key];
+      return acc;
+    }, {});
+
+    quizData.webQuiz.responses.forEach((_, index) => {
+      const responseIndex = (index + 1).toString();
+      if (!(responseIndex in quizResponse)) {
+        quizResponse[responseIndex] = false;
+      }
+    });
 
     axios
-      .post(`${CONSTANTS.API_URL}/evaluation/evaluate-quiz`, {
-        tabActivityCount,
-        clickCount,
-        taskResponse: checkedItems,
-      })
+      .post(
+        `${CONSTANTS.API_URL}/evaluation/evaluate-web-quiz/${webQuizId}/?userId=${userId}`,
+        {
+          tabActivityCount,
+          clickCount,
+          quizResponse,
+        }
+      )
       .then((response) => {
         setIsLoadingConfirmation(false);
         toast.success("Quiz validated successfully");
-        navigate(`/preworld/quiz/result/${response.data.taskEvaluation._id}`);
+        navigate(
+          `/world/desktop/web-quiz/verification/${response.data.updatedAssignment.evaluation}`
+        );
       })
       .catch((error) => {
-        toast.error("Error validating quiz");
-        console.error("Error getting score from backend:", error);
         setIsLoadingConfirmation(false);
+        toast.error("Error validating quiz");
+        console.error("Error ", error);
       });
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const url = `${CONSTANTS.API_URL}/generation/get-software-quiz`;
-        const response = await axios.get(url);
-        setQuizData(response.data.quizs);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching quiz data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -172,158 +174,138 @@ const WebQuizFrame = (props) => {
     };
   }, []);
 
-  const currentQuiz = quizData[currentQuestionIndex];
-  const totalQuestions = quizData.length;
-
   const handleCheckboxChange = useMemo(
     () => (index) => {
       setCheckedItems((prevCheckedItems) => ({
         ...prevCheckedItems,
-        [currentQuestionIndex]: {
-          ...(prevCheckedItems[currentQuestionIndex] || {}),
-          [index]: !(prevCheckedItems[currentQuestionIndex] || {})[index],
-        },
+        [index]: !prevCheckedItems[index],
       }));
     },
-    [setCheckedItems, currentQuestionIndex]
+    [setCheckedItems]
   );
 
-  const progressPercentage =
-    (currentQuestionIndex / (quizData.length - 1)) * 100;
-
   return (
-    <div className={classes.quizContainer}>
-      {isLoading ? (
-        <div className="loadingio">
-          <div className="loading">
-            <div></div>
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className="timer">
-            <div>{`${currentQuestionIndex + 1}/${totalQuestions}`}</div>
-            <div style={{ color: timeRemaining === 0 ? "red" : "inherit" }}>
-              {`${Math.floor(timeRemaining / 60)}:${(timeRemaining % 60)
-                .toString()
-                .padStart(2, "0")}`}
+    <Frame level={0}>
+      <div className={classes.quizContainer}>
+        {isLoading ? (
+          <div className="loadingio">
+            <div className="loading">
+              <div></div>
             </div>
           </div>
-          <div className={classes.progressBarContainer}>
-            <div
-              className={classes.progressBarFill}
-              style={{ width: `${progressPercentage}%` }}
-            />
-          </div>
-          {currentQuiz && (
-            <div className={classes.question}>
-              <h3>{currentQuiz.title}</h3>
-              <p style={{ fontSize: "15px" }}>{currentQuiz.question}</p>
-              <ul>
-                {currentQuiz.responses.map((response, index) => (
-                  <li key={index}>
-                    <label
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        fontSize: "15px",
-                      }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={
-                          checkedItems[currentQuestionIndex] &&
-                          checkedItems[currentQuestionIndex][index]
-                        }
-                        onChange={() => handleCheckboxChange(index)}
-                      />
-                      {response}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <div className={classes.buttonsContainer}>
-            <div className={classes.buttonContainer}>
-              <Button
-                onClick={handlePreviousQuestion}
-                disabled={currentQuestionIndex === 0}
-              >
-                Previous
-              </Button>
-              <Button
-                onClick={handleNextQuestion}
-                disabled={currentQuestionIndex === quizData.length - 1}
-              >
-                Next
-              </Button>
-            </div>
-            <div className={classes.submitButton}>
-              <Button onClick={handleVerifyClick}>Submit</Button>
-            </div>
-          </div>
-          {isModalOpen && (
-            <>
-              <div
-                className={classes.modalBackdrop}
-                onClick={handleCloseModal}
-              ></div>
-              <Frame className={classes.modalFrame} animate={true} corners={1}>
-                <div style={{ padding: "1em" }}>
-                  <Words>Are you sure you want to Validate the Quiz?</Words>
-                  <br />
-                  <br />
-
-                  <div className="btns_confirm">
-                    <Button onClick={handleConfirmClick} layer="success">
-                      Confirm
-                    </Button>
-                    <Button layer="secondary" onClick={handleCloseModal}>
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              </Frame>
-            </>
-          )}
-          {isTimeModalOpen && (
-            <>
-              <div
-                className={classes.modalBackdrop}
-                onClick={handleCloseModal}
-              ></div>
-              <Frame className={classes.modalFrame} animate={true} corners={1}>
-                <div style={{ padding: "1em", textAlign: "center" }}>
-                  <Words>Time is up! You need to submit the quiz.</Words>
-                  <br />
-                  <br />
-                  <Button onClick={handleConfirmClick}>Submit</Button>
-                </div>
-              </Frame>
-            </>
-          )}
-          {isLoadingConfirmation && (
-            <div
-              style={{
-                position: "absolute",
-                zIndex: 1000,
-                top: "60%",
-                left: "40%",
-                transform: "translate(-60%, -40%)",
-              }}
-            >
-              <div className="loadingio">
-                <div className="loading">
-                  <div></div>
-                </div>
+        ) : (
+          <>
+            <div className="timer">
+              <div>
+                {timeRemaining === 0
+                  ? "Time's up!"
+                  : `${Math.floor(timeRemaining / 60)}:${(timeRemaining % 60)
+                      .toString()
+                      .padStart(2, "0")}`}
               </div>
             </div>
-          )}
-        </>
-      )}
-    </div>
+            {quizData && (
+              <div className={classes.question}>
+                <h3>{quizData.webQuiz.title}</h3>
+                <p style={{ fontSize: "15px" }}>{quizData.webQuiz.question}</p>
+                <ul>
+                  {quizData.webQuiz.responses.map((response, index) => (
+                    <li key={index}>
+                      <label
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          fontSize: "15px",
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={!!checkedItems[index]}
+                          onChange={() => handleCheckboxChange(index)}
+                        />
+                        {response}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div className={classes.submitButton}>
+              <Button onClick={() => setModalOpen(true)}>Submit</Button>
+            </div>
+
+            {isModalOpen && (
+              <>
+                <div
+                  className={classes.modalBackdrop}
+                  onClick={() => setModalOpen(false)}
+                ></div>
+                <Frame
+                  className={classes.modalFrame}
+                  animate={true}
+                  corners={1}
+                >
+                  <div style={{ padding: "1em" }}>
+                    <Words>Are you sure you want to Validate the Quiz?</Words>
+                    <br />
+                    <br />
+                    <div className="btns_confirm">
+                      <Button onClick={handleConfirmClick} layer="success">
+                        Confirm
+                      </Button>
+                      <Button
+                        layer="secondary"
+                        onClick={() => setModalOpen(false)}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                </Frame>
+              </>
+            )}
+            {isTimeModalOpen && (
+              <>
+                <div
+                  className={classes.modalBackdrop}
+                  onClick={() => setTimeModalOpen(false)}
+                ></div>
+                <Frame
+                  className={classes.modalFrame}
+                  animate={true}
+                  corners={1}
+                >
+                  <div style={{ padding: "1em", textAlign: "center" }}>
+                    <Words>Time is up! You need to submit the quiz.</Words>
+                    <br />
+                    <br />
+                    <Button onClick={handleConfirmClick}>Submit</Button>
+                  </div>
+                </Frame>
+              </>
+            )}
+            {isLoadingConfirmation && (
+              <div
+                style={{
+                  position: "absolute",
+                  zIndex: 1000,
+                  top: "60%",
+                  left: "40%",
+                  transform: "translate(-60%, -40%)",
+                }}
+              >
+                <div className="loadingio">
+                  <div className="loading">
+                    <div></div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </Frame>
   );
 };
 

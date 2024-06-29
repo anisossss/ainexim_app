@@ -6,7 +6,7 @@ import { CONSTANTS } from "../../../constants/api";
 import { selectSelectedJob } from "../../../redux/Job/jobSlice";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const styles = () => ({
   "@media (max-width: 800px)": {
@@ -24,6 +24,8 @@ const ApplyFrame = (props) => {
   const { classes } = props;
 
   const selectedJob = useSelector(selectSelectedJob);
+  const location = useLocation();
+  const programId = location.pathname.split("/").pop();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -45,6 +47,7 @@ const ApplyFrame = (props) => {
     formData.append("email", email);
     formData.append("resume", resume);
     formData.append("coverLetter", coverLetter);
+    formData.append("programId", programId);
 
     try {
       const response = await axios.post(
@@ -70,7 +73,7 @@ const ApplyFrame = (props) => {
   return (
     <Frame className={classes.modalFrame}>
       <div style={{ padding: "1em" }}>
-        <Highlight animate>Apply for {selectedJob} job</Highlight>
+        <Highlight animate>Apply for {selectedJob} Career</Highlight>
         <br></br>
         <br></br>
         <Words>

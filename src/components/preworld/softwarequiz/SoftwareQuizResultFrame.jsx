@@ -1,8 +1,11 @@
-import { CONSTANTS } from "../../../constants/api";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { withStyles } from "arwes";
 import { Link } from "react-router-dom";
 import { Frame, Button, Words, Line } from "arwes";
+import { CONSTANTS } from "../../../constants/api";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../redux/Auth/authSelectors";
 const styles = () => ({
   validationFrame: {
     padding: "1em",
@@ -16,68 +19,67 @@ const styles = () => ({
 });
 
 const SoftwareQuizResultFrame = (props) => {
-  const { classes, className } = props;
-  const evaluationData = [
-    {
-      testName: "Test 1",
-      criteria: [
-        {
-          task: "Technical Understanding: ",
-          comment:
-            "The test results demonstrate a profound understanding of the technical concepts tested. It's apparent that concepts have been studied thoroughly and there's a strong foundation of technical knowledge.",
-          score: "90/100",
-        },
-        {
-          task: "Problem-solving Skills: ",
-          comment:
-            "The problem-solving aspect of the test was handled excellently. There's a solid application of technical knowledge to solve challenges. This reflects strong critical thinking and problem-solving skills.",
-          score: "100/100",
-        },
-        {
-          task: "Testing and Debugging: ",
-          comment:
-            "The test results reflect well-written code that effectively handles errors and unexpected input. There's clear evidence of careful testing and debugging, demonstrating a strong attention to details and focus on producing robust code.",
-          score: "90/100",
-        },
-      ],
-      overallScore: "95/100",
-      pointsRewarded: "1200",
-    },
-  ];
-  const [score, setScore] = useState(0);
-  const [pointsRewarded, setPointsRewarded] = useState(0);
+  const { classes } = props;
+  const [evaluationData, setEvaluationData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const userData = useSelector(selectUser);
+  const user = userData ? userData.user : null;
+  const userId = user ? user._id : null;
+  useEffect(() => {
+    const fetchEvaluationData = async () => {
+      try {
+        const response = await axios.get(
+          `${CONSTANTS.API_URL}/evaluation/get-software-quiz-evaluation/${userId}`
+        );
+        setEvaluationData(response.data.evaluation);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching evaluation data:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchEvaluationData();
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Frame animate={true}>
       <div className={classes.validationFrame}>
-        <Words animate style={{ fontWeight: "bold" }}>
-          Quiz Validation
-        </Words>
-        <br></br>
-        <br></br>
-        {evaluationData.map((test, i) => (
-          <div key={i}>
-            {test.criteria.map((criterion, j) => (
-              <div key={j} className={classes.criteriaContainer}>
-                <span layer="header" style={{ fontWeight: "bold" }}>
-                  {criterion.task}
-                </span>
-                <Words>{criterion.comment}</Words>
-                <br></br>
-                <br></br>
-                <Line />
-              </div>
-            ))}
-            <span animate style={{ fontWeight: "bold" }}>
-              Overall Score: {test.overallScore}
-            </span>
-            <br></br>
-            <span animate style={{ fontWeight: "bold" }}>
-              Points Rewarded: {test.pointsRewarded}
-            </span>
-          </div>
-        ))}
-        <br></br>
+        <div>
+          <Words animate style={{ fontWeight: "bold" }}>
+            {evaluationData.title}
+          </Words>
+          <br />
+          <Words>{evaluationData.description}</Words>
+          <br />
+          <br />
+          <Words animate style={{ fontWeight: "bold" }}>
+            Code Correction:
+          </Words>
+          <br />
+          <Words>{evaluationData.codeCorrection}</Words>
+          <br />
+          <br />
+          <Words animate style={{ fontWeight: "bold" }}>
+            Advice:
+          </Words>
+          <br />
+          <Words>{evaluationData.advice}</Words>
+          <br />
+          <br />
+          <Words animate style={{ fontWeight: "bold" }}>
+            Rating:
+          </Words>
+          <br />
+          <Words>{evaluationData.rating}</Words>
+          <br />
+          <br />
+          <Line />
+        </div>
         <Link to="/preworld/test">
           <Button className={classes.btn}>Next</Button>
         </Link>
@@ -85,4 +87,5 @@ const SoftwareQuizResultFrame = (props) => {
     </Frame>
   );
 };
+
 export default withStyles(styles)(SoftwareQuizResultFrame);

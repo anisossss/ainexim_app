@@ -14,8 +14,9 @@ import { cpp } from "@codemirror/lang-cpp";
 import { java } from "@codemirror/lang-java";
 import { php } from "@codemirror/lang-php";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../../../../redux/Auth/authSelectors";
 const styles = () => ({
   modalFrame: {
     position: "fixed",
@@ -46,25 +47,35 @@ const CodeTaskFrame = (props) => {
   const handleLanguageChange = (e) => {
     setSelectedLanguage(e.target.value);
   };
+  const location = useLocation();
+
+  const userData = useSelector(selectUser);
+  const user = userData ? userData.user : null;
+  const userId = user ? user._id : null;
   const [taskData, setTaskData] = useState(null);
+  const webTaskId = location.pathname.split("/").pop();
+
+  const [assignment, setAssignment] = useState(null);
 
   useEffect(() => {
-    const fetchTask = () => {
-      axios
-        .get(
-          `${CONSTANTS.API_URL}/generation/get-web-task/65d7d404b74ede7428d938ad`
-        )
-        .then((response) => {
-          setTaskData(response.data.task);
-          setIsLoading(false);
-          console.log("Task data:", response.data);
-        })
-        .catch((error) => {
-          console.error("Error getting evaluation data from backend:", error);
-        });
-    };
-    fetchTask();
-  }, []);
+    if (userId && webTaskId) {
+      fetchWebQuizAssignment();
+    }
+  }, [userId, webTaskId]);
+
+  const fetchWebQuizAssignment = async () => {
+    try {
+      const response = await axios.get(
+        `${CONSTANTS.API_URL}/generation/get-web-dev-assignment/${webTaskId}/?userId=${userId}`
+      );
+      setAssignment(response.data.assignment);
+      setIsLoading(false);
+      console.log(assignment);
+    } catch (error) {
+      console.error("Error fetching web dev assignment:", error);
+      toast.error("Error fetching web dev assignment");
+    }
+  };
 
   const navigate = useNavigate();
   const [clickCount, setClickCount] = useState(0);
@@ -103,7 +114,7 @@ const CodeTaskFrame = (props) => {
     console.log("Task response:", inputMessage);
     axios
       .post(
-        `${CONSTANTS.API_URL}/evaluation/evaluate-web-task/65d7d404b74ede7428d938ad`,
+        `${CONSTANTS.API_URL}/evaluation/evaluate-web-task/${webTaskId}/?userId=${userId}`,
         {
           tabActivityCount,
           clickCount,
@@ -113,17 +124,13 @@ const CodeTaskFrame = (props) => {
       .then((response) => {
         setIsLoadingConfirmation(false);
         toast.success("Task validated successfully");
-        // navigate(
-        //   `/world/desktop/task/verification/660e0755c5f7913ef8fb370a`
-        // );
-        // navigate(
-        //   `/world/desktop/task/verification/${response.data.taskEvaluation._id}`
-        // );
-        onValidate(response.data.taskEvaluation._id);
+        navigate(
+          `/world/desktop/task/verification/${response.data.updatedAssignment.evaluation}`
+        );
       })
       .catch((error) => {
         toast.error("Error validating task");
-        console.error("Error getting score from backend:", error);
+        console.error(error);
         setIsLoadingConfirmation(false);
       });
   };
@@ -147,9 +154,6 @@ const CodeTaskFrame = (props) => {
 
   const handleCloseModal = () => {
     setModalOpen(false);
-  };
-  const toggleExpansion = () => {
-    setIsExpanded(!isExpanded);
   };
 
   return (
@@ -183,19 +187,24 @@ const CodeTaskFrame = (props) => {
               }}
             >
               <span animate style={{ fontWeight: "bold" }}>
-                Task 1: {taskData && <Words animate>{taskData.title}</Words>}
+                Task 1:{" "}
+                {assignment && (
+                  <Words animate>{assignment.webTask.title}</Words>
+                )}
               </span>
               <br></br>
               <br></br>
-              {taskData && <Words animate>{taskData.description}</Words>}
+              {assignment && (
+                <Words animate>{assignment.webTask.description}</Words>
+              )}
               <br></br>
               <br></br>
               <Words animate style={{ fontWeight: "bold" }}>
                 Instructions
               </Words>
-              {taskData && (
+              {assignment && (
                 <div>
-                  {taskData.content.map((stepString, index) => {
+                  {assignment.webTask.content.map((stepString, index) => {
                     let stepIndex = 0;
                     return stepString.split(/\d+\.\s*/).map(
                       (step, innerIndex) =>
@@ -216,8 +225,8 @@ const CodeTaskFrame = (props) => {
                 Helpful Resources
               </Words>
               <br></br>
-              {taskData &&
-                taskData.resources.map((resource, index) => (
+              {assignment &&
+                assignment.webTask.resources.map((resource, index) => (
                   <span key={index}>
                     {resource.split(",").map((link, linkIndex) => (
                       <React.Fragment key={linkIndex}>

@@ -277,19 +277,9 @@ const GithubTaskFrame = (props) => {
               <br />
               <br />
               <div className="btns_confirm">
-                <Button
-                  onClick={() => navigate("/some/next/task/link")}
-                  layer="success"
-                >
-                  Go to Next Task
-                </Button>
-
-                <Button
-                  onClick={() => navigate("/task/board/link")}
-                  layer="secondary"
-                >
-                  Go to Task Board
-                </Button>
+                <Link to="/world/current-mission-timeline">
+                  <Button className={classes.btn}>Tasks Timeline</Button>
+                </Link>
               </div>
             </div>
           </Frame>
